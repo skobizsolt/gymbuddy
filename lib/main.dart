@@ -22,27 +22,51 @@ class App extends StatelessWidget {
 }
 
 ThemeData kDarkTheme(BuildContext context) {
+  const Color orange = Color.fromARGB(255, 242, 135, 5);
+  const Color discordBlack = Color.fromARGB(255, 30, 31, 34);
+  const Color discordGray = Color.fromARGB(255, 43, 45, 49);
+  const Color discordLightGray = Color.fromARGB(255, 66, 71, 78);
+  const Color discordWhite = Color.fromARGB(255, 169, 174, 181);
+
   return ThemeData(
     useMaterial3: true,
+    primaryColor: discordGray,
+    primaryColorDark: discordBlack,
+    primaryColorLight: discordLightGray,
     colorScheme: ColorScheme.fromSeed(
       brightness: Brightness.dark,
-      seedColor: const Color.fromARGB(255, 242, 135, 5),
-      background: const Color.fromARGB(255, 43, 45, 49),
+      seedColor: orange,
+      background: discordGray,
     ),
     appBarTheme: AppBarTheme.of(context).copyWith(
-      backgroundColor: const Color.fromARGB(255, 30, 31, 34),
-      foregroundColor: const Color.fromARGB(255, 242, 135, 5),
+      backgroundColor: discordBlack,
+      foregroundColor: orange,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: Color.fromARGB(255, 30, 31, 34),
-      selectedItemColor: Color.fromARGB(255, 242, 135, 5),
-      unselectedItemColor: Color.fromARGB(255, 169, 174, 181),
+      backgroundColor: discordBlack,
+      selectedItemColor: orange,
+      unselectedItemColor: discordWhite,
       type: BottomNavigationBarType.fixed,
     ),
-    textTheme: GoogleFonts.latoTextTheme().copyWith(
-      titleLarge: const TextStyle(
-        color: Color.fromARGB(255, 242, 135, 5),
-      ),
+    cardTheme: CardTheme.of(context).copyWith(
+      color: discordLightGray,
+      surfaceTintColor: discordLightGray,
+      elevation: 10,
     ),
+    textTheme: GoogleFonts.latoTextTheme().copyWith(
+        titleLarge: const TextStyle(
+          color: orange,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+        titleMedium: const TextStyle(
+          color: orange,
+          fontSize: 15,
+        ),
+        titleSmall: const TextStyle(
+          color: discordWhite,
+          fontStyle: FontStyle.italic,
+          fontSize: 13,
+        )),
   );
 }
