@@ -34,10 +34,10 @@ ThemeData kDarkTheme(BuildContext context) {
     primaryColorDark: discordBlack,
     primaryColorLight: discordLightGray,
     colorScheme: ColorScheme.fromSeed(
-      brightness: Brightness.dark,
-      seedColor: orange,
-      background: discordGray,
-    ),
+        brightness: Brightness.dark,
+        seedColor: orange,
+        background: discordGray,
+        onBackground: orange),
     appBarTheme: AppBarTheme.of(context).copyWith(
       backgroundColor: discordBlack,
       foregroundColor: orange,
@@ -65,7 +65,6 @@ ThemeData kDarkTheme(BuildContext context) {
         ),
         titleSmall: const TextStyle(
           color: discordWhite,
-          fontStyle: FontStyle.italic,
           fontSize: 13,
         )),
   );

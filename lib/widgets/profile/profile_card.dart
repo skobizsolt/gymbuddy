@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/widgets/profile/containered_text.dart';
+import 'package:gymbuddy/widgets/utils/containered_text.dart';
 import 'package:gymbuddy/widgets/profile/profile_picture.dart';
+import 'package:gymbuddy/widgets/utils/themed_icon.dart';
 
 class ProfileCard extends StatefulWidget {
   const ProfileCard({super.key});
@@ -39,12 +40,11 @@ class _ProfileCardState extends State<ProfileCard> {
         Container(
           height: 55,
           alignment: Alignment.topCenter,
-          padding: EdgeInsets.only(right: 8),
+          padding: const EdgeInsets.only(right: 8),
           child: InkWell(
             onTap: () {},
-            child: Icon(
+            child: const ThemedIcon(
               Icons.edit,
-              color: Theme.of(context).textTheme.titleLarge!.color,
             ),
           ),
         ),
