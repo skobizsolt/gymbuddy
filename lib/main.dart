@@ -37,7 +37,9 @@ ThemeData kDarkTheme(BuildContext context) {
         brightness: Brightness.dark,
         seedColor: orange,
         background: discordGray,
-        onBackground: orange),
+        onBackground: orange,
+        primary: orange,
+        secondary: discordWhite),
     appBarTheme: AppBarTheme.of(context).copyWith(
       backgroundColor: discordBlack,
       foregroundColor: orange,
