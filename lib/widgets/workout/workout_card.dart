@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/screen/profile/workout_details.dart';
-import 'package:gymbuddy/widgets/utils/containered_text.dart';
 
 class WorkoutCard extends StatelessWidget {
   const WorkoutCard({super.key, required this.workout});
@@ -19,21 +18,23 @@ class WorkoutCard extends StatelessWidget {
     Widget workoutDetails() {
       return Expanded(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ContaineredText(
-              text: workout.title,
+            Text(
+              workout.title,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(
               height: 4,
             ),
-            ContaineredText(
-              text: workout.description ?? 'No additional description',
+            Text(
+              workout.description ?? 'No additional description',
+              maxLines: 1,
               style: Theme.of(context).textTheme.titleSmall,
             ),
-            ContaineredText(
-              text: '${workout.steps.toString()} steps',
+            Text(
+              '${workout.steps.toString()} steps',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             workoutDifficultyRating[workout.difficulty],
@@ -53,9 +54,9 @@ class WorkoutCard extends StatelessWidget {
           child: Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   workoutDetails(),
-                  const Spacer(),
                   Column(children: [
                     Text(
                       '${workout.estimatedTimeInMinutes.toString()}\nmins',

@@ -54,18 +54,19 @@ ThemeData kDarkTheme(BuildContext context) {
       elevation: 10,
     ),
     textTheme: GoogleFonts.latoTextTheme().copyWith(
-        titleLarge: const TextStyle(
-          color: orange,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-        titleMedium: const TextStyle(
-          color: orange,
-          fontSize: 15,
-        ),
-        titleSmall: const TextStyle(
-          color: discordWhite,
-          fontSize: 13,
-        )),
+      titleLarge: const TextStyle(
+        color: orange,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      titleMedium: const TextStyle(
+        color: orange,
+        fontSize: 15,
+      ),
+      titleSmall: const TextStyle(
+        color: discordWhite,
+        fontSize: 13,
+      ),
+    ),
   );
 }

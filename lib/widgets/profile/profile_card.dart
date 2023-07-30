@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/widgets/utils/containered_text.dart';
 import 'package:gymbuddy/widgets/profile/profile_picture.dart';
 import 'package:gymbuddy/widgets/utils/themed_icon.dart';
 
@@ -11,44 +10,49 @@ class ProfileCard extends StatefulWidget {
 }
 
 class _ProfileCardState extends State<ProfileCard> {
-  Expanded _profileData(BuildContext context) {
+  Widget _profileData(BuildContext context) {
+    List<List<Object?>> content = [
+      [
+        // Full name
+        "Your name",
+        Theme.of(context).textTheme.titleLarge,
+      ],
+      [
+        // Username
+        "user099",
+        Theme.of(context).textTheme.titleMedium,
+      ],
+      [
+        // Registered
+        "Joined: 2023.01.01",
+        Theme.of(context).textTheme.titleSmall,
+      ],
+    ];
+
     return Expanded(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ContaineredText(
-            text: "Your name",
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          ContaineredText(
-            text: "user099",
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          ContaineredText(
-            text: 'Joined: 2023.01.01',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
+          ...content.map((item) => Text(
+                item[0] as String,
+                style: item[1] as TextStyle,
+              ))
         ],
       ),
     );
   }
 
-  Column _editProfileContent(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 55,
-          alignment: Alignment.topCenter,
-          padding: const EdgeInsets.only(right: 8),
-          child: InkWell(
-            onTap: () {},
-            child: const ThemedIcon(
-              Icons.edit,
-            ),
-          ),
+  Widget _editProfileContent(BuildContext context) {
+    return Container(
+      height: 55,
+      alignment: Alignment.topCenter,
+      padding: const EdgeInsets.only(right: 8),
+      child: InkWell(
+        onTap: () {},
+        child: const ThemedIcon(
+          Icons.edit,
         ),
-      ],
+      ),
     );
   }
 
@@ -67,9 +71,15 @@ class _ProfileCardState extends State<ProfileCard> {
                   const SizedBox(
                     width: 10,
                   ),
-                  _profileData(context),
-                  const Spacer(),
-                  _editProfileContent(context),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _profileData(context),
+                        _editProfileContent(context),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ],

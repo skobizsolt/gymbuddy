@@ -29,12 +29,13 @@ class Workout {
 }
 
 get workoutDifficultyRating {
-  final emptyStar = ThemedIcon(Icons.star_border);
-  final star = ThemedIcon(Icons.star);
+  const emptyStar = ThemedIcon(Icons.star_border);
+  const star = ThemedIcon(Icons.star);
 
   return {
-    WorkoutDifficulty.EASY: Row(children: [star, emptyStar, emptyStar]),
-    WorkoutDifficulty.INTERMEDIATE: Row(children: [star, star, emptyStar]),
-    WorkoutDifficulty.HARD: Row(children: [star, star, star]),
+    WorkoutDifficulty.EASY: const Row(children: [star, emptyStar, emptyStar]),
+    WorkoutDifficulty.INTERMEDIATE:
+        const Row(children: [star, star, emptyStar]),
+    WorkoutDifficulty.HARD: const Row(children: [star, star, star]),
   };
 }

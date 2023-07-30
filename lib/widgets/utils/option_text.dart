@@ -7,7 +7,7 @@ class OptionText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 8),
       width: double.infinity,
       child: Text(
         text,
