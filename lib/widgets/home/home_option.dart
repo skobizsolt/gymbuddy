@@ -1,21 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:gymbuddy/data/workout_data.dart';
+import 'package:gymbuddy/models/workout.dart';
+import 'package:gymbuddy/screen/workout/workouts_screen.dart';
 
 class HomeOption extends StatelessWidget {
   const HomeOption({
     super.key,
+    required this.id,
     required this.optionName,
     required this.icon,
   });
 
+  final int id;
   final String optionName;
   final IconData icon;
+
+  void searchWorkouts(BuildContext context, List<Workout> workouts) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WorkoutsSceen(
+          workouts: workouts,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          print(key);
+          if (id == 0) {
+            searchWorkouts(context, workoutData);
+          }
+        },
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(8.0),

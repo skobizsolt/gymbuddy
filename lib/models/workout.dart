@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/widgets/utils/themed_icon.dart';
 
-enum WorkoutDifficulty { EASY, INTERMEDIATE, HARD }
+enum WorkoutDifficulty { easy, intermediate, hard }
+
+enum WorkoutCategory { endurance, strength, balance, flexibility }
 
 class Workout {
   const Workout(
@@ -11,6 +13,7 @@ class Workout {
       required this.userId,
       required this.title,
       this.description,
+      required this.category,
       required this.registeredOn,
       required this.lastModified,
       required this.difficulty,
@@ -21,6 +24,7 @@ class Workout {
   final int userId;
   final String title;
   final String? description;
+  final WorkoutCategory category;
   final DateTime registeredOn;
   final DateTime lastModified;
   final WorkoutDifficulty difficulty;
@@ -28,14 +32,23 @@ class Workout {
   final int estimatedTimeInMinutes;
 }
 
-get workoutDifficultyRating {
+Map<WorkoutDifficulty, Row> get workoutDifficultyRating {
   const emptyStar = ThemedIcon(Icons.star_border);
   const star = ThemedIcon(Icons.star);
 
   return {
-    WorkoutDifficulty.EASY: const Row(children: [star, emptyStar, emptyStar]),
-    WorkoutDifficulty.INTERMEDIATE:
+    WorkoutDifficulty.easy: const Row(children: [star, emptyStar, emptyStar]),
+    WorkoutDifficulty.intermediate:
         const Row(children: [star, star, emptyStar]),
-    WorkoutDifficulty.HARD: const Row(children: [star, star, star]),
+    WorkoutDifficulty.hard: const Row(children: [star, star, star]),
+  };
+}
+
+Map<WorkoutCategory, String> get workoutCategoryIcon {
+  return const {
+    WorkoutCategory.strength: '🏋️‍♂️',
+    WorkoutCategory.endurance: '🏃‍♂️',
+    WorkoutCategory.flexibility: '🤸‍♂️',
+    WorkoutCategory.balance: '🧘‍♀️',
   };
 }

@@ -9,22 +9,27 @@ class HomeScreen extends StatelessWidget {
     Widget renderOptions() {
       var options = [
         {
+          'id': 0,
           'optionName': 'Search for something new',
           'icon': Icons.search_rounded,
         },
         {
+          'id': 1,
           'optionName': 'Currently popular',
           'icon': Icons.star_outline_sharp,
         },
         {
+          'id': 2,
           'optionName': 'Add new',
           'icon': Icons.add,
         },
         {
+          'id': 3,
           'optionName': 'Created by me',
           'icon': Icons.accessibility_new_rounded,
         },
         {
+          'id': 4,
           'optionName': 'Recent history',
           'icon': Icons.history,
         },
@@ -35,6 +40,7 @@ class HomeScreen extends StatelessWidget {
           itemCount: options.length,
           itemBuilder: (context, index) {
             return HomeOption(
+              id: options[index]['id'] as int,
               optionName: options[index]['optionName'] as String,
               icon: options[index]['icon'] as IconData,
             );

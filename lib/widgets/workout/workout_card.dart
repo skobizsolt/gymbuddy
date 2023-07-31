@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/screen/profile/workout_details.dart';
+import 'package:gymbuddy/screen/workout/workout_details.dart';
 
 class WorkoutCard extends StatelessWidget {
   const WorkoutCard({super.key, required this.workout});
@@ -34,10 +34,10 @@ class WorkoutCard extends StatelessWidget {
               style: Theme.of(context).textTheme.titleSmall,
             ),
             Text(
-              '${workout.steps.toString()} steps',
+              '${workoutCategoryIcon[workout.category]} ${workout.category.name}, ${workout.steps.toString()} steps',
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            workoutDifficultyRating[workout.difficulty],
+            workoutDifficultyRating[workout.difficulty] as Widget,
           ],
         ),
       );
