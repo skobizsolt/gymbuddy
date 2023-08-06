@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/widgets/home/home_option.dart';
+import 'package:gymbuddy/widgets/utils/dribble_style_body.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -106,27 +107,18 @@ class HomeScreen extends StatelessWidget {
             ),
 
             // Add Actions
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColorDark,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(24),
-                    topRight: Radius.circular(24),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // add new option
-                      renderOptions()
-                    ],
-                  ),
+            DribbleBody(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // add new option
+                    renderOptions()
+                  ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

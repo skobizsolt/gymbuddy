@@ -27,26 +27,28 @@ class WorkoutSearchTile extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () => onTap(),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Theme.of(context).primaryColorLight,
-                Theme.of(context).primaryColor,
-                Theme.of(context).primaryColorDark,
-              ],
+        child: Card(
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Theme.of(context).primaryColorLight,
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).primaryColorDark,
+                ],
+              ),
+              borderRadius: BorderRadius.circular(12),
             ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Center(
-            child: Text(
-              title,
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary, fontSize: 18),
-              textAlign: TextAlign.center,
+            child: Center(
+              child: Text(
+                title,
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary, fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),

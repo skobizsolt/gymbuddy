@@ -27,6 +27,8 @@ final workoutData = [
     workoutId: 3,
     userId: 1,
     title: "TEST Workout 3",
+    description:
+        'This is a test description for Test Workout 3. Any changes may occur.',
     category: WorkoutCategory.endurance,
     registeredOn: DateTime.parse('20230630'),
     lastModified: DateTime.parse('20230501'),

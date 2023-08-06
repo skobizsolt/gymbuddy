@@ -29,11 +29,6 @@ class WorkoutCard extends StatelessWidget {
               height: 4,
             ),
             Text(
-              workout.description ?? 'No additional description',
-              maxLines: 1,
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            Text(
               '${workoutCategoryIcon[workout.category]} ${workout.category.name}, ${workout.steps.toString()} steps',
               style: Theme.of(context).textTheme.titleMedium,
             ),

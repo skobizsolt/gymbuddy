@@ -10,6 +10,7 @@ class ThemedIcon extends StatelessWidget {
     return Icon(
       icon,
       color: Theme.of(context).colorScheme.onBackground,
+      size: 20,
     );
   }
 }

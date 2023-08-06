@@ -19,14 +19,10 @@ class SearchWorkoutsSceen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                InkWell(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    margin: const EdgeInsets.all(8.0),
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                BackButton(
+                  style: ButtonStyle(
+                    iconColor: MaterialStatePropertyAll(
+                      Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
                   ),
                 ),

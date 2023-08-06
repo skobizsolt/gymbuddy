@@ -32,7 +32,6 @@ class HomeOption extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
         onTap: () {
-          print(key);
           if (id == 0) {
             searchWorkouts(context, workoutData);
           }
