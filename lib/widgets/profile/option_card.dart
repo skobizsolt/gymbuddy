@@ -31,27 +31,18 @@ class _OptionCardState extends State<OptionCard> {
               children: [
                 Row(
                   children: [
-                    Stack(
-                      children: [
-                        Container(
-                          height: 45,
-                          width: 45,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColorDark,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        Positioned(
-                          right: 6.5,
-                          bottom: 6.5,
-                          child: Icon(
-                            widget.icon,
-                            size: 32,
-                            color:
-                                Theme.of(context).textTheme.titleLarge!.color,
-                          ),
-                        ),
-                      ],
+                    Container(
+                      height: 45,
+                      width: 45,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColorDark,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        widget.icon,
+                        size: 32,
+                        color: Theme.of(context).textTheme.titleLarge!.color,
+                      ),
                     ),
                     const SizedBox(
                       width: 15,

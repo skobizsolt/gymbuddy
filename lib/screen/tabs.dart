@@ -19,10 +19,11 @@ class _TabsScreenState extends State<TabsScreen> {
       body: const HomeScreen(),
     ),
     Screen(
-        appBar: AppBar(
-          title: const Text('Statistics'),
-        ),
-        body: const StatisticsSreen()),
+      appBar: AppBar(
+        title: const Text('Statistics'),
+      ),
+      body: const StatisticsSreen(),
+    ),
     Screen(
       appBar: AppBar(
         title: const Text('My Buddies'),

@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
         },
         {
           'id': 2,
-          'optionName': 'Add new',
+          'optionName': 'Add new training',
           'icon': Icons.add,
         },
         {
@@ -49,72 +49,86 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
-    return SafeArea(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(30.0),
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(30.0),
 
-            // AppBar area
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Hi, User!',
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            fontSize: 28,
-                          ),
-                    ),
-                    const Icon(
-                      Icons.person,
-                      size: 32,
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Text(
-                      'Let\'s do some workout 💪',
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            fontSize: 28,
-                          ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // Add Actions
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColorDark,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // add new option
-                    renderOptions()
-                  ],
-                ),
+              // AppBar area
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Hi, User!',
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              fontSize: 28,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                            ),
+                      ),
+                      Icon(
+                        Icons.person,
+                        size: 32,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Let\'s do some workout 💪',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(
+                                  fontSize: 28,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          )
-        ],
+
+            // Add Actions
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColorDark,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // add new option
+                      renderOptions()
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

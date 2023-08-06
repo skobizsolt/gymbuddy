@@ -49,7 +49,6 @@ class WorkoutCard extends StatelessWidget {
           selectWorkout(workout);
         },
         child: Container(
-          width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Column(
             children: [
