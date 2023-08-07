@@ -28,20 +28,22 @@ ThemeData kDarkTheme(BuildContext context) {
   const Color discordLightGray = Color.fromARGB(255, 66, 71, 78);
   const Color discordWhite = Color.fromARGB(255, 169, 174, 181);
 
+  ColorScheme colorScheme = ColorScheme.fromSeed(
+    brightness: Brightness.dark,
+    seedColor: orange,
+    background: discordGray,
+    onBackground: orange,
+    primary: orange,
+    secondary: discordWhite,
+    tertiary: Colors.white,
+  );
+
   return ThemeData(
     useMaterial3: true,
     primaryColor: discordGray,
     primaryColorDark: discordBlack,
     primaryColorLight: discordLightGray,
-    colorScheme: ColorScheme.fromSeed(
-      brightness: Brightness.dark,
-      seedColor: orange,
-      background: discordGray,
-      onBackground: orange,
-      primary: orange,
-      secondary: discordWhite,
-      tertiary: Colors.white,
-    ),
+    colorScheme: colorScheme,
     appBarTheme: AppBarTheme.of(context).copyWith(
       backgroundColor: discordBlack,
       foregroundColor: orange,
@@ -71,6 +73,15 @@ ThemeData kDarkTheme(BuildContext context) {
         color: discordWhite,
         fontSize: 13,
       ),
+    ),
+    dialogTheme: DialogTheme.of(context).copyWith(
+      backgroundColor: discordBlack,
+      titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+            color: orange,
+          ),
+      contentTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: orange,
+          ),
     ),
   );
 }

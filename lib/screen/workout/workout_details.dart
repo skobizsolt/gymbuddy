@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/widgets/utils/dribble_style_body.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
+import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 import 'package:ionicons/ionicons.dart';
 
 class WorkoutDetails extends StatelessWidget {
   const WorkoutDetails({super.key, required this.workout});
 
   final Workout workout;
-
   @override
   Widget build(BuildContext context) {
     final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
@@ -16,6 +16,7 @@ class WorkoutDetails extends StatelessWidget {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final backgroundColor = Theme.of(context).colorScheme.background;
 
+    // Renders the Workouts name
     Widget renderTitle() {
       return Row(
         children: [
@@ -33,6 +34,7 @@ class WorkoutDetails extends StatelessWidget {
       );
     }
 
+    // Renders the total workout time and steps
     Widget renderDetail({
       required final String title,
       required final IconData icon,
@@ -60,24 +62,39 @@ class WorkoutDetails extends StatelessWidget {
       );
     }
 
+    // Renders the deatils if added
     Widget renderDescription() {
       if (workout.description == null) {
         return const SizedBox();
       }
-      return InformationTag(
-        color: onPrimaryContainer,
-        child: Text(
-          workout.description!,
-          style: TextStyle(
-            color: primaryContainer,
-            fontSize: 15,
-            fontStyle: FontStyle.italic,
+      return Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: InformationTag(
+                  color: onPrimaryContainer,
+                  child: Text(
+                    workout.description!,
+                    style: TextStyle(
+                      color: primaryContainer,
+                      fontSize: 15,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              ),
+            ],
           ),
-          textAlign: TextAlign.justify,
-        ),
+          const SizedBox(
+            height: 20,
+          ),
+        ],
       );
     }
 
+    // Renders the type and difficulty and other future tags
     Widget renderTags() {
       var tags = [
         InformationTag(
@@ -119,6 +136,8 @@ class WorkoutDetails extends StatelessWidget {
         ),
       );
     }
+
+    //Renders all steps belongs with this workout
 
     return Scaffold(
       backgroundColor: primaryColor,
@@ -165,23 +184,35 @@ class WorkoutDetails extends StatelessWidget {
             DribbleBody(
               backgroundColor: backgroundColor,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Tags
-                    renderTags(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    // Description
-                    Row(
-                      children: [
-                        Expanded(child: renderDescription()),
-                      ],
-                    ),
-                  ],
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 32),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Tags
+                      renderTags(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+
+                      // Description
+                      renderDescription(),
+
+                      // Steps
+                      Text(
+                        'Steps',
+                        style:
+                            Theme.of(context).textTheme.titleMedium!.copyWith(
+                                  color: onPrimaryContainer,
+                                  fontSize: 18,
+                                ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      StepsPanelList(workoutId: workout.workoutId),
+                    ],
+                  ),
                 ),
               ),
             )

@@ -5,6 +5,7 @@ final workoutData = [
     workoutId: 1,
     userId: 1,
     title: "TEST Workout 1",
+    description: "Quick description",
     category: WorkoutCategory.strength,
     registeredOn: DateTime.now(),
     lastModified: DateTime.parse('20230701'),
