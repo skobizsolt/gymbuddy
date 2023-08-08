@@ -53,7 +53,7 @@ class HomeScreen extends StatelessWidget {
     return DribbleLayout(
       addAppBar: false,
       headerContent: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
           children: [
             Row(

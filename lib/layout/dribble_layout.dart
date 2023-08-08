@@ -55,12 +55,15 @@ class DribbleLayout extends StatelessWidget {
           children: [
             addAppBar ? renderAppBarButtons() : const SizedBox(),
 
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
 
             // Basic details
-            headerContent ?? const SizedBox(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: headerContent ?? const SizedBox(),
+            ),
 
             const SizedBox(
               height: 25,

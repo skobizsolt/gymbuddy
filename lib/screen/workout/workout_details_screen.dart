@@ -211,20 +211,34 @@ class WorkoutDetails extends StatelessWidget {
                     fontSize: 20,
                   ),
                 ),
-                InkWell(
-                  onTap: () {},
-                  child: Row(
-                    children: [
-                      const Text('Add new'),
-                      Icon(
-                        Ionicons.add,
-                        size: 24,
-                        color: primaryColor,
+                Visibility(
+                  visible: true,
+                  child: InkWell(
+                    onTap: () {},
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4.0),
+                        color: Theme.of(context).primaryColorLight,
+                        child: Row(
+                          children: [
+                            const Text('Add new'),
+                            Icon(
+                              Ionicons.add,
+                              size: 24,
+                              color: primaryColor,
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ],
+            ),
+            const SizedBox(
+              height: 15,
             ),
             StepsPanelList(workoutId: workout.workoutId),
           ],

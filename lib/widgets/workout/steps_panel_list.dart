@@ -4,45 +4,20 @@ import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/screen/workout/workout_step_details_screen.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
-class StepsPanelList extends StatefulWidget {
+class StepsPanelList extends StatelessWidget {
   const StepsPanelList({super.key, required this.workoutId});
 
   final int workoutId;
 
-  @override
-  State<StepsPanelList> createState() => _StepsPanelListState();
-}
-
-class _StepsPanelListState extends State<StepsPanelList> {
   List<WorkoutStep> get steps {
     List<WorkoutStep> list = stepsData
         .where(
-          (element) => element.workoutId == widget.workoutId,
+          (element) => element.workoutId == workoutId,
         )
         .toList();
     list.sort(
         (step, nextStep) => step.stepNumber.compareTo(nextStep.stepNumber));
     return list;
-  }
-
-  void showStepDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(steps[index].stepName),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-          content: Text(steps[index].details),
-        );
-      },
-    );
   }
 
   void openDetails(BuildContext context, WorkoutStep step) {
