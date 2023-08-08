@@ -73,14 +73,40 @@ ThemeData kDarkTheme(BuildContext context) {
         color: discordWhite,
         fontSize: 13,
       ),
+      bodyLarge: const TextStyle(
+        color: orange,
+      ),
+      bodyMedium: const TextStyle(
+        color: orange,
+      ),
+      bodySmall: const TextStyle(
+        color: orange,
+      ),
     ),
     dialogTheme: DialogTheme.of(context).copyWith(
       backgroundColor: discordBlack,
       titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
             color: orange,
           ),
-      contentTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+      contentTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
             color: orange,
+          ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: discordLightGray,
+        textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+      ),
+    ),
+    listTileTheme: ListTileThemeData(
+      titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
+      subtitleTextStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+            color: discordWhite,
           ),
     ),
   );

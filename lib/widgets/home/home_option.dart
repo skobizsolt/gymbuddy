@@ -60,8 +60,7 @@ class HomeOption extends StatelessWidget {
                 ),
                 Text(
                   optionName,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),

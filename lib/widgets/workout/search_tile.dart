@@ -45,8 +45,7 @@ class WorkoutSearchTile extends StatelessWidget {
             child: Center(
               child: Text(
                 title,
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary, fontSize: 18),
+                style: const TextStyle(fontSize: 18),
                 textAlign: TextAlign.center,
               ),
             ),

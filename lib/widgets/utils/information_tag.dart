@@ -9,16 +9,16 @@ class InformationTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
+    final backgroundColor = Theme.of(context).primaryColorLight;
 
     return Padding(
       padding: margin ?? const EdgeInsets.all(0.0),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
         decoration: BoxDecoration(
-          border: Border.all(color: color ?? onPrimaryContainer, width: 1.5),
+          border: Border.all(color: color ?? backgroundColor, width: 1.5),
           borderRadius: const BorderRadius.all(Radius.circular(16)),
-          color: color ?? onPrimaryContainer,
+          color: color ?? backgroundColor,
         ),
         child: child ?? const SizedBox(),
       ),

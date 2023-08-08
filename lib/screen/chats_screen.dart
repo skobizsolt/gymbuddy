@@ -5,11 +5,12 @@ class ChatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text(
         'Chats screen',
         style: TextStyle(
-            fontSize: 48, color: Theme.of(context).textTheme.titleLarge!.color),
+          fontSize: 48,
+        ),
       ),
     );
   }

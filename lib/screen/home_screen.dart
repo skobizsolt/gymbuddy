@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/widgets/home/home_option.dart';
-import 'package:gymbuddy/widgets/utils/dribble_style_body.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -50,77 +50,56 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      body: SafeArea(
+    return DribbleLayout(
+      addAppBar: false,
+      headerContent: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-
-              // AppBar area
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Hi, User!',
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                              fontSize: 28,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer,
-                            ),
-                      ),
-                      Icon(
-                        Icons.person,
-                        size: 32,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Hi, User!',
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        fontSize: 28,
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Let\'s do some workout 💪',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  fontSize: 28,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer),
-                        ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // Add Actions
-            DribbleBody(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // add new option
-                    renderOptions()
-                  ],
                 ),
-              ),
+                Icon(
+                  Icons.person,
+                  size: 32,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Let\'s do some workout 💪',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        fontSize: 28,
+                        color:
+                            Theme.of(context).colorScheme.onPrimaryContainer),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // add new option
+          renderOptions()
+        ],
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/data/workout_step_data.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/screen/workout/workout_step_details_screen.dart';
+import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
 class StepsPanelList extends StatefulWidget {
   const StepsPanelList({super.key, required this.workoutId});
@@ -43,61 +45,61 @@ class _StepsPanelListState extends State<StepsPanelList> {
     );
   }
 
+  void openDetails(BuildContext context, WorkoutStep step) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => WorkoutStepDetailsScreen(
+          step: step,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Option 1
-    // return SingleChildScrollView(
-    //   child: ExpansionPanelList(
-    //     expandIconColor: Theme.of(context).colorScheme.primaryContainer,
-    //     expandedHeaderPadding: EdgeInsets.all(8.0),
-    //     animationDuration: const Duration(milliseconds: 300),
-    //     expansionCallback: (index, bool isExpanded) {
-    //       setState(
-    //         () {
-    //           print(
-    //               'not $isExpanded is assigned to $index ${steps[index].expanded}');
-    //           steps[index].expanded = !isExpanded;
-    //         },
-    //       );
-    //     },
-    //     children: steps.map<ExpansionPanel>((WorkoutStep step) {
-    //       return ExpansionPanel(
-    //           backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-    //           isExpanded: step.expanded,
-    //           headerBuilder: (context, isExpanded) {
-    //             return ListTile(
-    //               title: Text(step.stepName),
-    //               textColor: Theme.of(context).colorScheme.primaryContainer,
-    //             );
-    //           },
-    //           body: ListTile(
-    //             title: Text(step.details),
-    //           ));
-    //     }).toList(),
-    //   ),
-    // );
+    // Notify the user if no steps added yet
+    if (steps.isEmpty) {
+      return const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: InformationTag(
+              child: Text(
+                'No steps to show!',
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
 
-    // Option 2
     return SingleChildScrollView(
       child: ListView.builder(
         shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: steps.length,
         itemBuilder: (context, index) {
           return Card(
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
-            child: ListTile(
-              title: Text(steps[index].stepName),
-              subtitle: Text('Type: ${steps[index].workoutType.name}'),
-              titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primaryContainer),
-              trailing: IconButton(
-                onPressed: () {
-                  showStepDialog(index);
-                },
-                icon: Icon(
-                  Icons.info_outline,
-                  color: Theme.of(context).colorScheme.background,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: ListTile(
+                title: Text(steps[index].stepName),
+                subtitle: Text(
+                  'Type: ${steps[index].workoutType.name}',
+                  style: Theme.of(context).listTileTheme.subtitleTextStyle,
+                ),
+                trailing: IconButton(
+                  onPressed: () {
+                    openDetails(context, steps[index]);
+                  },
+                  icon: Icon(
+                    Icons.info_outline,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ),
             ),
