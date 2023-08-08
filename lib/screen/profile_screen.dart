@@ -7,26 +7,35 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    var options = [
+      {
+        'title': 'Saved Workouts',
+        'icon': Icons.favorite_outline_rounded,
+      },
+      {
+        'title': 'Change password',
+        'icon': Icons.lock_outline_rounded,
+      },
+      {
+        'title': 'Logout',
+        'icon': Icons.logout,
+      }
+    ];
+
+    return Column(
       children: [
-        SizedBox(
+        const SizedBox(
           height: 25,
         ),
-        ProfileCard(),
-        SizedBox(
+        const ProfileCard(),
+        const SizedBox(
           height: 75,
         ),
-        OptionCard(
-          title: 'Saved Workouts',
-          icon: Icons.favorite_outline_rounded,
-        ),
-        OptionCard(
-          title: 'Change password',
-          icon: Icons.lock_outline_rounded,
-        ),
-        OptionCard(
-          title: 'Logout',
-          icon: Icons.logout,
+        // render each option
+        ...options.map(
+          (option) => OptionCard(
+              title: option['title'] as String,
+              icon: option['icon'] as IconData),
         ),
       ],
     );
