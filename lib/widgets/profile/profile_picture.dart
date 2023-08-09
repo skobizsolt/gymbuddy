@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
-class ProfilePicture extends StatefulWidget {
-  const ProfilePicture({super.key});
+class ProfilePicture extends StatelessWidget {
+  const ProfilePicture({super.key, this.profilePicture, this.size});
 
-  @override
-  State<ProfilePicture> createState() => _ProfilePictureState();
-}
+  final ImageProvider<Object>? profilePicture;
+  final double? size;
 
-class _ProfilePictureState extends State<ProfilePicture> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: size ?? 75,
+      width: size ?? 75,
       margin: const EdgeInsets.all(8),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-      ),
-      child: InkWell(
-        onTap: () {},
-        child: const Icon(
-          Icons.person_rounded,
-          size: 75,
+        image: DecorationImage(
+          image: profilePicture ?? MemoryImage(kTransparentImage),
+          fit: BoxFit.cover,
         ),
       ),
     );
