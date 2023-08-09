@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:gymbuddy/data/chat_history_data.dart';
 import 'package:gymbuddy/models/chat_history.dart';
 import 'package:gymbuddy/screen/chats/chat_conversation_screen.dart';
-import 'package:gymbuddy/widgets/profile/profile_picture.dart';
 import 'package:gymbuddy/widgets/utils/inputs/custom_text_input.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -21,12 +20,16 @@ class ChatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfilePicture getProfilePicture(String? url) {
+    Widget getProfilePicture(String? url) {
       Object picture =
           url == null ? MemoryImage(kTransparentImage) : NetworkImage(url);
-      return ProfilePicture(
-        profilePicture: picture as ImageProvider<Object>,
-        size: 50,
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: CircleAvatar(
+          radius: 32,
+          backgroundColor: Colors.transparent,
+          backgroundImage: picture as ImageProvider<Object>,
+        ),
       );
     }
 
@@ -47,17 +50,25 @@ class ChatsScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: CustomTextInput(
-                      labelText: 'Search',
-                      icon: Icons.search,
-                      height: 40,
+                    child: CustomSearchBar(
+                      height: 50,
                       color: Theme.of(context).primaryColorLight,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.person_add_alt_1),
-                    color: Theme.of(context).colorScheme.primary,
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Card(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(32),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.person_add_alt_1,
+                        ),
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                   ),
                 ],
               ),

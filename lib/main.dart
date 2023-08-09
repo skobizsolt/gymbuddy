@@ -39,75 +39,94 @@ ThemeData kDarkTheme(BuildContext context) {
   );
 
   return ThemeData(
-    useMaterial3: true,
-    primaryColor: discordGray,
-    primaryColorDark: discordBlack,
-    primaryColorLight: discordLightGray,
-    colorScheme: colorScheme,
-    appBarTheme: AppBarTheme.of(context).copyWith(
-      backgroundColor: discordBlack,
-      foregroundColor: orange,
-    ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: discordBlack,
-      selectedItemColor: orange,
-      unselectedItemColor: discordWhite,
-      type: BottomNavigationBarType.fixed,
-    ),
-    cardTheme: CardTheme.of(context).copyWith(
-      color: discordLightGray,
-      surfaceTintColor: discordLightGray,
-      elevation: 10,
-    ),
-    textTheme: GoogleFonts.latoTextTheme().copyWith(
-      titleLarge: const TextStyle(
-        color: orange,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
+      useMaterial3: true,
+      primaryColor: discordGray,
+      primaryColorDark: discordBlack,
+      primaryColorLight: discordLightGray,
+
+      // Color palette
+      colorScheme: colorScheme,
+      appBarTheme: AppBarTheme.of(context).copyWith(
+        backgroundColor: discordBlack,
+        foregroundColor: orange,
       ),
-      titleMedium: const TextStyle(
-        color: orange,
-        fontSize: 15,
+
+      // Bottom nav bar theme
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: discordBlack,
+        selectedItemColor: orange,
+        unselectedItemColor: discordWhite,
+        type: BottomNavigationBarType.fixed,
       ),
-      titleSmall: const TextStyle(
-        color: discordWhite,
-        fontSize: 13,
+
+      // Card theme
+      cardTheme: CardTheme.of(context).copyWith(
+        color: discordLightGray,
+        surfaceTintColor: discordLightGray,
+        elevation: 10,
       ),
-      bodyLarge: const TextStyle(
-        color: orange,
+
+      // Text themes
+      textTheme: GoogleFonts.latoTextTheme().copyWith(
+        titleLarge: const TextStyle(
+          color: orange,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+        titleMedium: const TextStyle(
+          color: orange,
+          fontSize: 15,
+        ),
+        titleSmall: const TextStyle(
+          color: discordWhite,
+          fontSize: 13,
+        ),
+        bodyLarge: const TextStyle(
+          color: orange,
+        ),
+        bodyMedium: const TextStyle(
+          color: orange,
+        ),
+        bodySmall: const TextStyle(
+          color: orange,
+        ),
       ),
-      bodyMedium: const TextStyle(
-        color: orange,
-      ),
-      bodySmall: const TextStyle(
-        color: orange,
-      ),
-    ),
-    dialogTheme: DialogTheme.of(context).copyWith(
-      backgroundColor: discordBlack,
-      titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: orange,
-          ),
-      contentTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: orange,
-          ),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: discordLightGray,
-        textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-              fontWeight: FontWeight.bold,
+
+      // Dialog theme
+      dialogTheme: DialogTheme.of(context).copyWith(
+        backgroundColor: discordBlack,
+        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+              color: orange,
+            ),
+        contentTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+              color: orange,
             ),
       ),
-    ),
-    listTileTheme: ListTileThemeData(
-      titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.bold,
-          ),
-      subtitleTextStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-            color: discordWhite,
-          ),
-    ),
-  );
+
+      // Elevated button theme
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: discordLightGray,
+          textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+      ),
+
+      // List tile theme
+      listTileTheme: ListTileThemeData(
+        titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+        subtitleTextStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+              color: discordWhite,
+            ),
+      ),
+      searchBarTheme: SearchBarThemeData(
+        textStyle: MaterialStatePropertyAll(
+          TextStyle().copyWith(color: orange),
+        ),
+        surfaceTintColor: MaterialStatePropertyAll(discordBlack),
+      ));
 }

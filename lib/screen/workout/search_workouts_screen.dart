@@ -59,7 +59,7 @@ class SearchWorkoutsSceen extends StatelessWidget {
               // Search Bar
               const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: CustomTextInput(labelText: 'Search', icon: Icons.search),
+                child: CustomSearchBar(),
               ),
 
               const SizedBox(
