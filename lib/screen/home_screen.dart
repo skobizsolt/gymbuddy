@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/widgets/home/home_option.dart';
+import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -66,8 +67,7 @@ class HomeScreen extends StatelessWidget {
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                 ),
-                CircleAvatar(
-                  backgroundColor: Colors.transparent,
+                ProfilePicture(
                   child: Icon(
                     Icons.person,
                     size: 32,

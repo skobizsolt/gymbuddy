@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 import 'package:gymbuddy/widgets/utils/themed_icon.dart';
 
 class ProfileCard extends StatefulWidget {
@@ -66,9 +67,8 @@ class _ProfileCardState extends State<ProfileCard> {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.transparent,
+                  ProfilePicture(
+                    size: 40,
                     child: Icon(
                       Icons.person,
                       size: 75,
