@@ -43,46 +43,56 @@ ThemeData kDarkTheme(BuildContext context) {
     primaryColor: discordGray,
     primaryColorDark: discordBlack,
     primaryColorLight: discordLightGray,
+
+    // Color palette
     colorScheme: colorScheme,
     appBarTheme: AppBarTheme.of(context).copyWith(
       backgroundColor: discordBlack,
       foregroundColor: orange,
     ),
+
+    // Bottom nav bar theme
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: discordBlack,
       selectedItemColor: orange,
       unselectedItemColor: discordWhite,
       type: BottomNavigationBarType.fixed,
     ),
+
+    // Card theme
     cardTheme: CardTheme.of(context).copyWith(
       color: discordLightGray,
       surfaceTintColor: discordLightGray,
       elevation: 10,
     ),
+
+    // Text themes
     textTheme: GoogleFonts.latoTextTheme().copyWith(
-      titleLarge: const TextStyle(
+      titleLarge: const TextStyle().copyWith(
         color: orange,
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ),
-      titleMedium: const TextStyle(
+      titleMedium: const TextStyle().copyWith(
         color: orange,
         fontSize: 15,
       ),
-      titleSmall: const TextStyle(
+      titleSmall: const TextStyle().copyWith(
         color: discordWhite,
         fontSize: 13,
       ),
-      bodyLarge: const TextStyle(
+      bodyLarge: const TextStyle().copyWith(
         color: orange,
       ),
-      bodyMedium: const TextStyle(
+      bodyMedium: const TextStyle().copyWith(
         color: orange,
       ),
-      bodySmall: const TextStyle(
+      bodySmall: const TextStyle().copyWith(
         color: orange,
       ),
     ),
+
+    // Dialog theme
     dialogTheme: DialogTheme.of(context).copyWith(
       backgroundColor: discordBlack,
       titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -92,6 +102,8 @@ ThemeData kDarkTheme(BuildContext context) {
             color: orange,
           ),
     ),
+
+    // Elevated button theme
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: discordLightGray,
@@ -100,6 +112,8 @@ ThemeData kDarkTheme(BuildContext context) {
             ),
       ),
     ),
+
+    // List tile theme
     listTileTheme: ListTileThemeData(
       titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
             color: colorScheme.primary,
@@ -109,5 +123,17 @@ ThemeData kDarkTheme(BuildContext context) {
             color: discordWhite,
           ),
     ),
+    searchBarTheme: SearchBarThemeData(
+      textStyle: MaterialStatePropertyAll(
+        const TextStyle().copyWith(color: orange),
+      ),
+      surfaceTintColor: const MaterialStatePropertyAll(discordBlack),
+    ),
+    bottomSheetTheme: const BottomSheetThemeData().copyWith(
+        backgroundColor: colorScheme.primary,
+        shape: Border.all(
+          style: BorderStyle.none,
+        ),
+        elevation: 0),
   );
 }
