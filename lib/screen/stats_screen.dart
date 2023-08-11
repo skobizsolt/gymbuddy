@@ -5,11 +5,12 @@ class StatisticsSreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text(
         'Stats screen',
         style: TextStyle(
-            fontSize: 48, color: Theme.of(context).textTheme.titleLarge!.color),
+          fontSize: 48,
+        ),
       ),
     );
   }

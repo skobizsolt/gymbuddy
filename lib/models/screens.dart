@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class Screen {
   Screen({
-    required this.appBar,
+    this.appBar,
     required this.body,
   });
 
-  PreferredSizeWidget appBar;
+  PreferredSizeWidget? appBar;
   Widget body;
 }
