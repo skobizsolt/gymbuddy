@@ -17,6 +17,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: kDarkTheme(context),
       home: const TabsScreen(),
+      // home: RegisterScreen(),
     );
   }
 }
@@ -88,6 +89,15 @@ ThemeData kDarkTheme(BuildContext context) {
         color: orange,
       ),
       bodySmall: const TextStyle().copyWith(
+        color: orange,
+      ),
+      displayLarge: const TextStyle().copyWith(
+        color: orange,
+      ),
+      displayMedium: const TextStyle().copyWith(
+        color: orange,
+      ),
+      displaySmall: const TextStyle().copyWith(
         color: orange,
       ),
     ),
