@@ -41,7 +41,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   // Password
                   CustomTextInput(
-                    labelText: 'Password again',
+                    labelText: 'Password',
                     color: Theme.of(context).primaryColorDark,
                     isObscured: true,
                   ),

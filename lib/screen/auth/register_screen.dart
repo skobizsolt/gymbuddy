@@ -46,7 +46,7 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   // Password
                   CustomTextInput(
-                    labelText: 'Password',
+                    labelText: 'Password again',
                     color: Theme.of(context).primaryColorDark,
                     isObscured: true,
                   ),

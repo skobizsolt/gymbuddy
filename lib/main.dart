@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gymbuddy/screen/tabs.dart';
+import 'package:gymbuddy/screen/auth/login_screen.dart';
 
 void main() {
   runApp(const ProviderScope(
@@ -16,8 +16,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: kDarkTheme(context),
-      home: const TabsScreen(),
-      // home: RegisterScreen(),
+      home: LoginScreen(),
     );
   }
 }
