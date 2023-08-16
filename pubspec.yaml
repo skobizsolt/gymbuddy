@@ -39,6 +39,8 @@ dependencies:
   flutter_riverpod: ^2.3.6
   ionicons:
   transparent_image:
+  firebase_core: ^2.15.1
+  firebase_auth: ^4.7.3
 
 dev_dependencies:
   flutter_test:

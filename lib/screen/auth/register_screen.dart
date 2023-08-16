@@ -4,7 +4,14 @@ import 'package:gymbuddy/widgets/utils/inputs/custom_text_input.dart';
 import 'package:gymbuddy/widgets/utils/wide_button.dart';
 
 class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
+  RegisterScreen({super.key});
+
+  final controllers = {
+    "email": TextEditingController(),
+    "username": TextEditingController(),
+    "password": TextEditingController(),
+    "passwordAgain": TextEditingController()
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +55,13 @@ class RegisterScreen extends StatelessWidget {
                   CustomTextInput(
                     labelText: 'Password again',
                     color: Theme.of(context).primaryColorDark,
-                    isObscured: true,
+                    obscureText: true,
                   ),
                   // Repeat password
                   CustomTextInput(
                     labelText: 'Password',
                     color: Theme.of(context).primaryColorDark,
-                    isObscured: true,
+                    obscureText: true,
                   ),
                   SizedBox(
                     height: 10,

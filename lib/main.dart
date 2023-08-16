@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gymbuddy/screen/auth/login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:gymbuddy/screen/auth/auth_page.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const ProviderScope(
     child: App(),
   ));
@@ -16,7 +22,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: kDarkTheme(context),
-      home: LoginScreen(),
+      home: AuthPage(),
     );
   }
 }

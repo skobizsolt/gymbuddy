@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbuddy/service/auth/logout_service.dart';
 import 'package:gymbuddy/widgets/profile/option_card.dart';
 import 'package:gymbuddy/widgets/profile/profile_card.dart';
 
@@ -7,21 +8,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var options = [
-      {
-        'title': 'Saved Workouts',
-        'icon': Icons.favorite_outline_rounded,
-      },
-      {
-        'title': 'Change password',
-        'icon': Icons.lock_outline_rounded,
-      },
-      {
-        'title': 'Logout',
-        'icon': Icons.logout,
-      }
-    ];
-
     return Column(
       children: [
         const SizedBox(
@@ -31,11 +17,25 @@ class ProfileScreen extends StatelessWidget {
         const SizedBox(
           height: 75,
         ),
+
         // render each option
-        ...options.map(
-          (option) => OptionCard(
-              title: option['title'] as String,
-              icon: option['icon'] as IconData),
+        // Saved workouts
+        OptionCard(
+          title: 'Saved Workouts',
+          icon: Icons.favorite_outline_rounded,
+        ),
+
+        // Change password
+        OptionCard(
+          title: 'Change password',
+          icon: Icons.lock_outline_rounded,
+        ),
+
+        //Log out
+        OptionCard(
+          title: 'Logout',
+          icon: Icons.logout,
+          onTap: signOut,
         ),
       ],
     );

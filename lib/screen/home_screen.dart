@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbuddy/global/user_data.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/widgets/home/home_option.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
@@ -61,7 +62,7 @@ class HomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Hi, User!',
+                  'Hi, ${user!.email}!',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         fontSize: 28,
                         color: Theme.of(context).colorScheme.onPrimaryContainer,

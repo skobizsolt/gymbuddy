@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class OptionCard extends StatefulWidget {
@@ -11,7 +9,7 @@ class OptionCard extends StatefulWidget {
   });
   final String title;
   final IconData icon;
-  final Void Function()? onTap;
+  final Function()? onTap;
 
   @override
   State<OptionCard> createState() => _OptionCardState();

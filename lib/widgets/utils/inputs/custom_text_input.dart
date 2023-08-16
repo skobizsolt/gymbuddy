@@ -4,24 +4,27 @@ import 'package:gymbuddy/layout/input_layout.dart';
 class CustomTextInput extends StatelessWidget {
   const CustomTextInput(
       {super.key,
+      this.controller,
       required this.labelText,
       this.icon,
       this.height,
       this.color,
-      this.isObscured});
+      this.obscureText});
 
+  final dynamic controller;
   final String labelText;
   final IconData? icon;
   final double? height;
   final Color? color;
-  final bool? isObscured;
+  final bool? obscureText;
 
   @override
   Widget build(BuildContext context) {
     return InputLayout(
       color: color,
       child: TextField(
-        obscureText: isObscured ?? false,
+        controller: controller,
+        obscureText: obscureText ?? false,
         decoration: InputDecoration(
           icon: icon == null
               ? null
