@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbuddy/data/chat_history_data.dart';
 import 'package:gymbuddy/models/chat_history.dart';
 import 'package:gymbuddy/screen/chats/chat_conversation_screen.dart';
-import 'package:gymbuddy/widgets/utils/inputs/custom_searchbar.dart';
+import 'package:gymbuddy/components/inputs/custom_searchbar.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 import 'package:transparent_image/transparent_image.dart';

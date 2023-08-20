@@ -41,6 +41,7 @@ dependencies:
   transparent_image:
   firebase_core: ^2.15.1
   firebase_auth: ^4.7.3
+  email_validator: '^2.1.16'
 
 dev_dependencies:
   flutter_test:

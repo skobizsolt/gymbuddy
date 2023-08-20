@@ -61,12 +61,16 @@ class HomeScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Hi, ${user!.email}!',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        fontSize: 28,
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
+                Flexible(
+                  child: Text(
+                    overflow: TextOverflow.ellipsis,
+                    'Hi, ${user!.email}!',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          fontSize: 28,
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                  ),
                 ),
                 ProfilePicture(
                   child: Icon(

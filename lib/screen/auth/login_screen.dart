@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/screen/auth/register_screen.dart';
-import 'package:gymbuddy/service/auth/login_email_service.dart';
+import 'package:gymbuddy/service/auth/email_auth_service.dart';
 import 'package:gymbuddy/widgets/utils/custom_text_button.dart';
-import 'package:gymbuddy/widgets/utils/inputs/custom_text_input.dart';
+import 'package:gymbuddy/components/inputs/custom_text_input.dart';
 import 'package:gymbuddy/widgets/utils/wide_button.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  final void Function() onPressed;
+  LoginScreen({
+    super.key,
+    required this.onPressed,
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -32,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Headers
                     Image.asset(
                       'lib/assets/images/logo.png',
                       cacheHeight: 144,
@@ -46,12 +50,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: 50,
                     ),
+
                     // Email field
                     CustomTextInput(
                       controller: controllers["email"],
                       labelText: 'Email',
                       color: Theme.of(context).primaryColorDark,
                     ),
+
                     // Password
                     CustomTextInput(
                       controller: controllers["password"],
@@ -59,15 +65,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Theme.of(context).primaryColorDark,
                       obscureText: true,
                     ),
+
+                    // Forgot password
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         CustomTextButton(
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => RegisterScreen(),
-                            ),
-                          ),
+                          onPressed: () {},
                           text: 'Forgot password?',
                           textStyle: Theme.of(context).textTheme.titleSmall,
                         ),
@@ -76,18 +80,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: 10,
                     ),
+
+                    // Log in the user
                     WideButton(
                       text: 'Login',
                       onPressed: () {
                         signUserIn(context, controllers);
                       },
                     ),
+
+                    // Switch to register
                     CustomTextButton(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => RegisterScreen(),
-                        ),
-                      ),
+                      onPressed: widget.onPressed,
                       text: 'New here? Register a new account',
                     )
                   ],

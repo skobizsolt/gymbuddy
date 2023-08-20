@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 
 class CustomTextInput extends StatelessWidget {
-  const CustomTextInput(
-      {super.key,
-      this.controller,
-      required this.labelText,
-      this.icon,
-      this.height,
-      this.color,
-      this.obscureText});
-
   final dynamic controller;
   final String labelText;
   final IconData? icon;
   final double? height;
   final Color? color;
   final bool? obscureText;
+
+  CustomTextInput({
+    super.key,
+    this.controller,
+    required this.labelText,
+    this.icon,
+    this.height,
+    this.color,
+    this.obscureText,
+  });
 
   @override
   Widget build(BuildContext context) {

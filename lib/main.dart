@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:gymbuddy/screen/auth/auth_page.dart';
+import 'package:gymbuddy/screen/auth/auth_screen.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -22,7 +22,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: kDarkTheme(context),
-      home: AuthPage(),
+      home: AuthScreen(),
     );
   }
 }

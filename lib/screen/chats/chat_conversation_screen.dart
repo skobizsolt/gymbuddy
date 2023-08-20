@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/widgets/utils/inputs/custom_text_input.dart';
+import 'package:gymbuddy/components/inputs/custom_text_input.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 import 'package:transparent_image/transparent_image.dart';
 
