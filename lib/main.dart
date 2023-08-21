@@ -138,17 +138,29 @@ ThemeData kDarkTheme(BuildContext context) {
             color: discordWhite,
           ),
     ),
+
+    // Search bar theme
     searchBarTheme: SearchBarThemeData(
       textStyle: MaterialStatePropertyAll(
         const TextStyle().copyWith(color: orange),
       ),
       surfaceTintColor: const MaterialStatePropertyAll(discordBlack),
     ),
+
+    // Bottom sheet theme
     bottomSheetTheme: const BottomSheetThemeData().copyWith(
-        backgroundColor: colorScheme.primary,
-        shape: Border.all(
-          style: BorderStyle.none,
-        ),
-        elevation: 0),
+      backgroundColor: colorScheme.primary,
+      shape: Border.all(
+        style: BorderStyle.none,
+      ),
+      elevation: 0,
+    ),
+
+    // Text input decoration
+    inputDecorationTheme: InputDecorationTheme().copyWith(
+      hintStyle: TextStyle(
+        color: orange,
+      ),
+    ),
   );
 }

@@ -1,24 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
+import 'package:gymbuddy/models/auth/auth_dto.dart';
 
-enum _AuthenticationType { login, register }
+enum AuthenticationType { login, register }
 
-void signUserIn(final BuildContext context,
-    final Map<String, TextEditingController> controllers) {
-  _authenticate(context, controllers, _AuthenticationType.login);
+void signUserIn(final BuildContext context, final AuthDto request) {
+  _authenticate(context, request, AuthenticationType.login);
 }
 
-void signUserUp(final BuildContext context,
-    final Map<String, TextEditingController> controllers) async {
-  _authenticate(context, controllers, _AuthenticationType.register);
+void signUserUp(final BuildContext context, final AuthDto request) async {
+  _authenticate(context, request, AuthenticationType.register);
   // username has to be stored (TODO)
 }
 
-void _authenticate(
-    final BuildContext context,
-    final Map<String, TextEditingController> controllers,
-    final _AuthenticationType type) async {
+void _authenticate(final BuildContext context, final AuthDto request,
+    final AuthenticationType type) async {
   // show loading circle
   showDialog(
     context: context,
@@ -32,17 +29,17 @@ void _authenticate(
   // Try authentication
   try {
     // Case: login
-    if (type == _AuthenticationType.login) {
+    if (type == AuthenticationType.login) {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: controllers["email"]!.text,
-        password: controllers["password"]!.text,
+        email: request.email,
+        password: request.password,
       );
     }
     // Case: Sign up
-    if (type == _AuthenticationType.register) {
+    if (type == AuthenticationType.register) {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: controllers["email"]!.text,
-        password: controllers["password"]!.text,
+        email: request.email,
+        password: request.password,
       );
     }
 
