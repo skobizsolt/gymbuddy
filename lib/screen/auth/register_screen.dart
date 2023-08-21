@@ -24,17 +24,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     var validForm = _form.currentState!.validate();
 
     if (validForm) {
-      _form.currentState!.save();
-      // Check if passwords match
-      if (_newUser.password != _newUser.passwordAgain) {
-        showErrorSnackBar(context, "Passwords not match!");
-        return;
-      }
-      final AuthDto _authDto = AuthDto();
-      _authDto.email = _newUser.email;
-      _authDto.password = _newUser.password;
-      signUserUp(context, _authDto);
+      return;
     }
+    _form.currentState!.save();
+    // Check if passwords not match
+    if (_newUser.password != _newUser.passwordAgain) {
+      showErrorSnackBar(context, "Passwords not match!");
+      return;
+    }
+    final AuthDto _authDto = AuthDto();
+    _authDto.email = _newUser.email;
+    _authDto.password = _newUser.password;
+    signUserUp(context, _authDto);
   }
 
   @override

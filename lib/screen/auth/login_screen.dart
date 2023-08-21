@@ -25,9 +25,10 @@ class _LoginScreenState extends State<LoginScreen> {
     var validForm = _form.currentState!.validate();
 
     if (validForm) {
-      _form.currentState!.save();
-      signUserIn(context, _authDto);
+      return;
     }
+    _form.currentState!.save();
+    signUserIn(context, _authDto);
   }
 
   @override
