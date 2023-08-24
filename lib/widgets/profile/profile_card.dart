@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gymbuddy/models/user_dto.dart';
+import 'package:gymbuddy/service/profile/profile_data_service.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 import 'package:gymbuddy/widgets/utils/themed_icon.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class ProfileCard extends StatefulWidget {
   const ProfileCard({super.key});
@@ -10,21 +14,23 @@ class ProfileCard extends StatefulWidget {
 }
 
 class _ProfileCardState extends State<ProfileCard> {
-  Widget _profileData(BuildContext context) {
+  final _data = ProfileDataService().profileData;
+
+  Widget _profileData(BuildContext context, AsyncSnapshot<UserDto> snapshot) {
     List<List<Object?>> content = [
       [
         // Full name
-        "Your name",
+        '${snapshot.data!.firstName} ${snapshot.data!.lastName}',
         Theme.of(context).textTheme.titleLarge,
       ],
       [
         // Username
-        "user099",
+        snapshot.data!.username,
         Theme.of(context).textTheme.titleMedium,
       ],
       [
         // Registered
-        "Joined: 2023.01.01",
+        "Joined: ${DateFormat.yMMMd('en_CA').format(snapshot.data!.registeredOn)}",
         Theme.of(context).textTheme.titleSmall,
       ],
     ];
@@ -58,41 +64,62 @@ class _ProfileCardState extends State<ProfileCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  ProfilePicture(
-                    size: 40,
-                    child: Icon(
-                      Icons.person,
-                      size: 75,
-                      color: Theme.of(context).colorScheme.tertiary,
-                    ),
-                  ), // Profile picture goes here
-                  const SizedBox(
-                    width: 10,
+    return FutureBuilder(
+        future: _data,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: double.infinity,
+                child: Card(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 48),
                   ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+              ),
+            );
+          }
+
+          // Allows to set different locales
+          initializeDateFormatting();
+
+          return Container(
+            padding: const EdgeInsets.all(8),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        _profileData(context),
-                        _editProfileContent(context),
+                        ProfilePicture(
+                          size: 40,
+                          child: Icon(
+                            Icons.person,
+                            size: 75,
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                        ), // Profile picture goes here
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _profileData(context, snapshot),
+                              _editProfileContent(context),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
+        });
   }
 }

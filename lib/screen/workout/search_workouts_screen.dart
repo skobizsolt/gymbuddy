@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/widgets/utils/inputs/custom_searchbar.dart';
+import 'package:gymbuddy/components/inputs/custom_searchbar.dart';
 import 'package:gymbuddy/widgets/workout/search_tile.dart';
 
 class SearchWorkoutsSceen extends StatelessWidget {

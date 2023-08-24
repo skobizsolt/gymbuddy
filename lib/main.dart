@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gymbuddy/screen/tabs.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:gymbuddy/screen/auth/auth_screen.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const ProviderScope(
     child: App(),
   ));
@@ -16,7 +22,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: kDarkTheme(context),
-      home: const TabsScreen(),
+      locale: Locale('hu', 'HU'),
+      home: AuthScreen(),
     );
   }
 }
@@ -90,6 +97,15 @@ ThemeData kDarkTheme(BuildContext context) {
       bodySmall: const TextStyle().copyWith(
         color: orange,
       ),
+      displayLarge: const TextStyle().copyWith(
+        color: orange,
+      ),
+      displayMedium: const TextStyle().copyWith(
+        color: orange,
+      ),
+      displaySmall: const TextStyle().copyWith(
+        color: orange,
+      ),
     ),
 
     // Dialog theme
@@ -123,17 +139,29 @@ ThemeData kDarkTheme(BuildContext context) {
             color: discordWhite,
           ),
     ),
+
+    // Search bar theme
     searchBarTheme: SearchBarThemeData(
       textStyle: MaterialStatePropertyAll(
         const TextStyle().copyWith(color: orange),
       ),
       surfaceTintColor: const MaterialStatePropertyAll(discordBlack),
     ),
+
+    // Bottom sheet theme
     bottomSheetTheme: const BottomSheetThemeData().copyWith(
-        backgroundColor: colorScheme.primary,
-        shape: Border.all(
-          style: BorderStyle.none,
-        ),
-        elevation: 0),
+      backgroundColor: colorScheme.primary,
+      shape: Border.all(
+        style: BorderStyle.none,
+      ),
+      elevation: 0,
+    ),
+
+    // Text input decoration
+    inputDecorationTheme: InputDecorationTheme().copyWith(
+      hintStyle: TextStyle(
+        color: orange,
+      ),
+    ),
   );
 }

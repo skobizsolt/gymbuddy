@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbuddy/data/chat_history_data.dart';
 import 'package:gymbuddy/models/chat_history.dart';
 import 'package:gymbuddy/screen/chats/chat_conversation_screen.dart';
-import 'package:gymbuddy/widgets/utils/inputs/custom_searchbar.dart';
+import 'package:gymbuddy/components/inputs/custom_searchbar.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -34,7 +34,7 @@ class ChatsScreen extends StatelessWidget {
           children: [
             // Buttons
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
                   Expanded(
@@ -84,9 +84,12 @@ class ChatsScreen extends StatelessWidget {
                       vertical: VisualDensity.maximumDensity,
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    leading: ProfilePicture(
-                      picture: picture,
-                      size: 32,
+                    leading: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ProfilePicture(
+                        picture: picture,
+                        size: 32,
+                      ),
                     ),
                     title: Text(orderedHistory[index].receiverUserName),
                     subtitle: Text(orderedHistory[index].lastMessage),

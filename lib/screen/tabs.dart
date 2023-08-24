@@ -16,7 +16,7 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   List<Screen> screens = [
     Screen(
-      body: const HomeScreen(),
+      body: HomeScreen(),
     ),
     Screen(
       appBar: AppBar(

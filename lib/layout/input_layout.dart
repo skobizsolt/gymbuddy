@@ -12,7 +12,7 @@ class InputLayout extends StatelessWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(12)),
       child: Card(
-        color: color ?? Theme.of(context).colorScheme.background,
+        color: color ?? Theme.of(context).primaryColorDark,
         child: Container(
           height: height,
           padding: const EdgeInsets.symmetric(
