@@ -7,7 +7,7 @@ class InputValidator {
     if (_isValidValue(value) && value!.trim().length > PASSWORD_LENGTH) {
       return null;
     }
-    return "Password must be at least " + "$PASSWORD_LENGTH characters long";
+    return "Password must be at least " + "$PASSWORD_LENGTH characters long!";
   }
 
   validateEmail(final String? value) {
@@ -15,14 +15,21 @@ class InputValidator {
       return null;
     }
 
-    return "Please enter a valid email";
+    return "Please enter a valid email!";
   }
 
   validateUsername(final String? value) {
     if (_isValidValue(value)) {
       return null;
     }
-    return "Please enter a valid username";
+    return "Please enter a valid username!";
+  }
+
+  validateBasicText(final String? value, final String hintText) {
+    if (_isValidValue(value)) {
+      return null;
+    }
+    return "Please enter a valid ${hintText.toLowerCase()}!";
   }
 
   _isValidValue(final String? value) {

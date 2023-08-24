@@ -1,10 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
-import 'package:gymbuddy/layout/input_layout.dart';
+import 'package:gymbuddy/components/inputs/default_text_form_field.dart';
+import 'package:gymbuddy/components/inputs/email_form_field.dart';
+import 'package:gymbuddy/components/inputs/password_form_field.dart';
+import 'package:gymbuddy/components/inputs/username_form_field.dart';
+import 'package:gymbuddy/global/user_data.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
 import 'package:gymbuddy/models/auth/new_user_dto.dart';
 import 'package:gymbuddy/service/auth/email_auth_service.dart';
-import 'package:gymbuddy/service/auth/validators.dart';
 import 'package:gymbuddy/widgets/utils/custom_text_button.dart';
 import 'package:gymbuddy/widgets/utils/wide_button.dart';
 
@@ -19,11 +24,12 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final NewUserDto _newUser = NewUserDto();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
+  bool _isAuthenticating = false;
 
   void submitForm() {
     var validForm = _form.currentState!.validate();
 
-    if (validForm) {
+    if (!validForm) {
       return;
     }
     _form.currentState!.save();
@@ -35,7 +41,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final AuthDto _authDto = AuthDto();
     _authDto.email = _newUser.email;
     _authDto.password = _newUser.password;
-    signUserUp(context, _authDto);
+    setState(() {
+      _isAuthenticating = true;
+    });
+    signUserUp(context, _authDto).then((value) => registerUserData(value));
+  }
+
+  void registerUserData(UserCredential? value) async {
+    if (value == null || value.user == null) {
+      return;
+    }
+    await FirebaseFirestore.instance
+        .collection(FIRESTORE_USER_COLLECTION)
+        .doc(value.user!.uid)
+        .set({
+      'email': value.user!.email,
+      'username': _newUser.username,
+      'first_name': _newUser.firstName,
+      'last_name': _newUser.lastName
+    });
   }
 
   @override
@@ -54,6 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      // App Icon
                       Image.asset(
                         'lib/assets/images/logo.png',
                         cacheHeight: 144,
@@ -61,6 +86,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       SizedBox(
                         height: 10,
                       ),
+
+                      // Header
                       Text(
                         'Join our community! ❤',
                         style: Theme.of(context).textTheme.displaySmall,
@@ -70,127 +97,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 50,
                       ),
 
-                      // First and last name
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: InputLayout(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextFormField(
-                                  keyboardType: TextInputType.emailAddress,
-                                  decoration: InputDecoration.collapsed(
-                                    hintText: 'First name',
-                                  ),
-                                  validator: (value) {
-                                    return InputValidator()
-                                        .validateUsername(value);
-                                  },
-                                  onSaved: (newValue) {
-                                    _newUser.firstName = newValue!;
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: InputLayout(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextFormField(
-                                  keyboardType: TextInputType.emailAddress,
-                                  decoration: InputDecoration.collapsed(
-                                    hintText: 'Last name',
-                                  ),
-                                  validator: (value) {
-                                    return InputValidator()
-                                        .validateUsername(value);
-                                  },
-                                  onSaved: (newValue) {
-                                    _newUser.lastName = newValue!;
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                      // First Name
+                      DefaultTextFormField(
+                        hintText: 'First Name',
+                        onSaved: (newValue) {
+                          _newUser.firstName = newValue!;
+                        },
+                      ),
+
+                      // Last name
+                      DefaultTextFormField(
+                        hintText: 'Last Name',
+                        onSaved: (newValue) {
+                          _newUser.lastName = newValue!;
+                        },
                       ),
 
                       // Email field
-                      InputLayout(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration.collapsed(
-                              hintText: 'Email',
-                            ),
-                            validator: (value) {
-                              return InputValidator().validateEmail(value);
-                            },
-                            onSaved: (newValue) {
-                              _newUser.email = newValue!;
-                            },
-                          ),
-                        ),
+                      EmailFormField(
+                        onSaved: (newValue) {
+                          _newUser.email = newValue!;
+                        },
                       ),
 
                       // Username
-                      InputLayout(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration.collapsed(
-                              hintText: 'Username',
-                            ),
-                            validator: (value) {
-                              return InputValidator().validateUsername(value);
-                            },
-                            onSaved: (newValue) {
-                              _newUser.username = newValue!;
-                            },
-                          ),
-                        ),
+                      UsernameFormField(
+                        onSaved: (newValue) {
+                          _newUser.username = newValue!;
+                        },
                       ),
 
                       // Password
-                      InputLayout(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            decoration: InputDecoration.collapsed(
-                              hintText: 'Password',
-                            ),
-                            obscureText: true,
-                            validator: (value) {
-                              return InputValidator().validatePassword(value);
-                            },
-                            onSaved: (newValue) {
-                              _newUser.password = newValue!;
-                            },
-                          ),
-                        ),
+                      PasswordFormField(
+                        hintText: 'Password',
+                        onsaved: (newValue) {
+                          _newUser.password = newValue!;
+                        },
                       ),
 
                       // Repeat password
-                      InputLayout(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            decoration: InputDecoration.collapsed(
-                              hintText: 'Password again',
-                            ),
-                            obscureText: true,
-                            validator: (value) {
-                              return InputValidator().validatePassword(value);
-                            },
-                            onSaved: (newValue) {
-                              _newUser.passwordAgain = newValue!;
-                            },
-                          ),
-                        ),
+                      PasswordFormField(
+                        hintText: 'Password again',
+                        onsaved: (newValue) {
+                          _newUser.passwordAgain = newValue!;
+                        },
                       ),
 
                       SizedBox(
@@ -198,7 +148,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
 
                       // Register a new user
-                      WideButton(text: 'Register now!', onPressed: submitForm),
+                      _isAuthenticating
+                          ? CircularProgressIndicator()
+                          : WideButton(
+                              text: 'Register now!', onPressed: submitForm),
 
                       // Switch back to login screen
                       CustomTextButton(

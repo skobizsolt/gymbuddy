@@ -9,45 +9,31 @@ void signUserIn(final BuildContext context, final AuthDto request) {
   _authenticate(context, request, AuthenticationType.login);
 }
 
-void signUserUp(final BuildContext context, final AuthDto request) async {
-  _authenticate(context, request, AuthenticationType.register);
+Future<UserCredential?> signUserUp(
+    final BuildContext context, final AuthDto request) async {
+  return _authenticate(context, request, AuthenticationType.register);
   // username has to be stored (TODO)
 }
 
-void _authenticate(final BuildContext context, final AuthDto request,
-    final AuthenticationType type) async {
-  // show loading circle
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    },
-  );
-
+Future<UserCredential?> _authenticate(final BuildContext context,
+    final AuthDto request, final AuthenticationType type) async {
   // Try authentication
   try {
     // Case: login
     if (type == AuthenticationType.login) {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      return await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: request.email,
         password: request.password,
       );
     }
     // Case: Sign up
     if (type == AuthenticationType.register) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      return await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: request.email,
         password: request.password,
       );
     }
-
-    // Pop the loading circle
-    Navigator.pop(context);
   } on FirebaseAuthException catch (e) {
-    // Pop the loading circle
-    Navigator.pop(context);
     FocusManager.instance.primaryFocus?.unfocus();
     // User not found
     if (e.code == 'invalid-email' || e.code == 'user-not-found') {
@@ -59,4 +45,5 @@ void _authenticate(final BuildContext context, final AuthDto request,
       showErrorSnackBar(context, 'Incorrect password');
     }
   }
+  return null;
 }

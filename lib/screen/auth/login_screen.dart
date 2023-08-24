@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/layout/input_layout.dart';
+import 'package:gymbuddy/components/inputs/email_form_field.dart';
+import 'package:gymbuddy/components/inputs/password_form_field.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
 import 'package:gymbuddy/service/auth/email_auth_service.dart';
-import 'package:gymbuddy/service/auth/validators.dart';
 import 'package:gymbuddy/widgets/utils/custom_text_button.dart';
 import 'package:gymbuddy/widgets/utils/wide_button.dart';
 
@@ -20,14 +20,18 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final AuthDto _authDto = AuthDto();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
+  bool _isAuthenticating = false;
 
   void submitForm() {
     var validForm = _form.currentState!.validate();
 
-    if (validForm) {
+    if (!validForm) {
       return;
     }
     _form.currentState!.save();
+    setState(() {
+      _isAuthenticating = true;
+    });
     signUserIn(context, _authDto);
   }
 
@@ -47,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Headers
+                      // App icon
                       Image.asset(
                         'lib/assets/images/logo.png',
                         cacheHeight: 144,
@@ -55,6 +59,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: 10,
                       ),
+
+                      // Header
                       Text(
                         'Greetings!',
                         style: Theme.of(context).textTheme.displaySmall,
@@ -64,41 +70,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                       // Email field
-                      InputLayout(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration.collapsed(
-                              hintText: 'Email',
-                            ),
-                            validator: (value) {
-                              return InputValidator().validateEmail(value);
-                            },
-                            onSaved: (newValue) {
-                              _authDto.email = newValue!;
-                            },
-                          ),
-                        ),
+                      EmailFormField(
+                        onSaved: (newValue) {
+                          _authDto.email = newValue!;
+                        },
                       ),
 
                       // Password
-                      InputLayout(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            decoration: InputDecoration.collapsed(
-                              hintText: 'Password',
-                            ),
-                            obscureText: true,
-                            validator: (value) {
-                              return InputValidator().validatePassword(value);
-                            },
-                            onSaved: (newValue) {
-                              _authDto.password = newValue!;
-                            },
-                          ),
-                        ),
+                      PasswordFormField(
+                        hintText: 'Password',
+                        onsaved: (newValue) {
+                          _authDto.password = newValue!;
+                        },
                       ),
 
                       // Forgot password
@@ -117,10 +100,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                       // Log in the user
-                      WideButton(
-                        text: 'Login',
-                        onPressed: submitForm,
-                      ),
+                      _isAuthenticating
+                          ? CircularProgressIndicator()
+                          : WideButton(
+                              text: 'Login',
+                              onPressed: submitForm,
+                            ),
 
                       // Switch to register
                       CustomTextButton(

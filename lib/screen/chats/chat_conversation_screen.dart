@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/components/inputs/custom_text_input.dart';
+import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -45,10 +45,14 @@ class ConversationScreen extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: CustomTextInput(
-                labelText: 'Say something...',
+              child: InputLayout(
                 height: 40,
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
+                child: TextFormField(
+                  decoration: InputDecoration().copyWith(
+                    hintText: 'Say something...',
+                  ),
+                ),
               ),
             ),
             const SizedBox(
