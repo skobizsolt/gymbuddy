@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
-import 'package:gymbuddy/service/auth/validators.dart';
+import 'package:gymbuddy/service/validators.dart';
 
 class UsernameFormField extends StatelessWidget {
   final Function(String?)? onSaved;

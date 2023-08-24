@@ -34,7 +34,7 @@ class ChatsScreen extends StatelessWidget {
           children: [
             // Buttons
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
                   Expanded(
@@ -84,9 +84,12 @@ class ChatsScreen extends StatelessWidget {
                       vertical: VisualDensity.maximumDensity,
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    leading: ProfilePicture(
-                      picture: picture,
-                      size: 32,
+                    leading: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ProfilePicture(
+                        picture: picture,
+                        size: 32,
+                      ),
                     ),
                     title: Text(orderedHistory[index].receiverUserName),
                     subtitle: Text(orderedHistory[index].lastMessage),

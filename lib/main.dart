@@ -22,6 +22,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: kDarkTheme(context),
+      locale: Locale('hu', 'HU'),
       home: AuthScreen(),
     );
   }

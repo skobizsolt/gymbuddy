@@ -10,16 +10,13 @@ class ProfilePicture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: CircleAvatar(
-        radius: size,
-        backgroundColor: Colors.transparent,
-        backgroundImage: picture == null
-            ? MemoryImage(kTransparentImage)
-            : picture as ImageProvider<Object>,
-        child: child,
-      ),
+    return CircleAvatar(
+      radius: size,
+      backgroundColor: Colors.transparent,
+      backgroundImage: picture == null
+          ? MemoryImage(kTransparentImage)
+          : picture as ImageProvider<Object>,
+      child: child,
     );
   }
 }
