@@ -58,7 +58,26 @@ class HomeScreen extends StatelessWidget {
       future: homeData,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                        height: 25,
+                        width: 25,
+                        child: CircularProgressIndicator()),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text('Fetching data...')
+                  ],
+                )
+              ],
+            ),
+          );
         }
 
         return DribbleLayout(

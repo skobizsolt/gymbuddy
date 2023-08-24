@@ -5,14 +5,14 @@ import 'package:gymbuddy/models/auth/auth_dto.dart';
 
 enum AuthenticationType { login, register }
 
-void signUserIn(final BuildContext context, final AuthDto request) {
-  _authenticate(context, request, AuthenticationType.login);
+Future<UserCredential?> signUserIn(
+    final BuildContext context, final AuthDto request) {
+  return _authenticate(context, request, AuthenticationType.login);
 }
 
 Future<UserCredential?> signUserUp(
     final BuildContext context, final AuthDto request) async {
   return _authenticate(context, request, AuthenticationType.register);
-  // username has to be stored (TODO)
 }
 
 Future<UserCredential?> _authenticate(final BuildContext context,

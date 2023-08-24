@@ -68,19 +68,13 @@ class _ProfileCardState extends State<ProfileCard> {
         future: _data,
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              width: double.infinity,
-              child: Card(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 32),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox(width: 5),
-                      Text('Loading profile data')
-                    ],
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: double.infinity,
+                child: Card(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 48),
                   ),
                 ),
               ),

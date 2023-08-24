@@ -20,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final AuthDto _authDto = AuthDto();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
-  bool _isAuthenticating = false;
+  static bool _isAuthenticating = false;
 
   void submitForm() {
     var validForm = _form.currentState!.validate();
@@ -29,10 +29,10 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     _form.currentState!.save();
-    setState(() {
-      _isAuthenticating = true;
-    });
-    signUserIn(context, _authDto);
+    // setState(() {
+    //   _isAuthenticating = true;
+    // });
+    signUserIn(context, _authDto).then((value) => _isAuthenticating = false);
   }
 
   @override

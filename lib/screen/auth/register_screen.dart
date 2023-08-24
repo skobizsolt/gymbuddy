@@ -41,9 +41,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final AuthDto _authDto = AuthDto();
     _authDto.email = _newUser.email;
     _authDto.password = _newUser.password;
-    setState(() {
-      _isAuthenticating = true;
-    });
+    // setState(() {
+    //   _isAuthenticating = true;
+    // });
     signUserUp(context, _authDto).then((value) => registerUserData(value));
   }
 
@@ -151,7 +151,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       _isAuthenticating
                           ? CircularProgressIndicator()
                           : WideButton(
-                              text: 'Register now!', onPressed: submitForm),
+                              text: 'Register now!',
+                              onPressed: submitForm,
+                            ),
 
                       // Switch back to login screen
                       CustomTextButton(
