@@ -22,8 +22,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: kDarkTheme(context),
-      locale: Locale('hu', 'HU'),
-      home: AuthScreen(),
+      locale: const Locale('hu', 'HU'),
+      home: const AuthScreen(),
     );
   }
 }
@@ -158,8 +158,8 @@ ThemeData kDarkTheme(BuildContext context) {
     ),
 
     // Text input decoration
-    inputDecorationTheme: InputDecorationTheme().copyWith(
-      hintStyle: TextStyle(
+    inputDecorationTheme: const InputDecorationTheme().copyWith(
+      hintStyle: const TextStyle(
         color: orange,
       ),
     ),

@@ -68,11 +68,11 @@ class HomeScreen extends StatelessWidget {
                     Container(
                         height: 25,
                         width: 25,
-                        child: CircularProgressIndicator()),
-                    SizedBox(
+                        child: const CircularProgressIndicator()),
+                    const SizedBox(
                       width: 15,
                     ),
-                    Text('Fetching data...')
+                    const Text('Fetching data...')
                   ],
                 )
               ],

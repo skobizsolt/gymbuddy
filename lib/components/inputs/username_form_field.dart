@@ -14,7 +14,7 @@ class UsernameFormField extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
           autocorrect: false,
-          decoration: InputDecoration.collapsed(
+          decoration: const InputDecoration.collapsed(
             hintText: 'Username',
           ),
           validator: (value) {

@@ -13,7 +13,7 @@ class CustomTextButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       child: Text(text),
-      style: ButtonStyle().copyWith(
+      style: const ButtonStyle().copyWith(
         textStyle: MaterialStatePropertyAll(
             textStyle ?? Theme.of(context).textTheme.titleMedium!),
       ),

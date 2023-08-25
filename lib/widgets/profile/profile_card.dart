@@ -72,7 +72,7 @@ class _ProfileCardState extends State<ProfileCard> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 width: double.infinity,
-                child: Card(
+                child: const Card(
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 48),
                   ),

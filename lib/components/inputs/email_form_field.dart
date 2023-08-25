@@ -13,7 +13,7 @@ class EmailFormField extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
           keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration.collapsed(
+          decoration: const InputDecoration.collapsed(
             hintText: 'Email',
           ),
           validator: (value) {

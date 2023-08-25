@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
+import 'package:gymbuddy/service/util/keyboard_service.dart';
 
 enum AuthenticationType { login, register }
 
@@ -35,7 +36,7 @@ class AuthService {
         );
       }
     } on FirebaseAuthException catch (e) {
-      FocusManager.instance.primaryFocus?.unfocus();
+      KeyboardService().closeKeyboard();
       // User not found
       if (e.code == 'invalid-email' || e.code == 'user-not-found') {
         showErrorSnackBar(context, 'Incorrect email');
