@@ -14,10 +14,10 @@ class AuthScreen extends StatelessWidget {
         builder: (context, snapshot) {
           // user is logged in
           if (snapshot.hasData) {
-            return TabsScreen();
+            return const TabsScreen();
           }
           // user is not logged in
-          return LoginOrRegisterScreen();
+          return const LoginOrRegisterScreen();
         },
       ),
     );

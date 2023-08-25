@@ -10,6 +10,8 @@ import 'package:gymbuddy/global/user_data.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
 import 'package:gymbuddy/models/auth/new_user_dto.dart';
 import 'package:gymbuddy/service/auth/email_auth_service.dart';
+import 'package:gymbuddy/service/util/keyboard_service.dart';
+import 'package:gymbuddy/widgets/utils/brand_icon.dart';
 import 'package:gymbuddy/widgets/utils/custom_text_button.dart';
 import 'package:gymbuddy/widgets/utils/wide_button.dart';
 
@@ -44,9 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     // setState(() {
     //   _isAuthenticating = true;
     // });
-    AuthService()
-        .signUserUp(context, _authDto)
-        .then((value) => registerUserData(value));
+    AuthService().signUserUp(context, _authDto).then(registerUserData);
   }
 
   void registerUserData(UserCredential? value) async {
@@ -66,103 +66,103 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(32),
+    return GestureDetector(
+      onTap: () => KeyboardService().unFocusKeyboard(context),
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Center(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _form,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // App Icon
-                      Image.asset(
-                        'lib/assets/images/logo.png',
-                        cacheHeight: 144,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                padding: const EdgeInsets.all(32),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _form,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // App Icon
+                        const BrandIcon(),
+                        const SizedBox(
+                          height: 10,
+                        ),
 
-                      // Header
-                      Text(
-                        'Join our community! ❤',
-                        style: Theme.of(context).textTheme.displaySmall,
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
+                        // Header
+                        Text(
+                          'Join our community! ❤',
+                          style: Theme.of(context).textTheme.displaySmall,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(
+                          height: 50,
+                        ),
 
-                      // First Name
-                      DefaultTextFormField(
-                        hintText: 'First Name',
-                        onSaved: (newValue) {
-                          _newUser.firstName = newValue!;
-                        },
-                      ),
+                        // First Name
+                        DefaultTextFormField(
+                          hintText: 'First Name',
+                          onSaved: (newValue) {
+                            _newUser.firstName = newValue!;
+                          },
+                        ),
 
-                      // Last name
-                      DefaultTextFormField(
-                        hintText: 'Last Name',
-                        onSaved: (newValue) {
-                          _newUser.lastName = newValue!;
-                        },
-                      ),
+                        // Last name
+                        DefaultTextFormField(
+                          hintText: 'Last Name',
+                          onSaved: (newValue) {
+                            _newUser.lastName = newValue!;
+                          },
+                        ),
 
-                      // Email field
-                      EmailFormField(
-                        onSaved: (newValue) {
-                          _newUser.email = newValue!;
-                        },
-                      ),
+                        // Email field
+                        EmailFormField(
+                          onSaved: (newValue) {
+                            _newUser.email = newValue!;
+                          },
+                        ),
 
-                      // Username
-                      UsernameFormField(
-                        onSaved: (newValue) {
-                          _newUser.username = newValue!;
-                        },
-                      ),
+                        // Username
+                        UsernameFormField(
+                          onSaved: (newValue) {
+                            _newUser.username = newValue!;
+                          },
+                        ),
 
-                      // Password
-                      PasswordFormField(
-                        hintText: 'Password',
-                        onsaved: (newValue) {
-                          _newUser.password = newValue!;
-                        },
-                      ),
+                        // Password
+                        PasswordFormField(
+                          hintText: 'Password',
+                          onsaved: (newValue) {
+                            _newUser.password = newValue!;
+                          },
+                        ),
 
-                      // Repeat password
-                      PasswordFormField(
-                        hintText: 'Password again',
-                        onsaved: (newValue) {
-                          _newUser.passwordAgain = newValue!;
-                        },
-                      ),
+                        // Repeat password
+                        PasswordFormField(
+                          hintText: 'Password again',
+                          onsaved: (newValue) {
+                            _newUser.passwordAgain = newValue!;
+                          },
+                        ),
 
-                      SizedBox(
-                        height: 10,
-                      ),
+                        const SizedBox(
+                          height: 10,
+                        ),
 
-                      // Register a new user
-                      _isAuthenticating
-                          ? CircularProgressIndicator()
-                          : WideButton(
-                              text: 'Register now!',
-                              onPressed: submitForm,
-                            ),
+                        // Register a new user
+                        _isAuthenticating
+                            ? const CircularProgressIndicator()
+                            : WideButton(
+                                text: 'Register now!',
+                                onPressed: submitForm,
+                              ),
 
-                      // Switch back to login screen
-                      CustomTextButton(
-                        onPressed: widget.onPressed,
-                        text: 'Already a member? Log in',
-                      )
-                    ],
+                        // Switch back to login screen
+                        CustomTextButton(
+                          onPressed: widget.onPressed,
+                          text: 'Already a member? Log in',
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

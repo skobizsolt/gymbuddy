@@ -16,12 +16,12 @@ void _showSnackbar(final BuildContext context, final String message,
     SnackBar(
       content: Text(
         message,
-        style: TextStyle().copyWith(fontStyle: FontStyle.italic),
+        style: const TextStyle().copyWith(fontStyle: FontStyle.italic),
       ),
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
       backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.primary,
       behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(12),
         ),

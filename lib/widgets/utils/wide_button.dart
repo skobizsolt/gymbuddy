@@ -31,7 +31,7 @@ class WideButton extends StatelessWidget {
               icon,
               color: Theme.of(context).colorScheme.primary,
             ),
-            SizedBox(
+            const SizedBox(
               width: 5,
             ),
             textWidget
@@ -44,11 +44,11 @@ class WideButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
         child: Container(
           color: color ?? Theme.of(context).primaryColorDark,
           child: InkWell(
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12),
             ),
             onTap: onPressed,
