@@ -44,7 +44,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     // setState(() {
     //   _isAuthenticating = true;
     // });
-    signUserUp(context, _authDto).then((value) => registerUserData(value));
+    AuthService()
+        .signUserUp(context, _authDto)
+        .then((value) => registerUserData(value));
   }
 
   void registerUserData(UserCredential? value) async {
