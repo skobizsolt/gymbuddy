@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbuddy/components/inputs/email_form_field.dart';
 import 'package:gymbuddy/components/inputs/password_form_field.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
+import 'package:gymbuddy/screen/auth/forgot_password_page.dart';
 import 'package:gymbuddy/service/auth/email_auth_service.dart';
 import 'package:gymbuddy/widgets/utils/custom_text_button.dart';
 import 'package:gymbuddy/widgets/utils/wide_button.dart';
@@ -32,7 +33,9 @@ class _LoginScreenState extends State<LoginScreen> {
     // setState(() {
     //   _isAuthenticating = true;
     // });
-    signUserIn(context, _authDto).then((value) => _isAuthenticating = false);
+    AuthService()
+        .signUserIn(context, _authDto)
+        .then((value) => _isAuthenticating = false);
   }
 
   @override
@@ -89,7 +92,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           CustomTextButton(
-                            onPressed: () {},
+                            onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ForgotPasswordScreen(),
+                                )),
                             text: 'Forgot password?',
                             textStyle: Theme.of(context).textTheme.titleSmall,
                           ),

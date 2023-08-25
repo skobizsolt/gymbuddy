@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/service/auth/logout_service.dart';
+import 'package:gymbuddy/service/auth/email_auth_service.dart';
 import 'package:gymbuddy/widgets/profile/option_card.dart';
 import 'package:gymbuddy/widgets/profile/profile_card.dart';
 
@@ -35,7 +35,7 @@ class ProfileScreen extends StatelessWidget {
         OptionCard(
           title: 'Logout',
           icon: Icons.logout,
-          onTap: signOut,
+          onTap: () => AuthService().signOut(context),
         ),
       ],
     );
