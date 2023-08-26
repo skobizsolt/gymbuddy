@@ -179,7 +179,7 @@ class _ChangeProfileContentState
                               hintText: 'Last name',
                               initialValue: _userData.lastName,
                               onSaved: (value) {
-                                _userData.lastName = value!;
+                                _userData.lastName = value!.trim();
                               },
                             ),
                           ],

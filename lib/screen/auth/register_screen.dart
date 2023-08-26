@@ -102,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         DefaultTextFormField(
                           hintText: 'First Name',
                           onSaved: (newValue) {
-                            _newUser.firstName = newValue!;
+                            _newUser.firstName = newValue!.trim();
                           },
                         ),
 
@@ -110,21 +110,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         DefaultTextFormField(
                           hintText: 'Last Name',
                           onSaved: (newValue) {
-                            _newUser.lastName = newValue!;
+                            _newUser.lastName = newValue!.trim();
                           },
                         ),
 
                         // Email field
                         EmailFormField(
                           onSaved: (newValue) {
-                            _newUser.email = newValue!;
+                            _newUser.email = newValue!.trim();
                           },
                         ),
 
                         // Username
                         UsernameFormField(
                           onSaved: (newValue) {
-                            _newUser.username = newValue!;
+                            _newUser.username = newValue!.trim();
                           },
                         ),
 
@@ -132,7 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         PasswordFormField(
                           hintText: 'Password',
                           onsaved: (newValue) {
-                            _newUser.password = newValue!;
+                            _newUser.password = newValue!.trim();
                           },
                         ),
 
@@ -140,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         PasswordFormField(
                           hintText: 'Password again',
                           onsaved: (newValue) {
-                            _newUser.passwordAgain = newValue!;
+                            _newUser.passwordAgain = newValue!.trim();
                           },
                         ),
 
