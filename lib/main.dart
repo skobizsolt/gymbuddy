@@ -129,6 +129,15 @@ ThemeData kDarkTheme(BuildContext context) {
       ),
     ),
 
+    // Filled button
+    filledButtonTheme: FilledButtonThemeData(
+      style: const ButtonStyle().copyWith(
+        backgroundColor: const MaterialStatePropertyAll(discordBlack),
+        foregroundColor: MaterialStatePropertyAll(colorScheme.primary),
+        elevation: const MaterialStatePropertyAll(8),
+      ),
+    ),
+
     // List tile theme
     listTileTheme: ListTileThemeData(
         titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(

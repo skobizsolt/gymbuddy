@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/user_dto.dart';
-import 'package:gymbuddy/screen/profile/change_profile_data.dart';
 import 'package:gymbuddy/service/profile/profile_data_service.dart';
+import 'package:gymbuddy/screen/profile/change_profile_data_screen.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -69,6 +69,16 @@ class _ProfileCardState extends State<ProfileCard> {
 
           // Allows to set different date locales
           initializeDateFormatting();
+          final _image = snapshot.data!.profileImageUrl == null
+              ? Icon(
+                  Icons.person,
+                  size: 75,
+                  color: Theme.of(context).colorScheme.tertiary,
+                )
+              : ProfilePicture(
+                  size: 75,
+                  picture: NetworkImage(snapshot.data!.profileImageUrl!),
+                );
 
           return Container(
             padding: const EdgeInsets.all(8),
@@ -82,11 +92,7 @@ class _ProfileCardState extends State<ProfileCard> {
                         // Profile picture goes here
                         ProfilePicture(
                           size: 40,
-                          child: Icon(
-                            Icons.person,
-                            size: 75,
-                            color: Theme.of(context).colorScheme.tertiary,
-                          ),
+                          child: _image,
                         ),
                         const SizedBox(
                           width: 10,
@@ -100,9 +106,11 @@ class _ProfileCardState extends State<ProfileCard> {
 
                               // Edit data button
                               IconButton(
-                                onPressed: () =>
-                                    ChangeProfileData(userDto: snapshot.data!)
-                                        .showChangeData(context),
+                                onPressed: () => Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                  builder: (context) => ChangeProfileDataScreen(
+                                      userDto: snapshot.data!),
+                                )),
                                 icon: const Icon(Icons.edit),
                                 color: Theme.of(context).colorScheme.secondary,
                               ),

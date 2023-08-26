@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gymbuddy/global/user_data.dart';
+import 'package:gymbuddy/global/firebase_constants.dart';
 import 'package:gymbuddy/models/home/home_dto.dart';
 
 class HomeService {

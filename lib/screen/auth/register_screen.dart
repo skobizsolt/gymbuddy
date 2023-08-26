@@ -6,7 +6,7 @@ import 'package:gymbuddy/components/inputs/default_text_form_field.dart';
 import 'package:gymbuddy/components/inputs/email_form_field.dart';
 import 'package:gymbuddy/components/inputs/password_form_field.dart';
 import 'package:gymbuddy/components/inputs/username_form_field.dart';
-import 'package:gymbuddy/global/user_data.dart';
+import 'package:gymbuddy/global/firebase_constants.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
 import 'package:gymbuddy/models/auth/new_user_dto.dart';
 import 'package:gymbuddy/service/auth/email_auth_service.dart';
