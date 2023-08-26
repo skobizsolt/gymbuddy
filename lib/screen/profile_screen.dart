@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/screen/auth/change_password_screen.dart';
+import 'package:gymbuddy/screen/profile/change_password_screen.dart';
 import 'package:gymbuddy/service/auth/email_auth_service.dart';
 import 'package:gymbuddy/widgets/profile/option_card.dart';
 import 'package:gymbuddy/widgets/profile/profile_card.dart';

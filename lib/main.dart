@@ -55,13 +55,13 @@ ThemeData kDarkTheme(BuildContext context) {
     colorScheme: colorScheme,
     appBarTheme: AppBarTheme.of(context).copyWith(
       backgroundColor: discordBlack,
-      foregroundColor: orange,
+      foregroundColor: colorScheme.primary,
     ),
 
     // Bottom nav bar theme
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: discordBlack,
-      selectedItemColor: orange,
+      selectedItemColor: colorScheme.primary,
       unselectedItemColor: discordWhite,
       type: BottomNavigationBarType.fixed,
     ),
@@ -76,12 +76,12 @@ ThemeData kDarkTheme(BuildContext context) {
     // Text themes
     textTheme: GoogleFonts.latoTextTheme().copyWith(
       titleLarge: const TextStyle().copyWith(
-        color: orange,
+        color: colorScheme.primary,
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ),
       titleMedium: const TextStyle().copyWith(
-        color: orange,
+        color: colorScheme.primary,
         fontSize: 15,
       ),
       titleSmall: const TextStyle().copyWith(
@@ -89,34 +89,34 @@ ThemeData kDarkTheme(BuildContext context) {
         fontSize: 13,
       ),
       bodyLarge: const TextStyle().copyWith(
-        color: orange,
+        color: colorScheme.primary,
       ),
       bodyMedium: const TextStyle().copyWith(
-        color: orange,
+        color: colorScheme.primary,
       ),
       bodySmall: const TextStyle().copyWith(
-        color: orange,
+        color: colorScheme.primary,
       ),
       displayLarge: const TextStyle().copyWith(
-        color: orange,
+        color: colorScheme.primary,
       ),
       displayMedium: const TextStyle().copyWith(
-        color: orange,
+        color: colorScheme.primary,
       ),
       displaySmall: const TextStyle().copyWith(
-        color: orange,
+        color: colorScheme.primary,
       ),
     ),
 
     // Dialog theme
     dialogTheme: DialogTheme.of(context).copyWith(
-      backgroundColor: discordBlack,
       titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: orange,
+            color: colorScheme.primary,
           ),
       contentTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: orange,
+            color: colorScheme.primary,
           ),
+      surfaceTintColor: discordGray,
     ),
 
     // Elevated button theme
@@ -131,26 +131,26 @@ ThemeData kDarkTheme(BuildContext context) {
 
     // List tile theme
     listTileTheme: ListTileThemeData(
-      titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.bold,
-          ),
-      subtitleTextStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-            color: discordWhite,
-          ),
-    ),
+        titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+        subtitleTextStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+              color: discordWhite,
+            ),
+        iconColor: colorScheme.primary),
 
     // Search bar theme
     searchBarTheme: SearchBarThemeData(
       textStyle: MaterialStatePropertyAll(
-        const TextStyle().copyWith(color: orange),
+        const TextStyle().copyWith(color: colorScheme.primary),
       ),
       surfaceTintColor: const MaterialStatePropertyAll(discordBlack),
     ),
 
     // Bottom sheet theme
     bottomSheetTheme: const BottomSheetThemeData().copyWith(
-      backgroundColor: colorScheme.primary,
+      backgroundColor: colorScheme.background,
       shape: Border.all(
         style: BorderStyle.none,
       ),
@@ -159,8 +159,11 @@ ThemeData kDarkTheme(BuildContext context) {
 
     // Text input decoration
     inputDecorationTheme: const InputDecorationTheme().copyWith(
-      hintStyle: const TextStyle(
-        color: orange,
+      hintStyle: const TextStyle().copyWith(
+        color: colorScheme.primary,
+      ),
+      labelStyle: const TextStyle().copyWith(
+        color: colorScheme.primary,
       ),
     ),
   );

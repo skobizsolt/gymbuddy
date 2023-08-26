@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/user_dto.dart';
+import 'package:gymbuddy/screen/profile/change_profile_data.dart';
 import 'package:gymbuddy/service/profile/profile_data_service.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
-import 'package:gymbuddy/widgets/utils/themed_icon.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -48,20 +48,6 @@ class _ProfileCardState extends State<ProfileCard> {
     );
   }
 
-  Widget _editProfileContent(BuildContext context) {
-    return Container(
-      height: 55,
-      alignment: Alignment.topCenter,
-      padding: const EdgeInsets.only(right: 8),
-      child: InkWell(
-        onTap: () {},
-        child: const ThemedIcon(
-          Icons.edit,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -81,7 +67,7 @@ class _ProfileCardState extends State<ProfileCard> {
             );
           }
 
-          // Allows to set different locales
+          // Allows to set different date locales
           initializeDateFormatting();
 
           return Container(
@@ -93,6 +79,7 @@ class _ProfileCardState extends State<ProfileCard> {
                   children: [
                     Row(
                       children: [
+                        // Profile picture goes here
                         ProfilePicture(
                           size: 40,
                           child: Icon(
@@ -100,16 +87,25 @@ class _ProfileCardState extends State<ProfileCard> {
                             size: 75,
                             color: Theme.of(context).colorScheme.tertiary,
                           ),
-                        ), // Profile picture goes here
+                        ),
                         const SizedBox(
                           width: 10,
                         ),
                         Expanded(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Profile data
                               _profileData(context, snapshot),
-                              _editProfileContent(context),
+
+                              // Edit data button
+                              IconButton(
+                                onPressed: () =>
+                                    ChangeProfileData(userDto: snapshot.data!)
+                                        .showChangeData(context),
+                                icon: const Icon(Icons.edit),
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ],
                           ),
                         ),
