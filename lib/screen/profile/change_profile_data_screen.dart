@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbuddy/providers/user_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -11,36 +13,29 @@ import 'package:gymbuddy/service/profile/profile_data_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 
-class ChangeProfileDataScreen extends StatefulWidget {
-  final UserDto userDto;
+class ChangeProfileDataScreen extends ConsumerStatefulWidget {
   const ChangeProfileDataScreen({
     super.key,
-    required this.userDto,
   });
 
   @override
-  State<ChangeProfileDataScreen> createState() => _ChangeProfileContentState();
+  ConsumerState<ChangeProfileDataScreen> createState() =>
+      _ChangeProfileContentState();
 }
 
-class _ChangeProfileContentState extends State<ChangeProfileDataScreen> {
+class _ChangeProfileContentState
+    extends ConsumerState<ChangeProfileDataScreen> {
   GlobalKey<FormState> _form = GlobalKey<FormState>();
   File? _localphoto = null;
-  UserDto? _updatedData;
 
-  @override
-  void initState() {
-    super.initState();
-    _updatedData = widget.userDto;
-  }
-
-  _saveForm() async {
+  _saveForm(UserDto userData) async {
     final bool isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
     }
     _form.currentState!.save();
 
-    ProfileDataService().updateProfileData(_updatedData, _localphoto);
+    ProfileDataService().updateProfileData(userData, _localphoto);
     Navigator.of(context).pop();
     showSucessSnackBar(context, 'Your data has updated!');
   }
@@ -90,9 +85,14 @@ class _ChangeProfileContentState extends State<ChangeProfileDataScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _currentPhoto = widget.userDto.profileImageUrl == null
+    final _data = ref.watch(userProvider);
+    if (_data.hasError) {
+      showErrorSnackBar(context, 'Your data has not been loaded');
+    }
+    final _userData = _data.value!;
+    final _currentPhoto = _userData.profileImageUrl == null
         ? MemoryImage(kTransparentImage)
-        : NetworkImage(widget.userDto.profileImageUrl!);
+        : NetworkImage(_userData.profileImageUrl!);
 
     return Scaffold(
       body: GestureDetector(
@@ -167,9 +167,9 @@ class _ChangeProfileContentState extends State<ChangeProfileDataScreen> {
                           children: [
                             DefaultTextFormField(
                               hintText: 'First name',
-                              initialValue: widget.userDto.firstName,
+                              initialValue: _userData.firstName,
                               onSaved: (value) {
-                                _updatedData!.firstName = value!;
+                                _userData.firstName = value!;
                               },
                             ),
                             const SizedBox(
@@ -177,9 +177,9 @@ class _ChangeProfileContentState extends State<ChangeProfileDataScreen> {
                             ),
                             DefaultTextFormField(
                               hintText: 'Last name',
-                              initialValue: widget.userDto.lastName,
+                              initialValue: _userData.lastName,
                               onSaved: (value) {
-                                _updatedData!.lastName = value!;
+                                _userData.lastName = value!;
                               },
                             ),
                           ],
@@ -196,7 +196,7 @@ class _ChangeProfileContentState extends State<ChangeProfileDataScreen> {
                               label: const Text('Cancel'),
                             ),
                             FilledButton.icon(
-                              onPressed: _saveForm,
+                              onPressed: () => _saveForm(_userData),
                               icon: const Icon(Icons.save_alt_outlined),
                               label: const Text(
                                 'Save',

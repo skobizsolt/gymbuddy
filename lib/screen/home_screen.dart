@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
-import 'package:gymbuddy/service/home/home_service.dart';
+import 'package:gymbuddy/providers/user_provider.dart';
 import 'package:gymbuddy/widgets/home/home_option.dart';
+import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   HomeScreen({super.key});
 
-  final homeData = HomeService().homeData;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final homeData = ref.watch(userProvider);
+
     Widget renderOptions() {
       var options = [
         {
@@ -54,98 +56,103 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
-    return FutureBuilder(
-      future: homeData,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return Center(
-            child: Column(
+    if (homeData.hasError) {
+      return const Center(
+        child: NoContentText(title: 'An error occured'),
+      );
+    }
+
+    if (homeData.isLoading) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                        height: 25,
-                        width: 25,
-                        child: const CircularProgressIndicator()),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    const Text('Fetching data...')
-                  ],
+                Container(
+                    height: 25,
+                    width: 25,
+                    child: const CircularProgressIndicator()),
+                const SizedBox(
+                  width: 15,
+                ),
+                const Text('Fetching data...')
+              ],
+            )
+          ],
+        ),
+      );
+    }
+
+    final userData = homeData.value!;
+
+    return DribbleLayout(
+      addAppBar: false,
+      headerContent: Padding(
+        padding: const EdgeInsets.only(left: 8, top: 12, bottom: 12),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                    overflow: TextOverflow.ellipsis,
+                    'Hi, ${userData.firstName}!',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          fontSize: 28,
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                  ),
+                ),
+                ProfilePicture(
+                  size: 32,
+                  child: userData.profileImageUrl == null
+                      ? Icon(
+                          Icons.person,
+                          size: 32,
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                        )
+                      : ProfilePicture(
+                          picture: NetworkImage(
+                            userData.profileImageUrl!,
+                          ),
+                          size: 24,
+                        ),
                 )
               ],
             ),
-          );
-        }
-
-        return DribbleLayout(
-          addAppBar: false,
-          headerContent: Padding(
-            padding: const EdgeInsets.only(left: 8, top: 12, bottom: 12),
-            child: Column(
+            const SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        overflow: TextOverflow.ellipsis,
-                        'Hi, ${snapshot.data!.firstName}!',
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                              fontSize: 28,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer,
-                            ),
-                      ),
-                    ),
-                    ProfilePicture(
-                      size: 32,
-                      child: snapshot.data!.profileImageUrl == null
-                          ? Icon(
-                              Icons.person,
-                              size: 32,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer,
-                            )
-                          : Image.network(snapshot.data!.profileImageUrl!),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Let\'s do some workout 💪',
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            fontSize: 28,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimaryContainer),
-                      ),
-                    ),
-                  ],
+                Expanded(
+                  child: Text(
+                    'Let\'s do some workout 💪',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        fontSize: 28,
+                        color:
+                            Theme.of(context).colorScheme.onPrimaryContainer),
+                  ),
                 ),
               ],
             ),
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // add new option
-              renderOptions()
-            ],
-          ),
-        );
-      },
+          ],
+        ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // add new option
+          renderOptions()
+        ],
+      ),
     );
   }
 }

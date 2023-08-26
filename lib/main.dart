@@ -11,7 +11,9 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const ProviderScope(
-    child: App(),
+    child: ProviderScope(
+      child: App(),
+    ),
   ));
 }
 
