@@ -62,7 +62,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
                       ),
                       EmailFormField(
                         onSaved: (value) {
-                          _email = value!;
+                          _email = value!.trim();
                         },
                       ),
                       const SizedBox(

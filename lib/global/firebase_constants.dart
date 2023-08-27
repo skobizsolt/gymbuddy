@@ -1,0 +1,2 @@
+const FIRESTORE_USER_COLLECTION = 'users';
+const FIREBASE_STORAGE_USER_IMAGES = 'user_images';

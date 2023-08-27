@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Email field
                         EmailFormField(
                           onSaved: (newValue) {
-                            _authDto.email = newValue!;
+                            _authDto.email = newValue!.trim();
                           },
                         ),
 
@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         PasswordFormField(
                           hintText: 'Password',
                           onsaved: (newValue) {
-                            _authDto.password = newValue!;
+                            _authDto.password = newValue!.trim();
                           },
                         ),
 

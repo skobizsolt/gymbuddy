@@ -61,15 +61,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       ),
                       PasswordFormField(
                         hintText: 'Old Password',
-                        onsaved: (value) => _passwords.oldPassword = value,
+                        onsaved: (value) =>
+                            _passwords.oldPassword = value!.trim(),
                       ),
                       PasswordFormField(
                         hintText: 'New Password',
-                        onsaved: (value) => _passwords.newPassword = value,
+                        onsaved: (value) =>
+                            _passwords.newPassword = value!.trim(),
                       ),
                       PasswordFormField(
                         hintText: 'Repeat new password',
-                        onsaved: (value) => _passwords.newPasswordAgain = value,
+                        onsaved: (value) =>
+                            _passwords.newPasswordAgain = value!.trim(),
                       ),
                       const SizedBox(
                         height: 15,

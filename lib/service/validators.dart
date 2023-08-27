@@ -33,6 +33,6 @@ class InputValidator {
   }
 
   _isValidValue(final String? value) {
-    return !(value == null && value!.trim().isEmpty);
+    return !(value == null || value.trim().isEmpty);
   }
 }

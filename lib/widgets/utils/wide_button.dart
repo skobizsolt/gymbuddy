@@ -41,7 +41,7 @@ class WideButton extends StatelessWidget {
       return textWidget;
     }
 
-    return SizedBox(
+    return Container(
       width: double.infinity,
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(12)),
