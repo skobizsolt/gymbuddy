@@ -26,7 +26,8 @@ class ProfileDataService {
         );
   }
 
-  void updateProfileData(UserDto? updatedData, File? localphoto) async {
+  Future<void> updateProfileData(
+      UserDto oldData, UserDto updatedData, File? localphoto) async {
     var userData = FirebaseAuth.instance.currentUser;
     // If the user choose a new profile picture
     if (userData != null && localphoto != null) {
@@ -35,13 +36,20 @@ class ProfileDataService {
           .child(FIREBASE_STORAGE_USER_IMAGES)
           .child('${userData.uid}.png');
       await storageRef.putFile(localphoto);
-      updatedData!.profileImageUrl = await storageRef.getDownloadURL();
+      updatedData.profileImageUrl = await storageRef.getDownloadURL();
+      await FirebaseFirestore.instance
+          .collection(FIRESTORE_USER_COLLECTION)
+          .doc(userData.uid)
+          .update(updatedData.toMapProfileImage());
     }
 
     // Now store the newly added data
-    await FirebaseFirestore.instance
-        .collection(FIRESTORE_USER_COLLECTION)
-        .doc(userData!.uid)
-        .update(updatedData!.toMap());
+    if (oldData.firstName != updatedData.firstName ||
+        oldData.lastName != updatedData.lastName) {
+      await FirebaseFirestore.instance
+          .collection(FIRESTORE_USER_COLLECTION)
+          .doc(userData!.uid)
+          .update(updatedData.toMap());
+    }
   }
 }

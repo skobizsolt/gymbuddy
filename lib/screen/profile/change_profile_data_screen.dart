@@ -28,22 +28,20 @@ class _ChangeProfileContentState
   GlobalKey<FormState> _form = GlobalKey<FormState>();
   File? _localphoto = null;
 
-  _saveForm(UserDto userData) async {
+  _saveForm(UserDto oldData, UserDto userData) async {
     final bool isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
     }
     _form.currentState!.save();
-
-    ProfileDataService().updateProfileData(userData, _localphoto);
+    await ProfileDataService()
+        .updateProfileData(oldData, userData, _localphoto)
+        .then((value) => ref.refresh(userProvider));
     Navigator.of(context).pop();
     showSucessSnackBar(context, 'Your data has updated!');
   }
 
-  _ChangeProfileContentState();
-
-  _showModalSheet(
-      BuildContext context, StateSetter setState, File? localphoto) {
+  _showModalSheet(BuildContext context, File? localphoto) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -86,10 +84,19 @@ class _ChangeProfileContentState
   @override
   Widget build(BuildContext context) {
     final _data = ref.watch(userProvider);
+    // If data has error
     if (_data.hasError) {
       showErrorSnackBar(context, 'Your data has not been loaded');
     }
-    final _userData = _data.value!;
+
+    // If data has been loaded
+    final _userData = UserDto(
+        email: _data.value!.email,
+        username: _data.value!.username,
+        firstName: _data.value!.firstName,
+        lastName: _data.value!.lastName,
+        registeredOn: _data.value!.registeredOn,
+        profileImageUrl: _data.value!.profileImageUrl);
     final _currentPhoto = _userData.profileImageUrl == null
         ? MemoryImage(kTransparentImage)
         : NetworkImage(_userData.profileImageUrl!);
@@ -132,7 +139,7 @@ class _ChangeProfileContentState
                           IconButton.filled(
                             onPressed: () {
                               KeyboardService().unFocusKeyboard(context);
-                              _showModalSheet(context, setState, _localphoto);
+                              _showModalSheet(context, _localphoto);
                             },
                             icon: Icon(
                               Icons.edit,
@@ -196,7 +203,8 @@ class _ChangeProfileContentState
                               label: const Text('Cancel'),
                             ),
                             FilledButton.icon(
-                              onPressed: () => _saveForm(_userData),
+                              onPressed: () =>
+                                  _saveForm(_data.value!, _userData),
                               icon: const Icon(Icons.save_alt_outlined),
                               label: const Text(
                                 'Save',

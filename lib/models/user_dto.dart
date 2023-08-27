@@ -38,6 +38,11 @@ class UserDto {
       'username': username,
       'first_name': firstName,
       'last_name': lastName,
+    };
+  }
+
+  Map<String, dynamic> toMapProfileImage() {
+    return <String, dynamic>{
       'profile_image_url': profileImageUrl,
     };
   }

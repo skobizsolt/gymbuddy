@@ -50,7 +50,7 @@ class _ProfileCardState extends ConsumerState<ProfileCard> {
 
   @override
   Widget build(BuildContext context) {
-    final _data = ref.watch(userProvider);
+    AsyncValue<UserDto> _data = ref.watch(userProvider);
 
     if (_data.isLoading) {
       return Padding(
@@ -68,17 +68,7 @@ class _ProfileCardState extends ConsumerState<ProfileCard> {
 
     // Allows to set different date locales
     initializeDateFormatting();
-    final _userData = _data.value!;
-    final _image = _userData.profileImageUrl == null
-        ? Icon(
-            Icons.person,
-            size: 75,
-            color: Theme.of(context).colorScheme.tertiary,
-          )
-        : ProfilePicture(
-            size: 75,
-            picture: NetworkImage(_userData.profileImageUrl!),
-          );
+    UserDto _userData = _data.value!;
 
     return Container(
       padding: const EdgeInsets.all(8),
@@ -90,10 +80,16 @@ class _ProfileCardState extends ConsumerState<ProfileCard> {
               Row(
                 children: [
                   // Profile picture goes here
-                  ProfilePicture(
-                    size: 40,
-                    child: _image,
-                  ),
+                  _userData.profileImageUrl == null
+                      ? Icon(
+                          Icons.person,
+                          size: 75,
+                          color: Theme.of(context).colorScheme.tertiary,
+                        )
+                      : ProfilePicture(
+                          size: 40,
+                          picture: NetworkImage(_userData.profileImageUrl!),
+                        ),
                   const SizedBox(
                     width: 10,
                   ),
@@ -101,16 +97,19 @@ class _ProfileCardState extends ConsumerState<ProfileCard> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Profile data
+                        // Profile _data
                         _profileData(context, _userData),
 
-                        // Edit data button
+                        // Edit _data button
                         IconButton(
-                          onPressed: () =>
-                              Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                const ChangeProfileDataScreen(),
-                          )),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ChangeProfileDataScreen(),
+                              ),
+                            );
+                          },
                           icon: const Icon(Icons.edit),
                           color: Theme.of(context).colorScheme.secondary,
                         ),
