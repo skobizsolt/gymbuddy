@@ -36,9 +36,13 @@ class _ChangeProfileContentState
     _form.currentState!.save();
     await ProfileDataService()
         .updateProfileData(oldData, userData, _localphoto)
-        .then((value) => ref.refresh(userProvider));
-    Navigator.of(context).pop();
-    showSucessSnackBar(context, 'Your data has updated!');
+        .whenComplete(
+      () {
+        Navigator.of(context).pop();
+        showSucessSnackBar(context, 'Your data has updated!');
+        ref.invalidate(userProvider);
+      },
+    );
   }
 
   _showModalSheet(BuildContext context, File? localphoto) {

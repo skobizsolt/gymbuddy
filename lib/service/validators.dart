@@ -20,7 +20,7 @@ class InputValidator {
   }
 
   validateUsername(final String? value) {
-    if (_isValidValue(value) && value!.trim().length >= 4) {
+    if (_isValidValue(value) && value!.trim().length >= USERNAME_LENGTH) {
       return null;
     }
     return "Minimum length for username is $USERNAME_LENGTH characters!";

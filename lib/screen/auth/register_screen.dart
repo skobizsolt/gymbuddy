@@ -7,7 +7,6 @@ import 'package:gymbuddy/components/inputs/password_form_field.dart';
 import 'package:gymbuddy/components/inputs/username_form_field.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
 import 'package:gymbuddy/models/auth/new_user_dto.dart';
-import 'package:gymbuddy/providers/user_provider.dart';
 import 'package:gymbuddy/service/auth/email_auth_service.dart';
 import 'package:gymbuddy/service/profile/profile_data_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
@@ -28,7 +27,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
   bool _isAuthenticating = false;
 
-  void submitForm() async {
+  Future<void> submitForm() async {
     var validForm = _form.currentState!.validate();
 
     if (!validForm) {
@@ -57,13 +56,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       _isAuthenticating = true;
     });
 
-    await AuthService().signUserUp(context, _authDto).then(
-          (value) async => await ProfileDataService()
-              .registerUserData(value, _newUser)
-              .then(ProfileDataService()
-                  .addUsernameToCollection(_newUser.username, _newUser.email))
-              .whenComplete(() => ref.refresh(userProvider)),
-        );
+    await AuthService()
+        .signUserUp(context, _authDto)
+        .then((value) async =>
+            await ProfileDataService().registerUserData(value, _newUser))
+        .then((value) async => await ProfileDataService()
+            .addUsernameToCollection(_newUser.username, _newUser.email));
     resetButton();
   }
 

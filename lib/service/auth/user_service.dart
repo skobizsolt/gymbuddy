@@ -8,12 +8,12 @@ class UserService {
   passwordReset(final BuildContext context, final String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      Navigator.pop(context);
+      showSucessSnackBar(context, 'Password reset email sent!');
     } on FirebaseAuthException catch (e) {
       KeyboardService().closeKeyboard();
       showErrorSnackBar(context, e.message.toString());
     }
-    Navigator.pop(context);
-    showSucessSnackBar(context, 'Password reset email sent!');
   }
 
   void changePassword(BuildContext context, ChangePasswordDto passwords) async {

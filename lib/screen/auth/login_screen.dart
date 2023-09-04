@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/inputs/email_form_field.dart';
 import 'package:gymbuddy/components/inputs/password_form_field.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
-import 'package:gymbuddy/providers/user_provider.dart';
 import 'package:gymbuddy/screen/auth/forgot_password_screen.dart';
 import 'package:gymbuddy/service/auth/email_auth_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
@@ -27,7 +26,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
   static bool _isAuthenticating = false;
 
-  void submitForm() async {
+  Future<void> submitForm() async {
     var validForm = _form.currentState!.validate();
 
     if (!validForm) {
@@ -37,9 +36,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() {
       _isAuthenticating = true;
     });
-    await AuthService()
-        .signUserIn(context, _authDto)
-        .whenComplete(() => ref.refresh(userProvider));
+    await AuthService().signUserIn(context, _authDto);
     resetButton();
   }
 
