@@ -8,14 +8,9 @@ import 'package:gymbuddy/providers/user_provider.dart';
 import 'package:gymbuddy/screen/profile/change_profile_data_screen.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 
-class ProfileCard extends ConsumerStatefulWidget {
+class ProfileCard extends ConsumerWidget {
   const ProfileCard({super.key});
 
-  @override
-  ConsumerState<ProfileCard> createState() => _ProfileCardState();
-}
-
-class _ProfileCardState extends ConsumerState<ProfileCard> {
   Widget _profileData(BuildContext context, UserDto userData) {
     List<List<Object?>> content = [
       [
@@ -49,7 +44,7 @@ class _ProfileCardState extends ConsumerState<ProfileCard> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     AsyncValue<UserDto> _data = ref.watch(userProvider);
 
     if (_data.isLoading) {
@@ -109,6 +104,7 @@ class _ProfileCardState extends ConsumerState<ProfileCard> {
                                     const ChangeProfileDataScreen(),
                               ),
                             );
+                            ref.read(userProvider);
                           },
                           icon: const Icon(Icons.edit),
                           color: Theme.of(context).colorScheme.secondary,

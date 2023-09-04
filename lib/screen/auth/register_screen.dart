@@ -1,34 +1,33 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/components/inputs/default_text_form_field.dart';
 import 'package:gymbuddy/components/inputs/email_form_field.dart';
 import 'package:gymbuddy/components/inputs/password_form_field.dart';
 import 'package:gymbuddy/components/inputs/username_form_field.dart';
-import 'package:gymbuddy/global/firebase_constants.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
 import 'package:gymbuddy/models/auth/new_user_dto.dart';
 import 'package:gymbuddy/service/auth/email_auth_service.dart';
+import 'package:gymbuddy/service/profile/profile_data_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/widgets/utils/brand_icon.dart';
 import 'package:gymbuddy/widgets/utils/custom_text_button.dart';
 import 'package:gymbuddy/widgets/utils/wide_button.dart';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends ConsumerStatefulWidget {
   final void Function() onPressed;
   RegisterScreen({super.key, required this.onPressed});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final NewUserDto _newUser = NewUserDto();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
   bool _isAuthenticating = false;
 
-  void submitForm() {
+  Future<void> submitForm() async {
     var validForm = _form.currentState!.validate();
 
     if (!validForm) {
@@ -40,27 +39,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
       showErrorSnackBar(context, "Passwords not match!");
       return;
     }
+    // Check if username is unique
+    bool isUniqueUsername = await ProfileDataService()
+        .usernames
+        .then((value) => !value.contains(_newUser.username));
+
+    if (!isUniqueUsername) {
+      showErrorSnackBar(context, 'Username is already taken!');
+      return;
+    }
+
     final AuthDto _authDto = AuthDto();
     _authDto.email = _newUser.email;
     _authDto.password = _newUser.password;
-    // setState(() {
-    //   _isAuthenticating = true;
-    // });
-    AuthService().signUserUp(context, _authDto).then(registerUserData);
+    setState(() {
+      _isAuthenticating = true;
+    });
+
+    await AuthService()
+        .signUserUp(context, _authDto)
+        .then((value) async =>
+            await ProfileDataService().registerUserData(value, _newUser))
+        .then((value) async => await ProfileDataService()
+            .addUsernameToCollection(_newUser.username, _newUser.email));
+    resetButton();
   }
 
-  void registerUserData(UserCredential? value) async {
-    if (value == null || value.user == null) {
+  resetButton() {
+    if (!mounted) {
+      _isAuthenticating = false;
       return;
     }
-    await FirebaseFirestore.instance
-        .collection(FIRESTORE_USER_COLLECTION)
-        .doc(value.user!.uid)
-        .set({
-      'email': value.user!.email,
-      'username': _newUser.username,
-      'first_name': _newUser.firstName,
-      'last_name': _newUser.lastName
+    setState(() {
+      _isAuthenticating = false;
     });
   }
 

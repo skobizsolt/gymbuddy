@@ -4,7 +4,6 @@ import 'package:gymbuddy/service/validators.dart';
 
 class DefaultTextFormField extends StatelessWidget {
   final String hintText;
-  final bool? collapsed;
   final String? initialValue;
   final String? Function(String?)? validator;
   final Function(String?)? onSaved;
@@ -12,7 +11,6 @@ class DefaultTextFormField extends StatelessWidget {
   const DefaultTextFormField({
     super.key,
     required this.hintText,
-    this.collapsed = true,
     this.initialValue,
     this.validator,
     this.onSaved,
@@ -24,14 +22,9 @@ class DefaultTextFormField extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
-          decoration: collapsed!
-              ? InputDecoration.collapsed(
-                  hintText: hintText,
-                )
-              : InputDecoration(
-                  labelText: hintText,
-                  border: InputBorder.none,
-                ),
+          decoration: InputDecoration.collapsed(
+            hintText: hintText,
+          ),
           validator: validator ??
               (value) {
                 return InputValidator().validateBasicText(value, hintText);

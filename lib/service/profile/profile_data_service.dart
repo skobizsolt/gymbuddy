@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:gymbuddy/global/firebase_constants.dart';
+import 'package:gymbuddy/models/auth/new_user_dto.dart';
 import 'package:gymbuddy/models/user_dto.dart';
 
 class ProfileDataService {
@@ -24,6 +25,22 @@ class ProfileDataService {
             profileImageUrl: value.data()!["profile_image_url"] ?? null,
           ),
         );
+  }
+
+  Future<void> registerUserData(
+      UserCredential? value, NewUserDto newUser) async {
+    if (value == null || value.user == null) {
+      return;
+    }
+    await FirebaseFirestore.instance
+        .collection(FIRESTORE_USER_COLLECTION)
+        .doc(value.user!.uid)
+        .set({
+      'email': value.user!.email,
+      'username': newUser.username,
+      'first_name': newUser.firstName,
+      'last_name': newUser.lastName
+    });
   }
 
   Future<void> updateProfileData(
@@ -51,5 +68,21 @@ class ProfileDataService {
           .doc(userData!.uid)
           .update(updatedData.toMap());
     }
+  }
+
+  Future<List<String>> get usernames async {
+    var usernamesCollection = await FirebaseFirestore.instance
+        .collection(FIRESTORE_USERNAME_COLLECTION)
+        .get();
+    List<String> usernames =
+        usernamesCollection.docs.map((doc) => doc.id).toList();
+    return usernames;
+  }
+
+  addUsernameToCollection(final String username, final String email) async {
+    return await FirebaseFirestore.instance
+        .collection(FIRESTORE_USERNAME_COLLECTION)
+        .doc(username)
+        .set({'email': email});
   }
 }
