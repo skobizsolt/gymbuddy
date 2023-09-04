@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/inputs/email_form_field.dart';
 import 'package:gymbuddy/components/inputs/password_form_field.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
+import 'package:gymbuddy/providers/user_provider.dart';
 import 'package:gymbuddy/screen/auth/forgot_password_screen.dart';
 import 'package:gymbuddy/service/auth/email_auth_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
@@ -9,7 +11,7 @@ import 'package:gymbuddy/widgets/utils/brand_icon.dart';
 import 'package:gymbuddy/widgets/utils/custom_text_button.dart';
 import 'package:gymbuddy/widgets/utils/wide_button.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   final void Function() onPressed;
   LoginScreen({
     super.key,
@@ -17,27 +19,38 @@ class LoginScreen extends StatefulWidget {
   });
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final AuthDto _authDto = AuthDto();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
   static bool _isAuthenticating = false;
 
-  void submitForm() {
+  void submitForm() async {
     var validForm = _form.currentState!.validate();
 
     if (!validForm) {
       return;
     }
     _form.currentState!.save();
-    // setState(() {
-    //   _isAuthenticating = true;
-    // });
-    AuthService()
+    setState(() {
+      _isAuthenticating = true;
+    });
+    await AuthService()
         .signUserIn(context, _authDto)
-        .then((value) => _isAuthenticating = false);
+        .whenComplete(() => ref.refresh(userProvider));
+    resetButton();
+  }
+
+  resetButton() {
+    if (!mounted) {
+      _isAuthenticating = false;
+      return;
+    }
+    setState(() {
+      _isAuthenticating = false;
+    });
   }
 
   @override

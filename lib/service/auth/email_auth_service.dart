@@ -42,6 +42,12 @@ class AuthService {
         showErrorSnackBar(context, 'Incorrect email');
       }
 
+      // Already registered
+      if (e.code == 'email-already-in-use') {
+        showErrorSnackBar(
+            context, 'This email is already registered by someone');
+      }
+
       // Incorrect password
       else if (e.code == 'wrong-password') {
         showErrorSnackBar(context, 'Incorrect password');
@@ -52,6 +58,6 @@ class AuthService {
 
   signOut(BuildContext context) {
     FirebaseAuth.instance.signOut();
-    showSucessSnackBar(context, 'You logged out successfully! 👋');
+    showSucessSnackBar(context, 'You\'ve logged out successfully! 👋');
   }
 }
