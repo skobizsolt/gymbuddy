@@ -10,7 +10,7 @@ class AuthScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var stream = ref.watch(authStateChangeProvider);
+    var stream = ref.read(authStateChangeProvider);
     return Scaffold(
       body: StreamBuilder<User?>(
         stream: stream,
