@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbuddy/providers/auth_provider.dart';
 import 'package:gymbuddy/screen/profile/change_password_screen.dart';
-import 'package:gymbuddy/service/auth/email_auth_service.dart';
 import 'package:gymbuddy/widgets/profile/option_card.dart';
 import 'package:gymbuddy/widgets/profile/profile_card.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Column(
@@ -42,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
           OptionCard(
             title: 'Logout',
             icon: Icons.logout,
-            onTap: () => AuthService().signOut(context),
+            onTap: () => ref.read(authProvider.notifier).signOut(context),
           ),
         ],
       ),

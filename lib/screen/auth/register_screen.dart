@@ -7,7 +7,7 @@ import 'package:gymbuddy/components/inputs/password_form_field.dart';
 import 'package:gymbuddy/components/inputs/username_form_field.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
 import 'package:gymbuddy/models/auth/new_user_dto.dart';
-import 'package:gymbuddy/service/auth/email_auth_service.dart';
+import 'package:gymbuddy/providers/auth_provider.dart';
 import 'package:gymbuddy/service/profile/profile_data_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/widgets/utils/brand_icon.dart';
@@ -56,7 +56,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       _isAuthenticating = true;
     });
 
-    await AuthService()
+    await ref
+        .read(authProvider.notifier)
         .signUserUp(context, _authDto)
         .then((value) async =>
             await ProfileDataService().registerUserData(value, _newUser))
