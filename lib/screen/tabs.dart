@@ -5,6 +5,7 @@ import 'package:gymbuddy/screen/chats_screen.dart';
 import 'package:gymbuddy/screen/home_screen.dart';
 import 'package:gymbuddy/screen/profile_screen.dart';
 import 'package:gymbuddy/screen/stats_screen.dart';
+import 'package:gymbuddy/service/util/keyboard_service.dart';
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -28,7 +29,7 @@ class _TabsScreenState extends State<TabsScreen> {
       appBar: AppBar(
         title: const Text('My Buddies'),
       ),
-      body: const ChatsScreen(),
+      body: ChatsScreen(),
     ),
     Screen(
       appBar: AppBar(
@@ -50,30 +51,33 @@ class _TabsScreenState extends State<TabsScreen> {
   Widget build(BuildContext context) {
     final Screen activeScreen = screens[_selectedPageIndex];
 
-    return Scaffold(
-      appBar: activeScreen.appBar,
-      body: activeScreen.body,
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: _selectPage,
-        currentIndex: _selectedPageIndex,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Stats',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_outlined),
-            label: 'Chats',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
-            label: 'Me',
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => KeyboardService().closeKeyboard(),
+      child: Scaffold(
+        appBar: activeScreen.appBar,
+        body: activeScreen.body,
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: _selectPage,
+          currentIndex: _selectedPageIndex,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart),
+              label: 'Stats',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat_outlined),
+              label: 'Chats',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_2_outlined),
+              label: 'Me',
+            ),
+          ],
+        ),
       ),
     );
   }

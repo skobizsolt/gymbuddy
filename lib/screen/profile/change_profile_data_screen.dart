@@ -87,7 +87,7 @@ class _ChangeProfileContentState
 
   @override
   Widget build(BuildContext context) {
-    final _data = ref.watch(userProvider);
+    final _data = ref.read(userProvider);
     // If data has error
     if (_data.hasError) {
       showErrorSnackBar(context, 'Your data has not been loaded');
