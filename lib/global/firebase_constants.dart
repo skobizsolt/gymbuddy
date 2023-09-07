@@ -9,3 +9,6 @@ const FIRESTORE_CHATS_MESSAGES_SUBCOLLECTION = 'messages';
 
 // Firestore utils
 const FIRESTORE_CHATROOM_ID_DELIMITER = '_';
+
+// Firebase messaging
+const FIREBASE_NOTIFICATION_CHATS_TOPIC = 'chats';

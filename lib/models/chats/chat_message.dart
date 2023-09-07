@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Message {
   final String senderId;
+  final String senderName;
   final String receiverId;
   final String message;
   final Timestamp timestamp;
   Message({
     required this.senderId,
+    required this.senderName,
     required this.receiverId,
     required this.message,
     required this.timestamp,
@@ -14,12 +16,14 @@ class Message {
 
   Message copyWith({
     String? senderId,
+    String? senderName,
     String? receiverId,
     String? message,
     Timestamp? timestamp,
   }) {
     return Message(
       senderId: senderId ?? this.senderId,
+      senderName: senderName ?? this.senderName,
       receiverId: receiverId ?? this.receiverId,
       message: message ?? this.message,
       timestamp: timestamp ?? this.timestamp,
@@ -29,6 +33,7 @@ class Message {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'senderId': senderId,
+      'senderName': senderName,
       'receiverId': receiverId,
       'message': message,
       'timestamp': timestamp,
@@ -38,31 +43,14 @@ class Message {
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
         senderId: map['senderId'] as String,
+        senderName: map['senderName'] as String,
         receiverId: map['receiverId'] as String,
         message: map['message'] as String,
-        timestamp: map['timestamp'] as Timestamp);
+        timestamp: map['timestamp']);
   }
 
   @override
   String toString() {
-    return 'Message(senderId: $senderId, receiverId: $receiverId, message: $message, timestamp: $timestamp)';
-  }
-
-  @override
-  bool operator ==(covariant Message other) {
-    if (identical(this, other)) return true;
-
-    return other.senderId == senderId &&
-        other.receiverId == receiverId &&
-        other.message == message &&
-        other.timestamp == timestamp;
-  }
-
-  @override
-  int get hashCode {
-    return senderId.hashCode ^
-        receiverId.hashCode ^
-        message.hashCode ^
-        timestamp.hashCode;
+    return 'Message(senderId: $senderId, senderName: $senderName, receiverId: $receiverId, message: $message, timestamp: $timestamp)';
   }
 }

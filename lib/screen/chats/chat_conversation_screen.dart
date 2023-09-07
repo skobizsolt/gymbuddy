@@ -1,14 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/chat_builder.dart';
+import 'package:gymbuddy/components/custom_snackbars.dart';
+import 'package:gymbuddy/global/firebase_constants.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/models/user_dto.dart';
+import 'package:gymbuddy/providers/user_provider.dart';
 import 'package:gymbuddy/service/chats/chat_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 
-class ConversationScreen extends ConsumerWidget {
+class ConversationScreen extends ConsumerStatefulWidget {
   ConversationScreen({
     super.key,
     required this.receiverId,
@@ -18,24 +22,49 @@ class ConversationScreen extends ConsumerWidget {
   final String receiverId;
   final UserDto receiverData;
 
+  @override
+  ConsumerState<ConversationScreen> createState() => _ConversationScreenState();
+}
+
+class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   final _chatController = TextEditingController();
+
   final _chatService = ChatService();
+
   final _currentUser = FirebaseAuth.instance.currentUser;
 
-  void sendMessage() async {
+  @override
+  void initState() {
+    super.initState();
+
+    setupPushNotifications();
+  }
+
+  void setupPushNotifications() async {
+    final firebaseMessagging = FirebaseMessaging.instance;
+    await firebaseMessagging.requestPermission();
+
+    firebaseMessagging.subscribeToTopic(FIREBASE_NOTIFICATION_CHATS_TOPIC);
+  }
+
+  void sendMessage(UserDto sender) async {
     if (_chatController.text.isNotEmpty) {
-      await _chatService.sendMessage(receiverId, _chatController.text);
+      await _chatService.sendMessage(
+        "${sender.firstName} ${sender.lastName}",
+        widget.receiverId,
+        _chatController.text,
+      );
     }
   }
 
   Widget _renderAvatar() {
-    if (receiverData.profileImageUrl == null) {
+    if (widget.receiverData.profileImageUrl == null) {
       return const SizedBox();
     }
     return Row(
       children: [
         ProfilePicture(
-          picture: NetworkImage(receiverData.profileImageUrl!),
+          picture: NetworkImage(widget.receiverData.profileImageUrl!),
         ),
         const SizedBox(
           width: 15,
@@ -45,7 +74,8 @@ class ConversationScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final _userData = ref.watch(userProvider).value;
     return GestureDetector(
       onTap: () => KeyboardService().unFocusKeyboard(context),
       child: Scaffold(
@@ -57,8 +87,8 @@ class ConversationScreen extends ConsumerWidget {
             children: [
               _renderAvatar(),
               Flexible(
-                child:
-                    Text("${receiverData.firstName} ${receiverData.lastName}"),
+                child: Text(
+                    "${widget.receiverData.firstName} ${widget.receiverData.lastName}"),
               ),
             ],
           ),
@@ -73,9 +103,10 @@ class ConversationScreen extends ConsumerWidget {
           ],
         ),
         body: Padding(
-            padding:
-                const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 8),
-            child: _buildMessages()),
+          padding:
+              const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 8),
+          child: _buildMessages(),
+        ),
         bottomSheet: Container(
           color: Theme.of(context).colorScheme.primary,
           padding: const EdgeInsets.all(8),
@@ -99,7 +130,12 @@ class ConversationScreen extends ConsumerWidget {
               IconButton(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
                 onPressed: () {
-                  sendMessage();
+                  if (_userData == null) {
+                    showErrorSnackBar(context,
+                        "Something went wrong, please try again later!");
+                  } else {
+                    sendMessage(_userData);
+                  }
                   _chatController.clear();
                   KeyboardService().closeKeyboard();
                 },
@@ -115,10 +151,10 @@ class ConversationScreen extends ConsumerWidget {
   }
 
   _buildMessages() {
-    final data = _chatService.getMessages(_currentUser!.uid, receiverId);
+    final data = _chatService.getMessages(_currentUser!.uid, widget.receiverId);
     return ChatBuilder(
       senderId: _currentUser!.uid,
-      receiverData: receiverData,
+      receiverData: widget.receiverData,
       stream: data,
     );
   }

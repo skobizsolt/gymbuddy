@@ -18,10 +18,12 @@ class ChatService {
   }
 
   // Send message
-  Future<void> sendMessage(String reveiverId, String message) async {
+  Future<void> sendMessage(
+      String senderName, String reveiverId, String message) async {
     // Create new message
     final Message chatMessage = Message(
         senderId: _currentUser.uid,
+        senderName: senderName,
         receiverId: reveiverId,
         message: message,
         timestamp: Timestamp.now());
