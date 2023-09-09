@@ -9,12 +9,12 @@ class ChatService {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User _currentUser = FirebaseAuth.instance.currentUser!;
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getUsers() async {
-    var snapshots =
-        await _firestore.collection(FIRESTORE_USER_COLLECTION).get();
-    return snapshots.docs
-        .where((element) => element.id != _currentUser.uid)
-        .toList();
+  Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getUsers() {
+    return _firestore.collection(FIRESTORE_USER_COLLECTION).snapshots().map(
+          (event) => event.docs
+              .where((element) => element.id != _currentUser.uid)
+              .toList(),
+        );
   }
 
   // Send message
@@ -57,7 +57,7 @@ class ChatService {
   }
 }
 
-var chatsProvider = FutureProvider((ref) {
+var chatsProvider = StreamProvider((ref) {
   ref.watch(authStateChangeProvider);
   return ChatService().getUsers();
 });

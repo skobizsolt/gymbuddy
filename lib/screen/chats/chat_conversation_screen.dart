@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/chat_builder.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
-import 'package:gymbuddy/global/firebase_constants.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/models/user_dto.dart';
 import 'package:gymbuddy/providers/user_provider.dart';
@@ -12,7 +10,7 @@ import 'package:gymbuddy/service/chats/chat_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 
-class ConversationScreen extends ConsumerStatefulWidget {
+class ConversationScreen extends ConsumerWidget {
   ConversationScreen({
     super.key,
     required this.receiverId,
@@ -22,49 +20,30 @@ class ConversationScreen extends ConsumerStatefulWidget {
   final String receiverId;
   final UserDto receiverData;
 
-  @override
-  ConsumerState<ConversationScreen> createState() => _ConversationScreenState();
-}
-
-class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   final _chatController = TextEditingController();
 
   final _chatService = ChatService();
 
   final _currentUser = FirebaseAuth.instance.currentUser;
 
-  @override
-  void initState() {
-    super.initState();
-
-    setupPushNotifications();
-  }
-
-  void setupPushNotifications() async {
-    final firebaseMessagging = FirebaseMessaging.instance;
-    await firebaseMessagging.requestPermission();
-
-    firebaseMessagging.subscribeToTopic(FIREBASE_NOTIFICATION_CHATS_TOPIC);
-  }
-
   void sendMessage(UserDto sender) async {
     if (_chatController.text.isNotEmpty) {
       await _chatService.sendMessage(
         "${sender.firstName} ${sender.lastName}",
-        widget.receiverId,
+        receiverId,
         _chatController.text,
       );
     }
   }
 
   Widget _renderAvatar() {
-    if (widget.receiverData.profileImageUrl == null) {
+    if (receiverData.profileImageUrl == null) {
       return const SizedBox();
     }
     return Row(
       children: [
         ProfilePicture(
-          picture: NetworkImage(widget.receiverData.profileImageUrl!),
+          picture: NetworkImage(receiverData.profileImageUrl!),
         ),
         const SizedBox(
           width: 15,
@@ -74,7 +53,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final _userData = ref.watch(userProvider).value;
     return GestureDetector(
       onTap: () => KeyboardService().unFocusKeyboard(context),
@@ -87,8 +66,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             children: [
               _renderAvatar(),
               Flexible(
-                child: Text(
-                    "${widget.receiverData.firstName} ${widget.receiverData.lastName}"),
+                child:
+                    Text("${receiverData.firstName} ${receiverData.lastName}"),
               ),
             ],
           ),
@@ -151,10 +130,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   }
 
   _buildMessages() {
-    final data = _chatService.getMessages(_currentUser!.uid, widget.receiverId);
+    final data = _chatService.getMessages(_currentUser!.uid, receiverId);
     return ChatBuilder(
       senderId: _currentUser!.uid,
-      receiverData: widget.receiverData,
+      receiverData: receiverData,
       stream: data,
     );
   }

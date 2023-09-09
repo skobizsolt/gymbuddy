@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/screen/auth/auth_screen.dart';
+import 'package:gymbuddy/service/notification_service.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -10,6 +12,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await NotificationService().setupPushNotifications();
   runApp(const ProviderScope(
     child: ProviderScope(
       child: App(),
@@ -26,6 +29,7 @@ class App extends StatelessWidget {
       theme: kDarkTheme(context),
       locale: const Locale('hu', 'HU'),
       home: const AuthScreen(),
+      navigatorKey: GlobalValues.navigatorKey,
     );
   }
 }

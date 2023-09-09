@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbuddy/global/global_variables.dart';
 
 import 'package:gymbuddy/models/screens.dart';
 import 'package:gymbuddy/screen/chats_screen.dart';
@@ -39,17 +40,15 @@ class _TabsScreenState extends State<TabsScreen> {
     ),
   ];
 
-  int _selectedPageIndex = 0;
-
   void _selectPage(int index) {
     setState(() {
-      _selectedPageIndex = index;
+      GlobalValues.kBottomNavBarIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final Screen activeScreen = screens[_selectedPageIndex];
+    final Screen activeScreen = screens[GlobalValues.kBottomNavBarIndex];
 
     return GestureDetector(
       onTap: () => KeyboardService().closeKeyboard(),
@@ -58,7 +57,7 @@ class _TabsScreenState extends State<TabsScreen> {
         body: activeScreen.body,
         bottomNavigationBar: BottomNavigationBar(
           onTap: _selectPage,
-          currentIndex: _selectedPageIndex,
+          currentIndex: GlobalValues.kBottomNavBarIndex,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
