@@ -9,25 +9,35 @@ const fcm = admin.messaging();
 // Cloud Firestore triggers ref: https://firebase.google.com/docs/functions/firestore-events
 exports.newChatMessageNotification = functions.firestore
   .document("chats/{chatId}/messages/{messageId}")
-  .onCreate((snapshot, context) => {
+  .onCreate(async (snapshot, context) => {
 
-    // TODO: get targets fcm token
-    const target = firestore
+    const receiver = snapshot.data()["receiverId"];
+
+    // Selected fcm tokens
+    const fcm_tokens_snapshots = await firestore
     .collection('users')
-    .doc(snapshot.data()["receiverId"])
+    .doc(receiver)
     .collection("tokens")
     .get();
 
-    const tokens = target.docs.map(snap => snap.id);
+    const fcm_tokens = fcm_tokens_snapshots.docs.map(snap => snap.id);
 
-    // Return this function's promise, so this ensures the firebase function
-    // will keep running, until the notification is scheduled.
-    return fcm.sendToDevice(tokens, {
-      // Sending a notification message.
+    if (fcm_tokens == null || fcm_tokens.length == 0) {
+      console.log('No tokens to send message to!');
+      return;
+    }
+
+    // Notification message.
+    const message = {
       notification: {
         title: snapshot.data()["senderName"],
         body: snapshot.data()["message"],
-        clickAction: "FLUTTER_NOTIFICATION_CLICK",
+        clickAction: "FLUTTER_NOTIFICATION_CLICK"
       },
-    });
+      tokens: fcm_tokens
+    };
+
+    // Return this function's promise, so this ensures the firebase function
+    // will keep running, until the notification is scheduled.
+    return await fcm.sendEachForMulticast(message);
   });
