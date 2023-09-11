@@ -4,40 +4,51 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 
 const firestore = admin.firestore();
-const fcm = admin.messaging();
 
 // Cloud Firestore triggers ref: https://firebase.google.com/docs/functions/firestore-events
 exports.newChatMessageNotification = functions.firestore
   .document("chats/{chatId}/messages/{messageId}")
   .onCreate(async (snapshot, context) => {
 
-    const receiver = snapshot.data()["receiverId"];
+    const messageData = snapshot.data();
+    const receiver = messageData["receiverId"];
+    functions.logger.log("New message sent by user: " + receiver);
+    functions.logger.debug("Title: " + messageData["senderName"]);
+    functions.logger.debug("Message: " + messageData["message"]);
 
     // Selected fcm tokens
-    const fcm_tokens_snapshots = await firestore
+    return await firestore
     .collection('users')
     .doc(receiver)
     .collection("tokens")
-    .get();
+    .get()
+    .then(
+      result => {
 
-    const fcm_tokens = fcm_tokens_snapshots.docs.map(snap => snap.id);
+        fcm_tokens = [];
+        result.docs.forEach(
+          document => {
+            fcm_tokens.push(document.id);
+          }
+        );
 
-    if (fcm_tokens == null || fcm_tokens.length == 0) {
-      console.log('No tokens to send message to!');
-      return;
-    }
+        // Checking if tokens available
+        if (fcm_tokens == null || fcm_tokens.length == 0) {
+          functions.logger.debug('No tokens to send message to!');
+          return;
+        }
 
-    // Notification message.
-    const message = {
-      notification: {
-        title: snapshot.data()["senderName"],
-        body: snapshot.data()["message"],
-        clickAction: "FLUTTER_NOTIFICATION_CLICK"
-      },
-      tokens: fcm_tokens
-    };
-
-    // Return this function's promise, so this ensures the firebase function
-    // will keep running, until the notification is scheduled.
-    return await fcm.sendEachForMulticast(message);
-  });
+        // Sending messages
+        functions.logger.debug('Tokens found, tokens: ' + fcm_tokens);
+        admin.messaging().sendEachForMulticast(
+          {
+            tokens: fcm_tokens,
+            notification: {
+              title: messageData["senderName"],
+              body: messageData["message"]
+            }
+          }
+        );
+      }
+    );
+});

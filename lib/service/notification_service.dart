@@ -12,14 +12,13 @@ class NotificationService {
 
   Future<void> setupPushNotifications() async {
     await _fcm.requestPermission().whenComplete(initPushNotifications);
-    saveDeviceToken();
   }
 
   Future<void> handleNotification(RemoteMessage? message) async {
     if (message == null) {
       return;
     }
-    if (message.data["action"] == FIREBASE_NOTIFICATION_CHATS_TOPIC) {}
+    print("Handling a background message: ${message.messageId}");
   }
 
   Future initPushNotifications() async {
