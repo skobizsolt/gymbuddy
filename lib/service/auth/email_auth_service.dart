@@ -1,12 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 
 enum AuthenticationType { login, register }
 
-class AuthService {
+class AuthService extends StateNotifier<UserCredential?> {
+  AuthService(super.state);
+
   Future<UserCredential?> signUserIn(
       final BuildContext context, final AuthDto request) {
     return _authenticate(context, request, AuthenticationType.login);

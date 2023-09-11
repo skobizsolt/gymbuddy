@@ -25,7 +25,7 @@ class ProfileCard extends ConsumerWidget {
       ],
       [
         // Registered
-        "Joined: ${DateFormat.yMMMd('en_CA').format(userData.registeredOn)}",
+        "Joined: ${DateFormat.yMMMd('en_CA').format(userData.registeredOn!)}",
         Theme.of(context).textTheme.titleSmall,
       ],
     ];

@@ -1,18 +1,60 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbuddy/components/chat_builder.dart';
+import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
+import 'package:gymbuddy/models/user_dto.dart';
+import 'package:gymbuddy/providers/user_provider.dart';
+import 'package:gymbuddy/service/chats/chat_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
-import 'package:transparent_image/transparent_image.dart';
 
-class ConversationScreen extends StatelessWidget {
-  const ConversationScreen(
-      {super.key, required this.receiverName, required this.receiverAvatar});
+class ConversationScreen extends ConsumerWidget {
+  ConversationScreen({
+    super.key,
+    required this.receiverId,
+    required this.receiverData,
+  });
 
-  final String receiverName;
-  final Object receiverAvatar;
+  final String receiverId;
+  final UserDto receiverData;
+
+  final _chatController = TextEditingController();
+
+  final _chatService = ChatService();
+
+  final _currentUser = FirebaseAuth.instance.currentUser;
+
+  void sendMessage(UserDto sender) async {
+    if (_chatController.text.isNotEmpty) {
+      await _chatService.sendMessage(
+        "${sender.firstName} ${sender.lastName}",
+        receiverId,
+        _chatController.text,
+      );
+    }
+  }
+
+  Widget _renderAvatar() {
+    if (receiverData.profileImageUrl == null) {
+      return const SizedBox();
+    }
+    return Row(
+      children: [
+        ProfilePicture(
+          picture: NetworkImage(receiverData.profileImageUrl!),
+        ),
+        const SizedBox(
+          width: 15,
+        ),
+      ],
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _userData = ref.watch(userProvider).value;
     return GestureDetector(
       onTap: () => KeyboardService().unFocusKeyboard(context),
       child: Scaffold(
@@ -22,15 +64,11 @@ class ConversationScreen extends StatelessWidget {
           titleSpacing: 0,
           title: Row(
             children: [
-              ProfilePicture(
-                  picture: receiverAvatar,
-                  child: receiverAvatar == MemoryImage(kTransparentImage)
-                      ? const Icon(Icons.person)
-                      : const SizedBox()),
-              const SizedBox(
-                width: 5,
+              _renderAvatar(),
+              Flexible(
+                child:
+                    Text("${receiverData.firstName} ${receiverData.lastName}"),
               ),
-              Text(receiverName),
             ],
           ),
           actions: [
@@ -43,16 +81,23 @@ class ConversationScreen extends StatelessWidget {
             ),
           ],
         ),
-        bottomSheet: Padding(
+        body: Padding(
+          padding:
+              const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 8),
+          child: _buildMessages(),
+        ),
+        bottomSheet: Container(
+          color: Theme.of(context).colorScheme.primary,
           padding: const EdgeInsets.all(8),
           child: Row(
             children: [
               Expanded(
                 child: InputLayout(
-                  height: 40,
+                  height: 50,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                   child: TextFormField(
-                    decoration: const InputDecoration().copyWith(
+                    controller: _chatController,
+                    decoration: const InputDecoration.collapsed(
                       hintText: 'Say something...',
                     ),
                   ),
@@ -64,6 +109,13 @@ class ConversationScreen extends StatelessWidget {
               IconButton(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
                 onPressed: () {
+                  if (_userData == null) {
+                    showErrorSnackBar(context,
+                        "Something went wrong, please try again later!");
+                  } else {
+                    sendMessage(_userData);
+                  }
+                  _chatController.clear();
                   KeyboardService().closeKeyboard();
                 },
                 icon: const Icon(
@@ -74,6 +126,15 @@ class ConversationScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  _buildMessages() {
+    final data = _chatService.getMessages(_currentUser!.uid, receiverId);
+    return ChatBuilder(
+      senderId: _currentUser!.uid,
+      receiverData: receiverData,
+      stream: data,
     );
   }
 }

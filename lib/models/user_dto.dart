@@ -3,14 +3,14 @@ class UserDto {
   String username;
   String firstName;
   String lastName;
-  DateTime registeredOn;
+  DateTime? registeredOn;
   String? profileImageUrl;
   UserDto({
     required this.email,
     required this.username,
     required this.firstName,
     required this.lastName,
-    required this.registeredOn,
+    this.registeredOn,
     this.profileImageUrl,
   });
 
@@ -29,6 +29,16 @@ class UserDto {
       lastName: lastName ?? this.lastName,
       registeredOn: registeredOn ?? this.registeredOn,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+    );
+  }
+
+  static UserDto fromMap(Map<String, dynamic> map) {
+    return UserDto(
+      email: map["email"],
+      username: map["username"],
+      firstName: map["first_name"],
+      lastName: map["last_name"],
+      profileImageUrl: map["profile_image_url"] ?? null,
     );
   }
 

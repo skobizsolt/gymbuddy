@@ -14,6 +14,7 @@ class InputLayout extends StatelessWidget {
       child: Card(
         color: color ?? Theme.of(context).primaryColorDark,
         child: Container(
+          alignment: Alignment.centerLeft,
           height: height,
           padding: const EdgeInsets.symmetric(
             horizontal: 16,
