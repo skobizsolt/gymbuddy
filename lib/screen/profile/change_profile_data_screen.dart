@@ -40,7 +40,6 @@ class _ChangeProfileContentState
       () {
         Navigator.of(context).pop();
         showSucessSnackBar(context, 'Your data has updated!');
-        ref.invalidate(userProvider);
       },
     );
   }
