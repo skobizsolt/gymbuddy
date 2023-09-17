@@ -5,7 +5,6 @@ import 'package:gymbuddy/components/inputs/password_form_field.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
 import 'package:gymbuddy/providers/auth_provider.dart';
 import 'package:gymbuddy/screen/auth/forgot_password_screen.dart';
-import 'package:gymbuddy/service/fcm_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/widgets/utils/brand_icon.dart';
 import 'package:gymbuddy/widgets/utils/custom_text_button.dart';
@@ -37,10 +36,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() {
       _isAuthenticating = true;
     });
-    await ref
-        .read(authProvider.notifier)
-        .signUserIn(context, _authDto)
-        .then((value) => FcmService().addTokenToUser());
+    await ref.read(authProvider.notifier).signUserIn(context, _authDto);
     resetButton();
   }
 

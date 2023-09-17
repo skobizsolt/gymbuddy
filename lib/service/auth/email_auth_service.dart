@@ -23,21 +23,25 @@ class AuthService extends StateNotifier<UserCredential?> {
 
   Future<UserCredential?> _authenticate(final BuildContext context,
       final AuthDto request, final AuthenticationType type) async {
-    // Try authentication
+    // Try authentication and adding FCM token for messaging
     try {
       // Case: login
       if (type == AuthenticationType.login) {
-        return await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: request.email,
-          password: request.password,
-        );
+        return await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+              email: request.email,
+              password: request.password,
+            )
+            .whenComplete(() => FcmService().addTokenToUser());
       }
       // Case: Sign up
       if (type == AuthenticationType.register) {
-        return await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: request.email,
-          password: request.password,
-        );
+        return await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+              email: request.email,
+              password: request.password,
+            )
+            .whenComplete(() => FcmService().addTokenToUser());
       }
     } on FirebaseAuthException catch (e) {
       KeyboardService().closeKeyboard();
