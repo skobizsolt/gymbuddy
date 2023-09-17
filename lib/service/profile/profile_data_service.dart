@@ -8,23 +8,26 @@ import 'package:gymbuddy/models/auth/new_user_dto.dart';
 import 'package:gymbuddy/models/user_dto.dart';
 
 class ProfileDataService {
-  Future<UserDto> get profileData async {
+  Stream<UserDto> get profileData {
     var currentUser = FirebaseAuth.instance.currentUser;
-    return await FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection(FIRESTORE_USER_COLLECTION)
         .doc(currentUser!.uid)
-        .get()
-        .then(
-          (value) => UserDto(
-                  email: value.data()!["email"],
-                  username: value.data()!["username"],
-                  firstName: value.data()!["first_name"],
-                  lastName: value.data()!["last_name"],
-                  registeredOn: currentUser.metadata.creationTime!)
-              .copyWith(
-            profileImageUrl: value.data()!["profile_image_url"] ?? null,
-          ),
-        );
+        .snapshots()
+        .map((value) {
+      if (value.data() == null || value.data()!.isEmpty) {
+        throw Exception("Couldn't receive user data");
+      }
+      return UserDto(
+              email: value.data()!["email"],
+              username: value.data()!["username"],
+              firstName: value.data()!["first_name"],
+              lastName: value.data()!["last_name"],
+              registeredOn: currentUser.metadata.creationTime!)
+          .copyWith(
+        profileImageUrl: value.data()!["profile_image_url"] ?? null,
+      );
+    });
   }
 
   Future<void> registerUserData(

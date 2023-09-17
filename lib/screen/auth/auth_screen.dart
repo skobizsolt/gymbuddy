@@ -17,7 +17,6 @@ class AuthScreen extends ConsumerWidget {
         builder: (context, snapshot) {
           // user is logged in
           if (snapshot.hasData) {
-            ref.invalidate(authStateChangeProvider);
             return const TabsScreen();
           }
           // user is not logged in
