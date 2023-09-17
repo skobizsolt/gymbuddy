@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/models/auth/auth_dto.dart';
+import 'package:gymbuddy/service/fcm_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 
 enum AuthenticationType { login, register }
@@ -60,7 +61,10 @@ class AuthService extends StateNotifier<UserCredential?> {
   }
 
   signOut(BuildContext context) {
-    FirebaseAuth.instance.signOut();
+    FcmService().deleteToken().then(
+          (value) => FirebaseAuth.instance.signOut(),
+        );
+
     showSucessSnackBar(context, 'You\'ve logged out successfully! 👋');
   }
 }
