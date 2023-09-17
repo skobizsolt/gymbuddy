@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/models/user_dto.dart';
+import 'package:gymbuddy/providers/chat_provider.dart';
 import 'package:gymbuddy/screen/chats/chat_conversation_screen.dart';
 import 'package:gymbuddy/components/inputs/custom_searchbar.dart';
-import 'package:gymbuddy/service/chats/chat_service.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 

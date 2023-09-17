@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/global/firebase_constants.dart';
 import 'package:gymbuddy/models/chats/chat_message.dart';
-import 'package:gymbuddy/providers/auth_provider.dart';
 
 class ChatService {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -56,8 +54,3 @@ class ChatService {
         .snapshots();
   }
 }
-
-var chatsProvider = StreamProvider((ref) {
-  ref.watch(authStateChangeProvider);
-  return ChatService().getUsers();
-});
