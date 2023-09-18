@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/service/validators.dart';
 
-class DefaultTextFormField extends StatelessWidget {
+class MultiLineTextFormField extends StatelessWidget {
   final String hintText;
   final String? initialValue;
   final String? Function(String?)? validator;
   final Function(String?)? onSaved;
-  final TextInputType? keyboardType;
+  final int maxLines;
 
-  const DefaultTextFormField({
+  const MultiLineTextFormField({
     super.key,
     required this.hintText,
     this.initialValue,
     this.validator,
     this.onSaved,
-    this.keyboardType,
+    required this.maxLines,
   });
 
   @override
@@ -33,7 +33,9 @@ class DefaultTextFormField extends StatelessWidget {
               },
           onSaved: onSaved,
           initialValue: initialValue ?? null,
-          keyboardType: keyboardType,
+          keyboardType: TextInputType.multiline,
+          minLines: 1,
+          maxLines: maxLines,
         ),
       ),
     );

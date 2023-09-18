@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/data/workout_data.dart';
+import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/screen/workout/search_workouts_screen.dart';
+import 'package:gymbuddy/screen/workout/workout_manager.dart';
 
 class HomeOption extends StatelessWidget {
   const HomeOption({
@@ -26,6 +28,17 @@ class HomeOption extends StatelessWidget {
     );
   }
 
+  void addNewTraining(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WorkoutManager(
+          type: CrudType.add,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,6 +47,9 @@ class HomeOption extends StatelessWidget {
         onTap: () {
           if (id == 0) {
             searchWorkouts(context, workoutData);
+          }
+          if (id == 2) {
+            addNewTraining(context);
           }
         },
         child: Card(

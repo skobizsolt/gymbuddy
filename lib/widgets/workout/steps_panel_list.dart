@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/data/workout_step_data.dart';
 import 'package:gymbuddy/models/workout_step.dart';
-import 'package:gymbuddy/screen/workout/workout_step_details_screen.dart';
+import 'package:gymbuddy/screen/workout_steps/workout_step_details_screen.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
 class StepsPanelList extends StatelessWidget {

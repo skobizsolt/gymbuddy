@@ -3,10 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/widgets/utils/themed_icon.dart';
 
-enum WorkoutDifficulty { easy, intermediate, hard }
-
-enum WorkoutCategory { endurance, strength, balance, flexibility }
-
 class Workout {
   const Workout(
       {required this.workoutId,
@@ -52,3 +48,7 @@ Map<WorkoutCategory, String> get workoutCategoryIcon {
     WorkoutCategory.balance: '🧘‍♀️',
   };
 }
+
+enum WorkoutDifficulty { easy, intermediate, hard }
+
+enum WorkoutCategory { endurance, strength, balance, flexibility }

@@ -1,17 +1,12 @@
-enum WorkoutType {
-  interval,
-  rep;
-}
-
 class WorkoutStep {
-  WorkoutStep(
-      {required this.stepId,
-      required this.workoutId,
-      required this.stepNumber,
-      required this.stepName,
-      required this.details,
-      required this.workoutType,
-      this.expanded = false});
+  WorkoutStep({
+    required this.stepId,
+    required this.workoutId,
+    required this.stepNumber,
+    required this.stepName,
+    required this.details,
+    required this.workoutType,
+  });
 
   int stepId;
   int workoutId;
@@ -19,5 +14,9 @@ class WorkoutStep {
   String stepName;
   String details;
   WorkoutType workoutType;
-  bool expanded;
+}
+
+enum WorkoutType {
+  interval,
+  rep;
 }
