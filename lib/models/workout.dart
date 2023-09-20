@@ -17,7 +17,7 @@ class Workout {
       required this.estimatedTimeInMinutes});
 
   final int workoutId;
-  final int userId;
+  final String userId;
   final String title;
   final String? description;
   final WorkoutCategory category;

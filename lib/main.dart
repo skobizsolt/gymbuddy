@@ -144,6 +144,15 @@ ThemeData kDarkTheme(BuildContext context) {
       ),
     ),
 
+    floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
+      backgroundColor: Theme.of(context).primaryColorDark,
+      foregroundColor: orange,
+      extendedTextStyle: const TextStyle().copyWith(
+        color: Colors.transparent,
+        fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
+      ),
+    ),
+
     // List tile theme
     listTileTheme: ListTileThemeData(
         titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(

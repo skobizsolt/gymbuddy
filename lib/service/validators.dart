@@ -26,6 +26,15 @@ class InputValidator {
     return "Minimum length for username is $USERNAME_LENGTH characters!";
   }
 
+  validateNumber(final String? value) {
+    if (_isValidValue(value) &&
+        int.tryParse(value!) != null &&
+        int.parse(value) > 0) {
+      return null;
+    }
+    return "Enter a valid number!";
+  }
+
   validateBasicText(final String? value, final String hintText) {
     if (_isValidValue(value)) {
       return null;
