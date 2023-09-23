@@ -49,14 +49,14 @@ abstract class TrainingApi extends ChopperService {
   ///
   ///@param workoutId
   ///@param stepNumber
-  Future<chopper.Response<WorkoutStepDto>>
+  Future<chopper.Response<WorkoutStepResponse>>
       workoutsWorkoutIdStepsStepNumberEditPut({
     required int? workoutId,
     required int? stepNumber,
-    required ChangeWorkoutStepDto? body,
+    required ChangeWorkoutStepRequest? body,
   }) {
     generatedMapping.putIfAbsent(
-        WorkoutStepDto, () => WorkoutStepDto.fromJsonFactory);
+        WorkoutStepResponse, () => WorkoutStepResponse.fromJsonFactory);
 
     return _workoutsWorkoutIdStepsStepNumberEditPut(
         workoutId: workoutId, stepNumber: stepNumber, body: body);
@@ -69,20 +69,21 @@ abstract class TrainingApi extends ChopperService {
     path: '/workouts/{workoutId}/steps/{stepNumber}/edit',
     optionalBody: true,
   )
-  Future<chopper.Response<WorkoutStepDto>>
+  Future<chopper.Response<WorkoutStepResponse>>
       _workoutsWorkoutIdStepsStepNumberEditPut({
     @Path('workoutId') required int? workoutId,
     @Path('stepNumber') required int? stepNumber,
-    @Body() required ChangeWorkoutStepDto? body,
+    @Body() required ChangeWorkoutStepRequest? body,
   });
 
   ///
   ///@param workoutId
-  Future<chopper.Response<WorkoutDto>> workoutsWorkoutIdEditPut({
+  Future<chopper.Response<WorkoutResponse>> workoutsWorkoutIdEditPut({
     required int? workoutId,
-    required ChangeWorkoutDto? body,
+    required ChangeWorkoutRequest? body,
   }) {
-    generatedMapping.putIfAbsent(WorkoutDto, () => WorkoutDto.fromJsonFactory);
+    generatedMapping.putIfAbsent(
+        WorkoutResponse, () => WorkoutResponse.fromJsonFactory);
 
     return _workoutsWorkoutIdEditPut(workoutId: workoutId, body: body);
   }
@@ -93,19 +94,20 @@ abstract class TrainingApi extends ChopperService {
     path: '/workouts/{workoutId}/edit',
     optionalBody: true,
   )
-  Future<chopper.Response<WorkoutDto>> _workoutsWorkoutIdEditPut({
+  Future<chopper.Response<WorkoutResponse>> _workoutsWorkoutIdEditPut({
     @Path('workoutId') required int? workoutId,
-    @Body() required ChangeWorkoutDto? body,
+    @Body() required ChangeWorkoutRequest? body,
   });
 
   ///
   ///@param workoutId
-  Future<chopper.Response<WorkoutStepDto>> workoutsWorkoutIdStepsCreatePost({
+  Future<chopper.Response<WorkoutStepResponse>>
+      workoutsWorkoutIdStepsCreatePost({
     required int? workoutId,
-    required ChangeWorkoutStepDto? body,
+    required ChangeWorkoutStepRequest? body,
   }) {
     generatedMapping.putIfAbsent(
-        WorkoutStepDto, () => WorkoutStepDto.fromJsonFactory);
+        WorkoutStepResponse, () => WorkoutStepResponse.fromJsonFactory);
 
     return _workoutsWorkoutIdStepsCreatePost(workoutId: workoutId, body: body);
   }
@@ -116,19 +118,20 @@ abstract class TrainingApi extends ChopperService {
     path: '/workouts/{workoutId}/steps/create',
     optionalBody: true,
   )
-  Future<chopper.Response<WorkoutStepDto>> _workoutsWorkoutIdStepsCreatePost({
+  Future<chopper.Response<WorkoutStepResponse>>
+      _workoutsWorkoutIdStepsCreatePost({
     @Path('workoutId') required int? workoutId,
-    @Body() required ChangeWorkoutStepDto? body,
+    @Body() required ChangeWorkoutStepRequest? body,
   });
 
   ///
   ///@param userId
-  Future<chopper.Response<DetailedWorkoutsDto>> workoutsCreatePost({
+  Future<chopper.Response<DetailedWorkoutsResponse>> workoutsCreatePost({
     required String? userId,
-    required ChangeWorkoutDto? body,
+    required ChangeWorkoutRequest? body,
   }) {
-    generatedMapping.putIfAbsent(
-        DetailedWorkoutsDto, () => DetailedWorkoutsDto.fromJsonFactory);
+    generatedMapping.putIfAbsent(DetailedWorkoutsResponse,
+        () => DetailedWorkoutsResponse.fromJsonFactory);
 
     return _workoutsCreatePost(userId: userId, body: body);
   }
@@ -139,28 +142,29 @@ abstract class TrainingApi extends ChopperService {
     path: '/workouts/create',
     optionalBody: true,
   )
-  Future<chopper.Response<DetailedWorkoutsDto>> _workoutsCreatePost({
+  Future<chopper.Response<DetailedWorkoutsResponse>> _workoutsCreatePost({
     @Query('userId') required String? userId,
-    @Body() required ChangeWorkoutDto? body,
+    @Body() required ChangeWorkoutRequest? body,
   });
 
   ///
-  Future<chopper.Response<WorkoutsDto>> workoutsGet() {
+  Future<chopper.Response<WorkoutListResponse>> workoutsGet() {
     generatedMapping.putIfAbsent(
-        WorkoutsDto, () => WorkoutsDto.fromJsonFactory);
+        WorkoutListResponse, () => WorkoutListResponse.fromJsonFactory);
 
     return _workoutsGet();
   }
 
   ///
   @Get(path: '/workouts')
-  Future<chopper.Response<WorkoutsDto>> _workoutsGet();
+  Future<chopper.Response<WorkoutListResponse>> _workoutsGet();
 
   ///
   ///@param workoutId
-  Future<chopper.Response<WorkoutDto>> workoutsWorkoutIdGet(
+  Future<chopper.Response<WorkoutResponse>> workoutsWorkoutIdGet(
       {required int? workoutId}) {
-    generatedMapping.putIfAbsent(WorkoutDto, () => WorkoutDto.fromJsonFactory);
+    generatedMapping.putIfAbsent(
+        WorkoutResponse, () => WorkoutResponse.fromJsonFactory);
 
     return _workoutsWorkoutIdGet(workoutId: workoutId);
   }
@@ -168,15 +172,15 @@ abstract class TrainingApi extends ChopperService {
   ///
   ///@param workoutId
   @Get(path: '/workouts/{workoutId}')
-  Future<chopper.Response<WorkoutDto>> _workoutsWorkoutIdGet(
+  Future<chopper.Response<WorkoutResponse>> _workoutsWorkoutIdGet(
       {@Path('workoutId') required int? workoutId});
 
   ///
   ///@param workoutId
-  Future<chopper.Response<List<WorkoutStepDto>>> workoutsWorkoutIdStepsGet(
+  Future<chopper.Response<List<WorkoutStepResponse>>> workoutsWorkoutIdStepsGet(
       {required int? workoutId}) {
     generatedMapping.putIfAbsent(
-        WorkoutStepDto, () => WorkoutStepDto.fromJsonFactory);
+        WorkoutStepResponse, () => WorkoutStepResponse.fromJsonFactory);
 
     return _workoutsWorkoutIdStepsGet(workoutId: workoutId);
   }
@@ -184,18 +188,19 @@ abstract class TrainingApi extends ChopperService {
   ///
   ///@param workoutId
   @Get(path: '/workouts/{workoutId}/steps')
-  Future<chopper.Response<List<WorkoutStepDto>>> _workoutsWorkoutIdStepsGet(
-      {@Path('workoutId') required int? workoutId});
+  Future<chopper.Response<List<WorkoutStepResponse>>>
+      _workoutsWorkoutIdStepsGet({@Path('workoutId') required int? workoutId});
 
   ///
   ///@param workoutId
   ///@param stepNumber
-  Future<chopper.Response<WorkoutStepDto>> workoutsWorkoutIdStepsStepNumberGet({
+  Future<chopper.Response<WorkoutStepResponse>>
+      workoutsWorkoutIdStepsStepNumberGet({
     required int? workoutId,
     required int? stepNumber,
   }) {
     generatedMapping.putIfAbsent(
-        WorkoutStepDto, () => WorkoutStepDto.fromJsonFactory);
+        WorkoutStepResponse, () => WorkoutStepResponse.fromJsonFactory);
 
     return _workoutsWorkoutIdStepsStepNumberGet(
         workoutId: workoutId, stepNumber: stepNumber);
@@ -205,7 +210,7 @@ abstract class TrainingApi extends ChopperService {
   ///@param workoutId
   ///@param stepNumber
   @Get(path: '/workouts/{workoutId}/steps/{stepNumber}')
-  Future<chopper.Response<WorkoutStepDto>>
+  Future<chopper.Response<WorkoutStepResponse>>
       _workoutsWorkoutIdStepsStepNumberGet({
     @Path('workoutId') required int? workoutId,
     @Path('stepNumber') required int? stepNumber,

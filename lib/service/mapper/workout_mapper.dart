@@ -3,7 +3,7 @@ import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 
 class WorkoutModelMapper {
-  Workout toWorkout(WorkoutDto workoutDto) {
+  Workout toWorkout(WorkoutResponse workoutDto) {
     return Workout(
         workoutId: workoutDto.workoutId!,
         userId: workoutDto.userId!,
@@ -19,11 +19,11 @@ class WorkoutModelMapper {
             workoutDto.stepDetails!.estimatedTimeInMinutes!);
   }
 
-  List<WorkoutStep> toWorkoutSteps(List<WorkoutStepDto> steps) {
+  List<WorkoutStep> toWorkoutSteps(List<WorkoutStepResponse> steps) {
     return steps.map(toWorkoutStep).toList();
   }
 
-  WorkoutStep toWorkoutStep(WorkoutStepDto step) {
+  WorkoutStep toWorkoutStep(WorkoutStepResponse step) {
     return WorkoutStep(
         stepNumber: step.stepNumber!,
         stepName: step.stepName!,

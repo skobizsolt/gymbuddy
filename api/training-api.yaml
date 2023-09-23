@@ -29,7 +29,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangeWorkoutStepDto'
+              $ref: '#/components/schemas/ChangeWorkoutStepRequest'
         required: true
       responses:
         '200':
@@ -37,7 +37,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/WorkoutStepDto'
+                $ref: '#/components/schemas/WorkoutStepResponse'
   /workouts/{workoutId}/edit:
     put:
       tags:
@@ -54,7 +54,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangeWorkoutDto'
+              $ref: '#/components/schemas/ChangeWorkoutRequest'
         required: true
       responses:
         '200':
@@ -62,7 +62,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/WorkoutDto'
+                $ref: '#/components/schemas/WorkoutResponse'
   /workouts/{workoutId}/steps/create:
     post:
       tags:
@@ -79,7 +79,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangeWorkoutStepDto'
+              $ref: '#/components/schemas/ChangeWorkoutStepRequest'
         required: true
       responses:
         '200':
@@ -87,7 +87,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/WorkoutStepDto'
+                $ref: '#/components/schemas/WorkoutStepResponse'
   /workouts/create:
     post:
       tags:
@@ -103,7 +103,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangeWorkoutDto'
+              $ref: '#/components/schemas/ChangeWorkoutRequest'
         required: true
       responses:
         '200':
@@ -111,7 +111,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/DetailedWorkoutsDto'
+                $ref: '#/components/schemas/DetailedWorkoutsResponse'
   /workouts:
     get:
       tags:
@@ -123,7 +123,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/WorkoutsDto'
+                $ref: '#/components/schemas/WorkoutListResponse'
   /workouts/{workoutId}:
     get:
       tags:
@@ -142,7 +142,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/WorkoutDto'
+                $ref: '#/components/schemas/WorkoutResponse'
   /workouts/{workoutId}/steps:
     get:
       tags:
@@ -163,7 +163,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/WorkoutStepDto'
+                  $ref: '#/components/schemas/WorkoutStepResponse'
   /workouts/{workoutId}/steps/{stepNumber}:
     get:
       tags:
@@ -188,7 +188,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/WorkoutStepDto'
+                $ref: '#/components/schemas/WorkoutStepResponse'
   /workouts/{workoutId}/steps/{stepNumber}/delete:
     delete:
       tags:
@@ -227,7 +227,7 @@ paths:
           description: OK
 components:
   schemas:
-    ChangeWorkoutStepDto:
+    ChangeWorkoutStepRequest:
       type: object
       properties:
         stepName:
@@ -242,7 +242,7 @@ components:
         estimatedTime:
           type: integer
           format: int32
-    WorkoutStepDto:
+    WorkoutStepResponse:
       type: object
       properties:
         stepNumber:
@@ -260,7 +260,7 @@ components:
         estimatedTime:
           type: integer
           format: int32
-    ChangeWorkoutDto:
+    ChangeWorkoutRequest:
       type: object
       properties:
         title:
@@ -283,7 +283,7 @@ components:
         steps:
           type: array
           items:
-            $ref: '#/components/schemas/ChangeWorkoutStepDto'
+            $ref: '#/components/schemas/ChangeWorkoutStepRequest'
     GeneralStepDetailsDto:
       type: object
       properties:
@@ -293,7 +293,7 @@ components:
         totalSteps:
           type: integer
           format: int32
-    WorkoutDto:
+    WorkoutResponse:
       type: object
       properties:
         workoutId:
@@ -326,22 +326,22 @@ components:
             - HARD
         stepDetails:
           $ref: '#/components/schemas/GeneralStepDetailsDto'
-    DetailedWorkoutsDto:
+    DetailedWorkoutsResponse:
       type: object
       properties:
         workout:
-          $ref: '#/components/schemas/WorkoutDto'
+          $ref: '#/components/schemas/WorkoutResponse'
         steps:
           type: array
           items:
-            $ref: '#/components/schemas/WorkoutStepDto'
-    WorkoutsDto:
+            $ref: '#/components/schemas/WorkoutStepResponse'
+    WorkoutListResponse:
       type: object
       properties:
         workouts:
           type: array
           items:
-            $ref: '#/components/schemas/WorkoutDto'
+            $ref: '#/components/schemas/WorkoutResponse'
   securitySchemes:
     token:
       type: http

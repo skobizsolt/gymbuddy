@@ -4,7 +4,7 @@ import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/models/workout/change_workout_request.dart';
+import 'package:gymbuddy/models/workout/change_workout.dart';
 import 'package:gymbuddy/screen/workout/workout_details_screen.dart';
 import 'package:gymbuddy/service/mapper/workout_mapper.dart';
 
@@ -16,9 +16,9 @@ class WorkoutService {
 
   Future<void> createWorkout(
     BuildContext context,
-    ChangeWorkoutRequest workout,
+    ChangeWorkoutDto workout,
   ) async {
-    var request = ChangeWorkoutDto.fromJson(workout.toMap());
+    var request = ChangeWorkoutRequest.fromJson(workout.toMap());
     var response = await _api.workoutsCreatePost(
         userId: FirebaseAuth.instance.currentUser!.uid, body: request);
 

@@ -4,7 +4,7 @@ import 'package:gymbuddy/components/inputs/default_text_form_field.dart';
 import 'package:gymbuddy/components/inputs/multiline_text_form_field.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
-import 'package:gymbuddy/models/workout/change_workout_step_request.dart';
+import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/service/validators.dart';
@@ -19,7 +19,7 @@ class WorkoutStepManager extends StatefulWidget {
 }
 
 class _WorkoutManagerState extends State<WorkoutStepManager> {
-  final ChangeWorkoutStepRequest _step = ChangeWorkoutStepRequest();
+  final ChangeWorkoutStepDto _step = ChangeWorkoutStepDto();
   final _formKey = GlobalKey<FormState>();
 
   _saveForm() {

@@ -5,8 +5,8 @@ import 'package:gymbuddy/components/inputs/multiline_text_form_field.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/models/workout/change_workout_request.dart';
-import 'package:gymbuddy/models/workout/change_workout_step_request.dart';
+import 'package:gymbuddy/models/workout/change_workout.dart';
+import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
 import 'package:gymbuddy/service/mapper/workout_internal_mapper.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
@@ -23,7 +23,7 @@ class WorkoutManager extends StatefulWidget {
 }
 
 class _WorkoutManagerState extends State<WorkoutManager> {
-  final ChangeWorkoutRequest _workout = ChangeWorkoutRequest(
+  final ChangeWorkoutDto _workout = ChangeWorkoutDto(
     steps: [],
   );
   final _formkey = GlobalKey<FormState>();
@@ -38,8 +38,7 @@ class _WorkoutManagerState extends State<WorkoutManager> {
   }
 
   addStep(CrudType type) async {
-    final ChangeWorkoutStepRequest? addedStep =
-        await Navigator.of(context).push(
+    final ChangeWorkoutStepDto? addedStep = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WorkoutStepManager(type: type),
       ),

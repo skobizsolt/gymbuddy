@@ -4,16 +4,16 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/models/workout/change_workout_step_request.dart';
+import 'package:gymbuddy/models/workout/change_workout_step.dart';
 
-class ChangeWorkoutRequest {
+class ChangeWorkoutDto {
   String? title;
   String? description;
   WorkoutCategory? category;
   WorkoutDifficulty? difficulty;
-  List<ChangeWorkoutStepRequest> steps;
+  List<ChangeWorkoutStepDto> steps;
 
-  ChangeWorkoutRequest({
+  ChangeWorkoutDto({
     this.title,
     this.description,
     this.category,
@@ -21,15 +21,15 @@ class ChangeWorkoutRequest {
     required this.steps,
   });
 
-  ChangeWorkoutRequest copyWith({
+  ChangeWorkoutDto copyWith({
     String? userId,
     String? title,
     String? description,
     WorkoutCategory? category,
     WorkoutDifficulty? difficulty,
-    List<ChangeWorkoutStepRequest>? steps,
+    List<ChangeWorkoutStepDto>? steps,
   }) {
-    return ChangeWorkoutRequest(
+    return ChangeWorkoutDto(
       title: title ?? this.title,
       description: description ?? this.description,
       category: category ?? this.category,
@@ -48,8 +48,8 @@ class ChangeWorkoutRequest {
     };
   }
 
-  factory ChangeWorkoutRequest.fromMap(Map<String, dynamic> map) {
-    return ChangeWorkoutRequest(
+  factory ChangeWorkoutDto.fromMap(Map<String, dynamic> map) {
+    return ChangeWorkoutDto(
       title: map['title'] != null ? map['title'] as String : null,
       description:
           map['description'] != null ? map['description'] as String : null,
@@ -59,9 +59,9 @@ class ChangeWorkoutRequest {
       difficulty: map['difficulty'] != null
           ? WorkoutDifficulty.values.byName(map['difficulty'])
           : null,
-      steps: List<ChangeWorkoutStepRequest>.from(
-        (map['steps'] as List<int>).map<ChangeWorkoutStepRequest>(
-          (x) => ChangeWorkoutStepRequest.fromMap(x as Map<String, dynamic>),
+      steps: List<ChangeWorkoutStepDto>.from(
+        (map['steps'] as List<int>).map<ChangeWorkoutStepDto>(
+          (x) => ChangeWorkoutStepDto.fromMap(x as Map<String, dynamic>),
         ),
       ),
     );
@@ -69,16 +69,16 @@ class ChangeWorkoutRequest {
 
   String toJson() => json.encode(toMap());
 
-  factory ChangeWorkoutRequest.fromJson(String source) =>
-      ChangeWorkoutRequest.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ChangeWorkoutDto.fromJson(String source) =>
+      ChangeWorkoutDto.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'ChangeWorkoutRequest(title: $title, description: $description, category: $category, difficulty: $difficulty, steps: $steps)';
+    return 'ChangeWorkoutDto(title: $title, description: $description, category: $category, difficulty: $difficulty, steps: $steps)';
   }
 
   @override
-  bool operator ==(covariant ChangeWorkoutRequest other) {
+  bool operator ==(covariant ChangeWorkoutDto other) {
     if (identical(this, other)) return true;
 
     return other.title == title &&

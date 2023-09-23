@@ -17,10 +17,11 @@ class _$TrainingApi extends TrainingApi {
   final definitionType = TrainingApi;
 
   @override
-  Future<Response<WorkoutStepDto>> _workoutsWorkoutIdStepsStepNumberEditPut({
+  Future<Response<WorkoutStepResponse>>
+      _workoutsWorkoutIdStepsStepNumberEditPut({
     required int? workoutId,
     required int? stepNumber,
-    required ChangeWorkoutStepDto? body,
+    required ChangeWorkoutStepRequest? body,
   }) {
     final Uri $url =
         Uri.parse('/workouts/${workoutId}/steps/${stepNumber}/edit');
@@ -31,13 +32,13 @@ class _$TrainingApi extends TrainingApi {
       client.baseUrl,
       body: $body,
     );
-    return client.send<WorkoutStepDto, WorkoutStepDto>($request);
+    return client.send<WorkoutStepResponse, WorkoutStepResponse>($request);
   }
 
   @override
-  Future<Response<WorkoutDto>> _workoutsWorkoutIdEditPut({
+  Future<Response<WorkoutResponse>> _workoutsWorkoutIdEditPut({
     required int? workoutId,
-    required ChangeWorkoutDto? body,
+    required ChangeWorkoutRequest? body,
   }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}/edit');
     final $body = body;
@@ -47,13 +48,13 @@ class _$TrainingApi extends TrainingApi {
       client.baseUrl,
       body: $body,
     );
-    return client.send<WorkoutDto, WorkoutDto>($request);
+    return client.send<WorkoutResponse, WorkoutResponse>($request);
   }
 
   @override
-  Future<Response<WorkoutStepDto>> _workoutsWorkoutIdStepsCreatePost({
+  Future<Response<WorkoutStepResponse>> _workoutsWorkoutIdStepsCreatePost({
     required int? workoutId,
-    required ChangeWorkoutStepDto? body,
+    required ChangeWorkoutStepRequest? body,
   }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}/steps/create');
     final $body = body;
@@ -63,13 +64,13 @@ class _$TrainingApi extends TrainingApi {
       client.baseUrl,
       body: $body,
     );
-    return client.send<WorkoutStepDto, WorkoutStepDto>($request);
+    return client.send<WorkoutStepResponse, WorkoutStepResponse>($request);
   }
 
   @override
-  Future<Response<DetailedWorkoutsDto>> _workoutsCreatePost({
+  Future<Response<DetailedWorkoutsResponse>> _workoutsCreatePost({
     required String? userId,
-    required ChangeWorkoutDto? body,
+    required ChangeWorkoutRequest? body,
   }) {
     final Uri $url = Uri.parse('/workouts/create');
     final Map<String, dynamic> $params = <String, dynamic>{'userId': userId};
@@ -81,22 +82,23 @@ class _$TrainingApi extends TrainingApi {
       body: $body,
       parameters: $params,
     );
-    return client.send<DetailedWorkoutsDto, DetailedWorkoutsDto>($request);
+    return client
+        .send<DetailedWorkoutsResponse, DetailedWorkoutsResponse>($request);
   }
 
   @override
-  Future<Response<WorkoutsDto>> _workoutsGet() {
+  Future<Response<WorkoutListResponse>> _workoutsGet() {
     final Uri $url = Uri.parse('/workouts');
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
     );
-    return client.send<WorkoutsDto, WorkoutsDto>($request);
+    return client.send<WorkoutListResponse, WorkoutListResponse>($request);
   }
 
   @override
-  Future<Response<WorkoutDto>> _workoutsWorkoutIdGet(
+  Future<Response<WorkoutResponse>> _workoutsWorkoutIdGet(
       {required int? workoutId}) {
     final Uri $url = Uri.parse('/workouts/${workoutId}');
     final Request $request = Request(
@@ -104,11 +106,11 @@ class _$TrainingApi extends TrainingApi {
       $url,
       client.baseUrl,
     );
-    return client.send<WorkoutDto, WorkoutDto>($request);
+    return client.send<WorkoutResponse, WorkoutResponse>($request);
   }
 
   @override
-  Future<Response<List<WorkoutStepDto>>> _workoutsWorkoutIdStepsGet(
+  Future<Response<List<WorkoutStepResponse>>> _workoutsWorkoutIdStepsGet(
       {required int? workoutId}) {
     final Uri $url = Uri.parse('/workouts/${workoutId}/steps');
     final Request $request = Request(
@@ -116,11 +118,12 @@ class _$TrainingApi extends TrainingApi {
       $url,
       client.baseUrl,
     );
-    return client.send<List<WorkoutStepDto>, WorkoutStepDto>($request);
+    return client
+        .send<List<WorkoutStepResponse>, WorkoutStepResponse>($request);
   }
 
   @override
-  Future<Response<WorkoutStepDto>> _workoutsWorkoutIdStepsStepNumberGet({
+  Future<Response<WorkoutStepResponse>> _workoutsWorkoutIdStepsStepNumberGet({
     required int? workoutId,
     required int? stepNumber,
   }) {
@@ -130,7 +133,7 @@ class _$TrainingApi extends TrainingApi {
       $url,
       client.baseUrl,
     );
-    return client.send<WorkoutStepDto, WorkoutStepDto>($request);
+    return client.send<WorkoutStepResponse, WorkoutStepResponse>($request);
   }
 
   @override

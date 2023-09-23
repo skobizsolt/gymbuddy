@@ -1,8 +1,8 @@
-import 'package:gymbuddy/models/workout/change_workout_step_request.dart';
+import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 
 class WorkoutInternalDataMapper {
-  List<WorkoutStep> toWorkoutStepList(List<ChangeWorkoutStepRequest> steps) {
+  List<WorkoutStep> toWorkoutStepList(List<ChangeWorkoutStepDto> steps) {
     return steps
         .map(
           (e) => toWorkoutStep(e, steps.indexOf(e)),
@@ -10,7 +10,7 @@ class WorkoutInternalDataMapper {
         .toList();
   }
 
-  WorkoutStep toWorkoutStep(ChangeWorkoutStepRequest step, int stepIndex) {
+  WorkoutStep toWorkoutStep(ChangeWorkoutStepDto step, int stepIndex) {
     return WorkoutStep(
         stepNumber: stepIndex,
         stepName: step.stepName!,

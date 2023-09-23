@@ -3,25 +3,25 @@ import 'dart:convert';
 
 import 'package:gymbuddy/models/workout_step.dart';
 
-class ChangeWorkoutStepRequest {
+class ChangeWorkoutStepDto {
   String? stepName;
   String? details;
   WorkoutType? workoutType;
   int? estimatedTime;
-  ChangeWorkoutStepRequest({
+  ChangeWorkoutStepDto({
     this.stepName,
     this.details,
     this.workoutType,
     this.estimatedTime,
   });
 
-  ChangeWorkoutStepRequest copyWith({
+  ChangeWorkoutStepDto copyWith({
     String? stepName,
     String? details,
     WorkoutType? workoutType,
     int? estimatedTime,
   }) {
-    return ChangeWorkoutStepRequest(
+    return ChangeWorkoutStepDto(
       stepName: stepName ?? this.stepName,
       details: details ?? this.details,
       workoutType: workoutType ?? this.workoutType,
@@ -39,8 +39,8 @@ class ChangeWorkoutStepRequest {
     };
   }
 
-  factory ChangeWorkoutStepRequest.fromMap(Map<String, dynamic> map) {
-    return ChangeWorkoutStepRequest(
+  factory ChangeWorkoutStepDto.fromMap(Map<String, dynamic> map) {
+    return ChangeWorkoutStepDto(
       stepName: map['stepName'] != null ? map['stepName'] as String : null,
       details: map['details'] != null ? map['details'] as String : null,
       workoutType: map['workoutType'] != null
@@ -53,17 +53,16 @@ class ChangeWorkoutStepRequest {
 
   String toJson() => json.encode(toMap());
 
-  factory ChangeWorkoutStepRequest.fromJson(String source) =>
-      ChangeWorkoutStepRequest.fromMap(
-          json.decode(source) as Map<String, dynamic>);
+  factory ChangeWorkoutStepDto.fromJson(String source) =>
+      ChangeWorkoutStepDto.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'ChangeWorkoutStepRequest(stepName: $stepName, details: $details, workoutType: $workoutType, estimatedTime: $estimatedTime)';
+    return 'ChangeWorkoutStepDto(stepName: $stepName, details: $details, workoutType: $workoutType, estimatedTime: $estimatedTime)';
   }
 
   @override
-  bool operator ==(covariant ChangeWorkoutStepRequest other) {
+  bool operator ==(covariant ChangeWorkoutStepDto other) {
     if (identical(this, other)) return true;
 
     return other.stepName == stepName &&
