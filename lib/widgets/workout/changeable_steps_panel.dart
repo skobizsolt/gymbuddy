@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/models/workout/change_workout_step.dart';
+import 'package:gymbuddy/models/workout/change_workout_step_request.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_details_screen.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
@@ -7,9 +7,9 @@ import 'package:gymbuddy/widgets/utils/information_tag.dart';
 class ChangeableStepsPanelList extends StatelessWidget {
   const ChangeableStepsPanelList({super.key, required this.steps});
 
-  final List<ChangeWorkoutStepDto> steps;
+  final List<ChangeWorkoutStepRequest> steps;
 
-  void openDetails(BuildContext context, ChangeWorkoutStepDto step) {
+  void openDetails(BuildContext context, ChangeWorkoutStepRequest step) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WorkoutStepDetailsScreen(

@@ -1,0 +1,349 @@
+openapi: 3.0.1
+info:
+  title: Training API
+  description: GymBuddy training backend API
+  version: '1.0'
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /workouts/{workoutId}/steps/{stepNumber}/edit:
+    put:
+      tags:
+        - workout-steps-controller
+      operationId: editStep
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: stepNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeWorkoutStepDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutStepDto'
+  /workouts/{workoutId}/edit:
+    put:
+      tags:
+        - workout-controller
+      operationId: editWorkout
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeWorkoutDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutDto'
+  /workouts/{workoutId}/steps/create:
+    post:
+      tags:
+        - workout-steps-controller
+      operationId: addStep
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeWorkoutStepDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutStepDto'
+  /workouts/create:
+    post:
+      tags:
+        - workout-controller
+      operationId: createWorkout
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeWorkoutDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DetailedWorkoutsDto'
+  /workouts:
+    get:
+      tags:
+        - workout-controller
+      operationId: getAllWorkouts
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutsDto'
+  /workouts/{workoutId}:
+    get:
+      tags:
+        - workout-controller
+      operationId: getWorkout
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutDto'
+  /workouts/{workoutId}/steps:
+    get:
+      tags:
+        - workout-steps-controller
+      operationId: getAllSteps
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutStepDto'
+  /workouts/{workoutId}/steps/{stepNumber}:
+    get:
+      tags:
+        - workout-steps-controller
+      operationId: getStep
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: stepNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutStepDto'
+  /workouts/{workoutId}/steps/{stepNumber}/delete:
+    delete:
+      tags:
+        - workout-steps-controller
+      operationId: deleteStep
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: stepNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+  /workouts/{workoutId}/delete:
+    delete:
+      tags:
+        - workout-controller
+      operationId: deleteWorkout
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    ChangeWorkoutStepDto:
+      type: object
+      properties:
+        stepName:
+          type: string
+        details:
+          type: string
+        workoutType:
+          type: string
+          enum:
+            - INTERVAL
+            - REP
+        estimatedTime:
+          type: integer
+          format: int32
+    WorkoutStepDto:
+      type: object
+      properties:
+        stepNumber:
+          type: integer
+          format: int32
+        stepName:
+          type: string
+        details:
+          type: string
+        workoutType:
+          type: string
+          enum:
+            - INTERVAL
+            - REP
+        estimatedTime:
+          type: integer
+          format: int32
+    ChangeWorkoutDto:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum:
+            - ENDURANCE
+            - STRENGTH
+            - BALANCE
+            - FLEXIBILITY
+        difficulty:
+          type: string
+          enum:
+            - EASY
+            - INTERMEDIATE
+            - HARD
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeWorkoutStepDto'
+    GeneralStepDetailsDto:
+      type: object
+      properties:
+        estimatedTimeInMinutes:
+          type: integer
+          format: int32
+        totalSteps:
+          type: integer
+          format: int32
+    WorkoutDto:
+      type: object
+      properties:
+        workoutId:
+          type: integer
+          format: int32
+        userId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        registeredOn:
+          type: string
+          format: date-time
+        lastModified:
+          type: string
+          format: date-time
+        category:
+          type: string
+          enum:
+            - ENDURANCE
+            - STRENGTH
+            - BALANCE
+            - FLEXIBILITY
+        difficulty:
+          type: string
+          enum:
+            - EASY
+            - INTERMEDIATE
+            - HARD
+        stepDetails:
+          $ref: '#/components/schemas/GeneralStepDetailsDto'
+    DetailedWorkoutsDto:
+      type: object
+      properties:
+        workout:
+          $ref: '#/components/schemas/WorkoutDto'
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkoutStepDto'
+    WorkoutsDto:
+      type: object
+      properties:
+        workouts:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkoutDto'
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,16 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/components/crud/form_category.dart';
-import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/components/inputs/default_text_form_field.dart';
 import 'package:gymbuddy/components/inputs/multiline_text_form_field.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/models/workout/change_workout.dart';
-import 'package:gymbuddy/models/workout/change_workout_step.dart';
+import 'package:gymbuddy/models/workout/change_workout_request.dart';
+import 'package:gymbuddy/models/workout/change_workout_step_request.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
+import 'package:gymbuddy/service/workout/workout_service.dart';
 import 'package:gymbuddy/widgets/workout/changeable_steps_panel.dart';
 
 class WorkoutManager extends StatefulWidget {
@@ -23,27 +22,23 @@ class WorkoutManager extends StatefulWidget {
 }
 
 class _WorkoutManagerState extends State<WorkoutManager> {
-  final ChangeWorkoutDto _workout = ChangeWorkoutDto(
-    userId: FirebaseAuth.instance.currentUser!.uid,
+  final ChangeWorkoutRequest _workout = ChangeWorkoutRequest(
     steps: [],
   );
   final _formkey = GlobalKey<FormState>();
 
-  _saveForm() {
+  _saveForm() async {
     var isValid = _formkey.currentState!.validate();
     if (!isValid) {
       return;
     }
     _formkey.currentState!.save();
-    Navigator.pop(context);
-    showSucessSnackBar(
-        context,
-        'Training "${_workout.title}"' +
-            ' ${workoutCategoryIcon[_workout.category]} has created successfully!');
+    await WorkoutService().createWorkout(context, _workout);
   }
 
   addStep(CrudType type) async {
-    final ChangeWorkoutStepDto? addedStep = await Navigator.of(context).push(
+    final ChangeWorkoutStepRequest? addedStep =
+        await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WorkoutStepManager(type: type),
       ),
@@ -171,10 +166,10 @@ class _WorkoutManagerState extends State<WorkoutManager> {
             )
             .toList(),
         value: WorkoutCategory.values[0].name,
-        onChanged: (value) => _workout.category = WorkoutCategory.values
-            .firstWhere((element) => element.name == value),
-        onSaved: (newValue) => _workout.category = WorkoutCategory.values
-            .firstWhere((element) => element.name == newValue),
+        onChanged: (value) =>
+            _workout.category = WorkoutCategory.values.byName(value!),
+        onSaved: (newValue) =>
+            _workout.category = WorkoutCategory.values.byName(newValue!),
         decoration: const InputDecoration(border: InputBorder.none),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -199,10 +194,10 @@ class _WorkoutManagerState extends State<WorkoutManager> {
             )
             .toList(),
         value: WorkoutDifficulty.values[0].name,
-        onChanged: (value) => _workout.difficulty = WorkoutDifficulty.values
-            .firstWhere((element) => element.name == value),
-        onSaved: (newValue) => _workout.difficulty = WorkoutDifficulty.values
-            .firstWhere((element) => element.name == newValue),
+        onChanged: (value) =>
+            _workout.difficulty = WorkoutDifficulty.values.byName(value!),
+        onSaved: (newValue) =>
+            _workout.difficulty = WorkoutDifficulty.values.byName(newValue!),
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
