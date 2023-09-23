@@ -246,7 +246,7 @@ class TempWorkoutDetails extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            StepsPanelList(workoutId: workout.workoutId!),
+            StepsPanelList(workoutSteps: []),
           ],
         ),
       ),

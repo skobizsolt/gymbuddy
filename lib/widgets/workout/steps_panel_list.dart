@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/data/workout_step_data.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_details_screen.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
 class StepsPanelList extends StatelessWidget {
-  const StepsPanelList({super.key, required this.workoutId});
+  const StepsPanelList({super.key, required this.workoutSteps});
 
-  final int workoutId;
+  final List<WorkoutStep> workoutSteps;
 
   List<WorkoutStep> get steps {
-    List<WorkoutStep> list = stepsData
-        .where(
-          (element) => element.workoutId == workoutId,
-        )
-        .toList();
-    list.sort(
+    workoutSteps.sort(
         (step, nextStep) => step.stepNumber.compareTo(nextStep.stepNumber));
-    return list;
+    return workoutSteps;
   }
 
   void openDetails(BuildContext context, WorkoutStep step) {
@@ -64,7 +58,7 @@ class StepsPanelList extends StatelessWidget {
               child: ListTile(
                 title: Text(steps[index].stepName),
                 subtitle: Text(
-                  'Type: ${steps[index].workoutType.name}',
+                  'Type: ${steps[index].workoutType.name} based step, ${steps[index].estimatedTime} seconds',
                   style: Theme.of(context).listTileTheme.subtitleTextStyle,
                 ),
                 trailing: IconButton(

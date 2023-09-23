@@ -8,9 +8,10 @@ import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout/change_workout_request.dart';
 import 'package:gymbuddy/models/workout/change_workout_step_request.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
+import 'package:gymbuddy/service/mapper/workout_internal_mapper.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/service/workout/workout_service.dart';
-import 'package:gymbuddy/widgets/workout/changeable_steps_panel.dart';
+import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 
 class WorkoutManager extends StatefulWidget {
   WorkoutManager({super.key, required this.type});
@@ -210,7 +211,9 @@ class _WorkoutManagerState extends State<WorkoutManager> {
     if (_workout.steps.isEmpty) {
       return const SizedBox();
     } else {
-      return ChangeableStepsPanelList(steps: _workout.steps);
+      return StepsPanelList(
+          workoutSteps:
+              WorkoutInternalDataMapper().toWorkoutStepList(_workout.steps));
     }
   }
 }

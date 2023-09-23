@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/workout.dart';
+import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 import 'package:ionicons/ionicons.dart';
 
 class WorkoutDetails extends StatelessWidget {
-  const WorkoutDetails({super.key, required this.workout});
+  const WorkoutDetails({super.key, required this.workout, this.steps});
 
   final Workout workout;
+  final List<WorkoutStep>? steps;
   @override
   Widget build(BuildContext context) {
     final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
@@ -121,7 +123,7 @@ class WorkoutDetails extends StatelessWidget {
 
     // Renders the deatils if added
     Widget renderDescription() {
-      if (workout.description == null) {
+      if (workout.description == null || workout.description!.isEmpty) {
         return const SizedBox();
       }
       return Column(
@@ -240,7 +242,7 @@ class WorkoutDetails extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            StepsPanelList(workoutId: workout.workoutId),
+            StepsPanelList(workoutSteps: steps!),
           ],
         ),
       ),

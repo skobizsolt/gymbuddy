@@ -153,7 +153,10 @@ class WorkoutStepDetailsScreen extends StatelessWidget {
               height: 10,
             ),
             // Description
-            renderDescription(),
+            Visibility(
+              visible: step.details != null && step.details.isNotEmpty,
+              child: renderDescription(),
+            ),
           ],
         ),
       ),

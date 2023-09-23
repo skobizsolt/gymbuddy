@@ -1,19 +1,17 @@
 class WorkoutStep {
   WorkoutStep({
-    required this.stepId,
-    required this.workoutId,
     required this.stepNumber,
     required this.stepName,
     required this.details,
     required this.workoutType,
+    required this.estimatedTime,
   });
 
-  int stepId;
-  int workoutId;
   int stepNumber;
   String stepName;
   String details;
   WorkoutType workoutType;
+  int estimatedTime;
 }
 
 enum WorkoutType {
