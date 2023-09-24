@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/data/workout_data.dart';
-import 'package:gymbuddy/global/global_variables.dart';
-import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/screen/workout/search_workouts_screen.dart';
-import 'package:gymbuddy/screen/workout/workout_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbuddy/service/home/home_service.dart';
 
-class HomeOption extends StatelessWidget {
+enum HomeOptions { search, popular, newTraining, myTrainings, recentlyLaunched }
+
+class HomeOption extends ConsumerWidget {
   const HomeOption({
     super.key,
     required this.id,
@@ -17,39 +16,20 @@ class HomeOption extends StatelessWidget {
   final String optionName;
   final IconData icon;
 
-  void searchWorkouts(BuildContext context, List<Workout> workouts) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SearchWorkoutsSceen(
-          workouts: workouts,
-        ),
-      ),
-    );
-  }
-
-  void addNewTraining(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => WorkoutManager(
-          type: CrudType.add,
-        ),
-      ),
-    );
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
         onTap: () {
-          if (id == 0) {
-            searchWorkouts(context, workoutData);
+          if (id == HomeOptions.search.index) {
+            HomeService.searchWorkouts(context);
           }
-          if (id == 2) {
-            addNewTraining(context);
+          if (id == HomeOptions.myTrainings.index) {
+            HomeService.showMyTrainings(context, ref);
+          }
+          if (id == HomeOptions.newTraining.index) {
+            HomeService.addNewTraining(context);
           }
         },
         child: Card(

@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/models/workout.dart';
+import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workouts_screen.dart';
 
-class WorkoutSearchTile extends StatelessWidget {
+class WorkoutSearchTile extends ConsumerWidget {
   const WorkoutSearchTile({
     super.key,
     required this.workoutCategory,
   });
   final WorkoutCategory workoutCategory;
 
+  List<Workout> loadData(WidgetRef ref) {
+    var data = ref.refresh(workoutProvider);
+    if (!data.hasValue) {
+      return [];
+    }
+    return data.value!
+        .where((workout) => workout.category == workoutCategory)
+        .toList();
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final String title =
         '${workoutCategory.name[0].toUpperCase() + workoutCategory.name.substring(1)} ${workoutCategoryIcon[workoutCategory]}';
 
@@ -18,7 +30,7 @@ class WorkoutSearchTile extends StatelessWidget {
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => WorkoutsScreen(
           title: 'Category - $title',
-          selectedCategory: workoutCategory,
+          workouts: loadData(ref),
         ),
       ));
     }

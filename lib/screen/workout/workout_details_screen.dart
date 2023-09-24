@@ -6,8 +6,8 @@ import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 import 'package:ionicons/ionicons.dart';
 
-class WorkoutDetails extends StatelessWidget {
-  const WorkoutDetails({super.key, required this.workout, this.steps});
+class WorkoutDetailsScreen extends StatelessWidget {
+  const WorkoutDetailsScreen({super.key, required this.workout, this.steps});
 
   final Workout workout;
   final List<WorkoutStep>? steps;

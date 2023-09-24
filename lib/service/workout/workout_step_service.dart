@@ -1,0 +1,23 @@
+import 'package:flutter/material.dart';
+import 'package:gymbuddy/global/global_variables.dart';
+import 'package:gymbuddy/models/api/training_api.swagger.dart';
+import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/service/mapper/workout_mapper.dart';
+import 'package:gymbuddy/service/util/response_validator.dart';
+
+class WorkoutStepService {
+  final _workoutMapper = WorkoutModelMapper();
+  final _api =
+      TrainingApi.create(baseUrl: Uri.http(GlobalValues.ANDROID_EMULATOR_URL));
+
+  Future<List<WorkoutStep>> getSteps(
+      int workoutId, BuildContext context) async {
+    var response = await _api.workoutsWorkoutIdStepsGet(workoutId: workoutId);
+
+    ResponseValidator.validateResponse(response, context);
+
+    return response.body == null
+        ? []
+        : _workoutMapper.toWorkoutSteps(response.body!);
+  }
+}

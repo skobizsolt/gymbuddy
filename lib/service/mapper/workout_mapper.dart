@@ -3,6 +3,13 @@ import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 
 class WorkoutModelMapper {
+  List<Workout> toWorkoutList(WorkoutListResponse response) {
+    if (response.workouts == null) {
+      return [];
+    }
+    return response.workouts!.map(toWorkout).toList();
+  }
+
   Workout toWorkout(WorkoutResponse workoutDto) {
     return Workout(
         workoutId: workoutDto.workoutId!,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/screen/workout/workout_details_screen.dart';
+import 'package:gymbuddy/service/workout/workout_step_service.dart';
 
 class WorkoutCard extends StatelessWidget {
   const WorkoutCard({super.key, required this.workout});
@@ -8,11 +9,17 @@ class WorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void selectWorkout(Workout workout) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: ((context) => WorkoutDetails(workout: workout))),
-      );
+    Future<void> selectWorkout(Workout workout) async {
+      await WorkoutStepService().getSteps(workout.workoutId, context).then(
+            (steps) => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: ((context) => WorkoutDetailsScreen(
+                      workout: workout,
+                      steps: steps,
+                    )),
+              ),
+            ),
+          );
     }
 
     Widget workoutDetails() {
