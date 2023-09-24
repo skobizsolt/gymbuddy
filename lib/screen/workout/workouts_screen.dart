@@ -1,7 +1,7 @@
-// ignore_for_file: unnecessary_null_comparison
-
 import 'package:flutter/material.dart';
+import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/workout.dart';
+import 'package:gymbuddy/screen/workout/workout_manager.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 import 'package:gymbuddy/widgets/workout/workout_card.dart';
 
@@ -28,31 +28,62 @@ class WorkoutsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget renderContent() {
       if (workouts.isEmpty) {
-        return const NoContentText(title: 'Uh oh ... nothing here yet!');
-      } else {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
+        return Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
+            mainAxisSize: MainAxisSize.min,
             children: [
+              const NoContentText(
+                title: 'Nothing here yet 😞',
+                details: 'Let\'s add a new workout!',
+              ),
               const SizedBox(
-                height: 20,
+                height: 8,
               ),
-              Expanded(
-                child: _renderWorkouts(workoutList: workouts),
-              ),
+              ElevatedButton.icon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => WorkoutManager(type: CrudType.add),
+                  ),
+                ),
+                style: const ButtonStyle().copyWith(
+                    backgroundColor: MaterialStatePropertyAll(
+                        Theme.of(context).primaryColorDark)),
+                icon: const Icon(Icons.add),
+                label: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Text('Create a new training now!',
+                      style: Theme.of(context).textTheme.titleMedium),
+                ),
+              )
             ],
           ),
+        );
+      } else {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: _renderWorkouts(workoutList: workouts),
+            ),
+          ],
         );
       }
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(
+          title,
+        ),
       ),
-      body: renderContent(),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: renderContent(),
+      ),
     );
   }
 }

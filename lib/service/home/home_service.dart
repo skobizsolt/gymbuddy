@@ -6,10 +6,10 @@ import 'package:gymbuddy/global/firebase_constants.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/home/home_dto.dart';
 import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/search_workouts_screen.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
 import 'package:gymbuddy/screen/workout/workouts_screen.dart';
+import 'package:gymbuddy/service/workout/workout_service.dart';
 
 class HomeService {
   Future<HomeDto> get homeData async {
@@ -46,24 +46,27 @@ class HomeService {
     );
   }
 
-  static void showMyTrainings(BuildContext context, WidgetRef ref) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => WorkoutsScreen(
-          title: "My trainings",
-          workouts: _loadMyWorkouts(ref),
+  static Future<void> showMyTrainings(
+      BuildContext context, WidgetRef ref) async {
+    await _loadMyWorkouts().then(
+      (loadedWorkouts) => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WorkoutsScreen(
+            title: "My trainings",
+            workouts: loadedWorkouts,
+          ),
         ),
       ),
     );
   }
 
-  static List<Workout> _loadMyWorkouts(WidgetRef ref) {
-    final trainings = ref.read(workoutProvider);
-    if (!trainings.hasValue) {
+  static Future<List<Workout>> _loadMyWorkouts() async {
+    final trainings = await WorkoutService().getWorkouts();
+    if (trainings.isEmpty) {
       return [];
     }
-    return trainings.value!
+    return trainings
         .where((element) =>
             element.userId == FirebaseAuth.instance.currentUser!.uid)
         .toList();

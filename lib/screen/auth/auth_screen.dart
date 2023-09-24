@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/providers/auth_provider.dart';
+import 'package:gymbuddy/providers/chat_provider.dart';
+import 'package:gymbuddy/providers/user_provider.dart';
 import 'package:gymbuddy/screen/auth/login_or_register_screen.dart';
 import 'package:gymbuddy/screen/tabs.dart';
 
@@ -17,6 +19,8 @@ class AuthScreen extends ConsumerWidget {
         builder: (context, snapshot) {
           // user is logged in
           if (snapshot.hasData) {
+            _invalidateProviders(ref);
+
             return const TabsScreen();
           }
           // user is not logged in
@@ -24,5 +28,10 @@ class AuthScreen extends ConsumerWidget {
         },
       ),
     );
+  }
+
+  void _invalidateProviders(WidgetRef ref) {
+    ref.invalidate(userProvider);
+    ref.invalidate(chatsProvider);
   }
 }

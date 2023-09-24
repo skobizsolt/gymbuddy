@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/workout.dart';
@@ -11,6 +12,11 @@ class WorkoutDetailsScreen extends StatelessWidget {
 
   final Workout workout;
   final List<WorkoutStep>? steps;
+
+  bool get isSelfResource {
+    return workout.userId == FirebaseAuth.instance.currentUser!.uid;
+  }
+
   @override
   Widget build(BuildContext context) {
     final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
@@ -21,7 +27,7 @@ class WorkoutDetailsScreen extends StatelessWidget {
     Widget renderAppBarButtons() {
       // Delete Button
       return Visibility(
-        visible: true,
+        visible: isSelfResource,
         child: IconButton(
           onPressed: () {},
           icon: Icon(
@@ -109,7 +115,7 @@ class WorkoutDetailsScreen extends StatelessWidget {
         height: 40,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
+          shrinkWrap: isSelfResource,
           itemCount: tags.length,
           itemBuilder: (context, index) {
             return Padding(
@@ -178,7 +184,7 @@ class WorkoutDetailsScreen extends StatelessWidget {
 
           // Edit workout button
           Visibility(
-            visible: true,
+            visible: isSelfResource,
             child: ElevatedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.edit),
@@ -214,7 +220,7 @@ class WorkoutDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible: true,
+                  visible: isSelfResource,
                   child: InkWell(
                     onTap: () {},
                     child: ClipRRect(
