@@ -23,20 +23,37 @@ class WorkoutDetailsScreen extends StatefulWidget {
 
 class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
   final _workoutService = WorkoutService();
+  late Workout workoutData;
+  late List<WorkoutStep> stepsData;
+  late Stream<WorkoutDetailsResponse> generalStepsData;
 
   bool get isSelfResource {
     return widget.workout.userId == FirebaseAuth.instance.currentUser!.uid;
   }
 
-  editWorkout(final BuildContext context) {
-    Navigator.of(context).push(
+  editWorkout(final BuildContext context) async {
+    final Workout? editedWorkout = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WorkoutManager(
           type: CrudType.edit,
-          workout: widget.workout,
+          workout: workoutData,
         ),
       ),
     );
+    if (editedWorkout == null) {
+      return;
+    }
+    setState(() {
+      workoutData = editedWorkout;
+    });
+  }
+
+  @override
+  initState() {
+    super.initState();
+    workoutData = widget.workout;
+    stepsData = widget.steps ?? [];
+    generalStepsData = loadDetails(context);
   }
 
   Stream<WorkoutDetailsResponse> loadDetails(BuildContext context) {
@@ -49,9 +66,6 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
     final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
     final primaryColor = Theme.of(context).colorScheme.primary;
     final backgroundColor = Theme.of(context).colorScheme.background;
-    var workoutData = widget.workout;
-    var stepsData = widget.steps ?? [];
-    var generalStepsData = loadDetails(context);
 
     // Renders app bar buttons
     Widget renderAppBarButtons() {
@@ -133,7 +147,7 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
               ),
               Text(
                 workoutData.difficulty.name[0].toUpperCase() +
-                    widget.workout.difficulty.name.substring(1),
+                    workoutData.difficulty.name.substring(1),
                 style: const TextStyle(fontSize: 14),
               ),
             ],

@@ -54,7 +54,7 @@ class WorkoutService {
     yield response.body!;
   }
 
-  Future<WorkoutResponse> editWorkout(
+  Future<Workout> editWorkout(
     final BuildContext context,
     final int workoutId,
     final ChangeWorkoutDto workout,
@@ -67,7 +67,6 @@ class WorkoutService {
 
     showSucessSnackBar(
         context, "Training ${response.body!.title} edited successfully!");
-    Navigator.of(context).pop();
-    return response.body!;
+    return _workoutMapper.toWorkout(response.body!);
   }
 }

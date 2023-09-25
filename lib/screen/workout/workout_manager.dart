@@ -40,7 +40,8 @@ class _WorkoutManagerState extends State<WorkoutManager> {
     }
     if (CrudType.edit == widget.type) {
       await WorkoutService()
-          .editWorkout(context, widget.workout!.workoutId, _workout);
+          .editWorkout(context, widget.workout!.workoutId, _workout)
+          .then((value) => Navigator.of(context).pop(value));
     }
   }
 
@@ -141,14 +142,13 @@ class _WorkoutManagerState extends State<WorkoutManager> {
                                           .titleMedium,
                                     ),
                                     style: const ButtonStyle().copyWith(
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Theme.of(context)
-                                                    .primaryColorDark),
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Theme.of(context)
-                                                    .primaryColorDark)),
+                                      backgroundColor: MaterialStatePropertyAll(
+                                          Theme.of(context).primaryColorDark),
+                                      surfaceTintColor:
+                                          MaterialStatePropertyAll(
+                                              Theme.of(context)
+                                                  .primaryColorDark),
+                                    ),
                                   ),
                                 ),
                               ],
