@@ -48,6 +48,11 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
     });
   }
 
+  deleteWorkout(BuildContext context) {
+    Navigator.of(context).pop();
+    _workoutService.deleteWorkout(context, workoutData.workoutId);
+  }
+
   @override
   initState() {
     super.initState();
@@ -68,12 +73,13 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
     final backgroundColor = Theme.of(context).colorScheme.background;
 
     // Renders app bar buttons
-    Widget renderAppBarButtons() {
+    Widget renderAppBarButtons(int totalSteps) {
       // Delete Button
       return Visibility(
         visible: isSelfResource,
         child: IconButton(
-          onPressed: () {},
+          onPressed: () =>
+              _showConfirmDeleteDialog(workoutData.title, totalSteps),
           icon: Icon(
             Icons.delete,
             color: onPrimaryContainer,
@@ -210,7 +216,8 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
         builder: (context, snapshot) {
           return DribbleLayout(
             actions: [
-              renderAppBarButtons(),
+              // Delete button
+              renderAppBarButtons(snapshot.data!.totalSteps!),
             ],
             headerContent: Column(
               children: [
@@ -269,6 +276,8 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
                           fontSize: 20,
                         ),
                       ),
+
+                      // Add new step
                       Visibility(
                         visible: isSelfResource,
                         child: InkWell(
@@ -326,5 +335,62 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
             ),
           );
         });
+  }
+
+  _showConfirmDeleteDialog(String title, int totalSteps) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        title: const Text("❌ Delete workout"),
+        content: RichText(
+          // Controls visual overflow
+          overflow: TextOverflow.clip,
+
+          // Controls how the text should be aligned horizontally
+          textAlign: TextAlign.center,
+
+          // Whether the text should break at soft line breaks
+          softWrap: true,
+
+          // The number of font pixels for each logical pixel
+          textScaleFactor: 1,
+          text: TextSpan(
+            style: Theme.of(context).textTheme.bodyLarge,
+            children: <TextSpan>[
+              TextSpan(
+                  text: '"$title"',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  )),
+              const TextSpan(text: ' with '),
+              TextSpan(
+                  text: '$totalSteps steps',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer)),
+              const TextSpan(text: ' will be deleted. Are you sure?'),
+              const TextSpan(text: "\nThis operation cannot be undone!"),
+            ],
+          ),
+        ),
+        actions: [
+          BackButton(
+            style: const ButtonStyle().copyWith(
+                foregroundColor: MaterialStatePropertyAll(
+                    Theme.of(context).colorScheme.primary)),
+          ),
+          ElevatedButton.icon(
+            onPressed: () => deleteWorkout(context),
+            style: const ButtonStyle().copyWith(
+                backgroundColor: MaterialStatePropertyAll(
+                    Theme.of(context).primaryColorDark)),
+            icon: const Icon(Icons.delete),
+            label: const Text("Delete"),
+          ),
+        ],
+      ),
+    );
   }
 }

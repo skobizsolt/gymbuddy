@@ -5,8 +5,7 @@ import 'package:gymbuddy/components/custom_snackbars.dart';
 class ResponseValidator {
   static validateResponse(Response response, BuildContext context) {
     if (!response.isSuccessful) {
-      showErrorSnackBar(context,
-          "An error occured when creating this training. Please try again later!");
+      showErrorSnackBar(context, "An error occured. Please try again later!");
       throw Exception(response.error);
     }
   }

@@ -69,4 +69,14 @@ class WorkoutService {
         context, "Training ${response.body!.title} edited successfully!");
     return _workoutMapper.toWorkout(response.body!);
   }
+
+  Future<void> deleteWorkout(BuildContext context, int workoutId) async {
+    final response =
+        await _api.workoutsWorkoutIdDeleteDelete(workoutId: workoutId);
+
+    ResponseValidator.validateResponse(response, context);
+
+    showSucessSnackBar(context, "Workout deleted successfully!");
+    Navigator.of(context).pop();
+  }
 }
