@@ -12,18 +12,15 @@ class WorkoutModelMapper {
 
   Workout toWorkout(WorkoutResponse workoutDto) {
     return Workout(
-        workoutId: workoutDto.workoutId!,
-        userId: workoutDto.userId!,
-        title: workoutDto.title!,
-        description: workoutDto.description,
-        category: WorkoutCategory.values.byName(workoutDto.category!.name),
-        registeredOn: workoutDto.registeredOn!,
-        lastModified: workoutDto.lastModified!,
-        difficulty:
-            WorkoutDifficulty.values.byName(workoutDto.difficulty!.name),
-        steps: workoutDto.stepDetails!.totalSteps!,
-        estimatedTimeInMinutes:
-            workoutDto.stepDetails!.estimatedTimeInMinutes!);
+      workoutId: workoutDto.workoutId!,
+      userId: workoutDto.userId!,
+      title: workoutDto.title!,
+      description: workoutDto.description,
+      category: WorkoutCategory.values.byName(workoutDto.category!.name),
+      registeredOn: workoutDto.registeredOn!,
+      lastModified: workoutDto.lastModified!,
+      difficulty: WorkoutDifficulty.values.byName(workoutDto.difficulty!.name),
+    );
   }
 
   List<WorkoutStep> toWorkoutSteps(List<WorkoutStepResponse> steps) {

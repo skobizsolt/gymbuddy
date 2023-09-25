@@ -10,8 +10,6 @@ final workoutData = [
     registeredOn: DateTime.now(),
     lastModified: DateTime.parse('20230701'),
     difficulty: WorkoutDifficulty.easy,
-    steps: 15,
-    estimatedTimeInMinutes: 90,
   ),
   Workout(
     workoutId: 2,
@@ -21,8 +19,6 @@ final workoutData = [
     registeredOn: DateTime.parse('20230601'),
     lastModified: DateTime.parse('20230728'),
     difficulty: WorkoutDifficulty.intermediate,
-    steps: 10,
-    estimatedTimeInMinutes: 30,
   ),
   Workout(
     workoutId: 3,
@@ -34,8 +30,6 @@ final workoutData = [
     registeredOn: DateTime.parse('20230630'),
     lastModified: DateTime.parse('20230501'),
     difficulty: WorkoutDifficulty.hard,
-    steps: 6,
-    estimatedTimeInMinutes: 105,
   ),
   Workout(
     workoutId: 4,
@@ -45,7 +39,5 @@ final workoutData = [
     registeredOn: DateTime.parse('20230630'),
     lastModified: DateTime.parse('20230501'),
     difficulty: WorkoutDifficulty.hard,
-    steps: 8,
-    estimatedTimeInMinutes: 45,
   ),
 ];

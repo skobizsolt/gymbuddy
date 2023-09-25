@@ -1,20 +1,47 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
+import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/screen/workout/workout_manager.dart';
+import 'package:gymbuddy/service/workout/workout_service.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 import 'package:ionicons/ionicons.dart';
 
-class WorkoutDetailsScreen extends StatelessWidget {
-  const WorkoutDetailsScreen({super.key, required this.workout, this.steps});
+class WorkoutDetailsScreen extends StatefulWidget {
+  WorkoutDetailsScreen({super.key, required this.workout, this.steps});
 
   final Workout workout;
   final List<WorkoutStep>? steps;
 
+  @override
+  State<WorkoutDetailsScreen> createState() => _WorkoutDetailsScreenState();
+}
+
+class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
+  final _workoutService = WorkoutService();
+
   bool get isSelfResource {
-    return workout.userId == FirebaseAuth.instance.currentUser!.uid;
+    return widget.workout.userId == FirebaseAuth.instance.currentUser!.uid;
+  }
+
+  editWorkout(final BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => WorkoutManager(
+          type: CrudType.edit,
+          workout: widget.workout,
+        ),
+      ),
+    );
+  }
+
+  Stream<WorkoutDetailsResponse> loadDetails(BuildContext context) {
+    return _workoutService.getGeneralStepDetails(
+        widget.workout.workoutId, context);
   }
 
   @override
@@ -22,6 +49,9 @@ class WorkoutDetailsScreen extends StatelessWidget {
     final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
     final primaryColor = Theme.of(context).colorScheme.primary;
     final backgroundColor = Theme.of(context).colorScheme.background;
+    var workoutData = widget.workout;
+    var stepsData = widget.steps ?? [];
+    var generalStepsData = loadDetails(context);
 
     // Renders app bar buttons
     Widget renderAppBarButtons() {
@@ -44,7 +74,7 @@ class WorkoutDetailsScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              workout.title,
+              workoutData.title,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color: onPrimaryContainer,
                     fontSize: 32,
@@ -89,7 +119,7 @@ class WorkoutDetailsScreen extends StatelessWidget {
       var tags = [
         InformationTag(
           child: Text(
-            '${workoutCategoryIcon[workout.category]} ${workout.category.name[0].toUpperCase() + workout.category.name.substring(1)}',
+            '${workoutCategoryIcon[workoutData.category]} ${workoutData.category.name[0].toUpperCase() + workoutData.category.name.substring(1)}',
             style: TextStyle(color: primaryColor, fontSize: 14),
           ),
         ),
@@ -97,13 +127,13 @@ class WorkoutDetailsScreen extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              workoutDifficultyRating[workout.difficulty] as Widget,
+              workoutDifficultyRating[workoutData.difficulty] as Widget,
               const SizedBox(
                 width: 5,
               ),
               Text(
-                workout.difficulty.name[0].toUpperCase() +
-                    workout.difficulty.name.substring(1),
+                workoutData.difficulty.name[0].toUpperCase() +
+                    widget.workout.difficulty.name.substring(1),
                 style: const TextStyle(fontSize: 14),
               ),
             ],
@@ -129,7 +159,7 @@ class WorkoutDetailsScreen extends StatelessWidget {
 
     // Renders the deatils if added
     Widget renderDescription() {
-      if (workout.description == null || workout.description!.isEmpty) {
+      if (workoutData.description == null || workoutData.description!.isEmpty) {
         return const SizedBox();
       }
       return Column(
@@ -139,7 +169,7 @@ class WorkoutDetailsScreen extends StatelessWidget {
               Expanded(
                 child: InformationTag(
                   child: Text(
-                    workout.description!,
+                    workoutData.description!,
                     style: const TextStyle(
                       fontSize: 15,
                       fontStyle: FontStyle.italic,
@@ -157,121 +187,130 @@ class WorkoutDetailsScreen extends StatelessWidget {
       );
     }
 
-    //Renders all steps belongs with this workout
-
-    return DribbleLayout(
-      actions: [
-        renderAppBarButtons(),
-      ],
-      headerContent: Column(
-        children: [
-          // Title
-          renderTitle(),
-
-          // Time to complete
-          renderDetail(
-            title: '${workout.estimatedTimeInMinutes} mins',
-            icon: Icons.access_time_rounded,
-          ),
-
-          // Steps
-          renderDetail(
-              title: '${workout.steps} Steps', icon: Ionicons.footsteps),
-
-          const SizedBox(
-            height: 8,
-          ),
-
-          // Edit workout button
-          Visibility(
-            visible: isSelfResource,
-            child: ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.edit),
-              label: const Text('Edit workout'),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: onPrimaryContainer, elevation: 0),
-            ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Tags
-            renderTags(),
-            const SizedBox(
-              height: 20,
-            ),
-
-            // Description
-            renderDescription(),
-
-            // Steps
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+    return StreamBuilder<WorkoutDetailsResponse>(
+        initialData: WorkoutDetailsResponse.fromJson({
+          "estimatedTimeInMinutes": 0,
+          "totalSteps": 0,
+        }),
+        stream: generalStepsData,
+        builder: (context, snapshot) {
+          return DribbleLayout(
+            actions: [
+              renderAppBarButtons(),
+            ],
+            headerContent: Column(
               children: [
-                const Text(
-                  'Steps',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
+                // Title
+                renderTitle(),
+
+                // Time to complete
+                renderDetail(
+                  title: '${snapshot.data!.estimatedTimeInMinutes} mins',
+                  icon: Icons.access_time_rounded,
                 ),
+
+                // Steps
+                renderDetail(
+                    title: '${snapshot.data!.totalSteps} Steps',
+                    icon: Ionicons.footsteps),
+
+                const SizedBox(
+                  height: 8,
+                ),
+
+                // Edit workout button
                 Visibility(
                   visible: isSelfResource,
-                  child: InkWell(
-                    onTap: () {},
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4.0),
-                        color: Theme.of(context).primaryColorLight,
-                        child: Row(
-                          children: [
-                            const Text('Add new'),
-                            Icon(
-                              Ionicons.add,
-                              size: 24,
-                              color: primaryColor,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  child: ElevatedButton.icon(
+                    onPressed: () => editWorkout(context),
+                    icon: const Icon(Icons.edit),
+                    label: const Text('Edit workout'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: onPrimaryContainer, elevation: 0),
                   ),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 15,
-            ),
-            StepsPanelList(workoutSteps: steps!),
-          ],
-        ),
-      ),
-      footing: Container(
-        color: backgroundColor,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.play_arrow),
-                    label: const Text('Launch'),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Tags
+                  renderTags(),
+                  const SizedBox(
+                    height: 20,
                   ),
+
+                  // Description
+                  renderDescription(),
+
+                  // Steps
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Steps',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      Visibility(
+                        visible: isSelfResource,
+                        child: InkWell(
+                          onTap: () {},
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4.0),
+                              color: Theme.of(context).primaryColorLight,
+                              child: Row(
+                                children: [
+                                  const Text('Add new'),
+                                  Icon(
+                                    Ionicons.add,
+                                    size: 24,
+                                    color: primaryColor,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+
+                  // Renders all steps belongs with this workout
+                  StepsPanelList(workoutSteps: stepsData),
+                ],
+              ),
+            ),
+            footing: Container(
+              color: backgroundColor,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Icons.play_arrow),
+                          label: const Text('Launch'),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+              ),
+            ),
+          );
+        });
   }
 }

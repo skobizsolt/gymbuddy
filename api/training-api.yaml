@@ -54,7 +54,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangeWorkoutRequest'
+              $ref: '#/components/schemas/EditWorkoutRequest'
         required: true
       responses:
         '200':
@@ -103,7 +103,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangeWorkoutRequest'
+              $ref: '#/components/schemas/CreateWorkoutRequest'
         required: true
       responses:
         '200':
@@ -189,6 +189,25 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutStepResponse'
+  /workouts/data/{workoutId}/details:
+    get:
+      tags:
+        - workout-util-controller
+      operationId: getGeneralDetails
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutDetailsResponse'
   /workouts/{workoutId}/steps/{stepNumber}/delete:
     delete:
       tags:
@@ -260,7 +279,7 @@ components:
         estimatedTime:
           type: integer
           format: int32
-    ChangeWorkoutRequest:
+    EditWorkoutRequest:
       type: object
       properties:
         title:
@@ -280,19 +299,6 @@ components:
             - EASY
             - INTERMEDIATE
             - HARD
-        steps:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChangeWorkoutStepRequest'
-    GeneralStepDetailsDto:
-      type: object
-      properties:
-        estimatedTimeInMinutes:
-          type: integer
-          format: int32
-        totalSteps:
-          type: integer
-          format: int32
     WorkoutResponse:
       type: object
       properties:
@@ -324,8 +330,30 @@ components:
             - EASY
             - INTERMEDIATE
             - HARD
-        stepDetails:
-          $ref: '#/components/schemas/GeneralStepDetailsDto'
+    CreateWorkoutRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum:
+            - ENDURANCE
+            - STRENGTH
+            - BALANCE
+            - FLEXIBILITY
+        difficulty:
+          type: string
+          enum:
+            - EASY
+            - INTERMEDIATE
+            - HARD
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeWorkoutStepRequest'
     DetailedWorkoutsResponse:
       type: object
       properties:
@@ -342,6 +370,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/WorkoutResponse'
+    WorkoutDetailsResponse:
+      type: object
+      properties:
+        estimatedTimeInMinutes:
+          type: integer
+          format: int64
+        totalSteps:
+          type: integer
+          format: int64
   securitySchemes:
     token:
       type: http

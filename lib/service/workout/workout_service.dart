@@ -22,7 +22,7 @@ class WorkoutService {
 
   Future<void> createWorkout(
       BuildContext context, ChangeWorkoutDto workout) async {
-    var request = ChangeWorkoutRequest.fromJson(workout.toMap());
+    var request = CreateWorkoutRequest.fromJson(workout.toAddWorkoutMap());
     var response = await _api.workoutsCreatePost(
         userId: FirebaseAuth.instance.currentUser!.uid, body: request);
 
@@ -43,5 +43,31 @@ class WorkoutService {
           ),
         ))
         .whenComplete(() => Navigator.of(context).pop());
+  }
+
+  Stream<WorkoutDetailsResponse> getGeneralStepDetails(
+      final int workoutId, BuildContext context) async* {
+    var response =
+        await _api.workoutsDataWorkoutIdDetailsGet(workoutId: workoutId);
+
+    ResponseValidator.validateResponse(response, context);
+    yield response.body!;
+  }
+
+  Future<WorkoutResponse> editWorkout(
+    final BuildContext context,
+    final int workoutId,
+    final ChangeWorkoutDto workout,
+  ) async {
+    var response = await _api.workoutsWorkoutIdEditPut(
+        workoutId: workoutId,
+        body: EditWorkoutRequest.fromJson(workout.toEditWorkoutMap()));
+
+    ResponseValidator.validateResponse(response, context);
+
+    showSucessSnackBar(
+        context, "Training ${response.body!.title} edited successfully!");
+    Navigator.of(context).pop();
+    return response.body!;
   }
 }

@@ -80,7 +80,7 @@ abstract class TrainingApi extends ChopperService {
   ///@param workoutId
   Future<chopper.Response<WorkoutResponse>> workoutsWorkoutIdEditPut({
     required int? workoutId,
-    required ChangeWorkoutRequest? body,
+    required EditWorkoutRequest? body,
   }) {
     generatedMapping.putIfAbsent(
         WorkoutResponse, () => WorkoutResponse.fromJsonFactory);
@@ -96,7 +96,7 @@ abstract class TrainingApi extends ChopperService {
   )
   Future<chopper.Response<WorkoutResponse>> _workoutsWorkoutIdEditPut({
     @Path('workoutId') required int? workoutId,
-    @Body() required ChangeWorkoutRequest? body,
+    @Body() required EditWorkoutRequest? body,
   });
 
   ///
@@ -128,7 +128,7 @@ abstract class TrainingApi extends ChopperService {
   ///@param userId
   Future<chopper.Response<DetailedWorkoutsResponse>> workoutsCreatePost({
     required String? userId,
-    required ChangeWorkoutRequest? body,
+    required CreateWorkoutRequest? body,
   }) {
     generatedMapping.putIfAbsent(DetailedWorkoutsResponse,
         () => DetailedWorkoutsResponse.fromJsonFactory);
@@ -144,7 +144,7 @@ abstract class TrainingApi extends ChopperService {
   )
   Future<chopper.Response<DetailedWorkoutsResponse>> _workoutsCreatePost({
     @Query('userId') required String? userId,
-    @Body() required ChangeWorkoutRequest? body,
+    @Body() required CreateWorkoutRequest? body,
   });
 
   ///
@@ -215,6 +215,23 @@ abstract class TrainingApi extends ChopperService {
     @Path('workoutId') required int? workoutId,
     @Path('stepNumber') required int? stepNumber,
   });
+
+  ///
+  ///@param workoutId
+  Future<chopper.Response<WorkoutDetailsResponse>>
+      workoutsDataWorkoutIdDetailsGet({required int? workoutId}) {
+    generatedMapping.putIfAbsent(
+        WorkoutDetailsResponse, () => WorkoutDetailsResponse.fromJsonFactory);
+
+    return _workoutsDataWorkoutIdDetailsGet(workoutId: workoutId);
+  }
+
+  ///
+  ///@param workoutId
+  @Get(path: '/workouts/data/{workoutId}/details')
+  Future<chopper.Response<WorkoutDetailsResponse>>
+      _workoutsDataWorkoutIdDetailsGet(
+          {@Path('workoutId') required int? workoutId});
 
   ///
   ///@param workoutId

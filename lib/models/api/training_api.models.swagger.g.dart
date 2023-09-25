@@ -46,43 +46,21 @@ Map<String, dynamic> _$WorkoutStepResponseToJson(
       'estimatedTime': instance.estimatedTime,
     };
 
-ChangeWorkoutRequest _$ChangeWorkoutRequestFromJson(
-        Map<String, dynamic> json) =>
-    ChangeWorkoutRequest(
+EditWorkoutRequest _$EditWorkoutRequestFromJson(Map<String, dynamic> json) =>
+    EditWorkoutRequest(
       title: json['title'] as String?,
       description: json['description'] as String?,
-      category: changeWorkoutRequestCategoryNullableFromJson(json['category']),
+      category: editWorkoutRequestCategoryNullableFromJson(json['category']),
       difficulty:
-          changeWorkoutRequestDifficultyNullableFromJson(json['difficulty']),
-      steps: (json['steps'] as List<dynamic>?)
-              ?.map((e) =>
-                  ChangeWorkoutStepRequest.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+          editWorkoutRequestDifficultyNullableFromJson(json['difficulty']),
     );
 
-Map<String, dynamic> _$ChangeWorkoutRequestToJson(
-        ChangeWorkoutRequest instance) =>
+Map<String, dynamic> _$EditWorkoutRequestToJson(EditWorkoutRequest instance) =>
     <String, dynamic>{
       'title': instance.title,
       'description': instance.description,
-      'category': changeWorkoutRequestCategoryToJson(instance.category),
-      'difficulty': changeWorkoutRequestDifficultyToJson(instance.difficulty),
-      'steps': instance.steps?.map((e) => e.toJson()).toList(),
-    };
-
-GeneralStepDetailsDto _$GeneralStepDetailsDtoFromJson(
-        Map<String, dynamic> json) =>
-    GeneralStepDetailsDto(
-      estimatedTimeInMinutes: json['estimatedTimeInMinutes'] as int?,
-      totalSteps: json['totalSteps'] as int?,
-    );
-
-Map<String, dynamic> _$GeneralStepDetailsDtoToJson(
-        GeneralStepDetailsDto instance) =>
-    <String, dynamic>{
-      'estimatedTimeInMinutes': instance.estimatedTimeInMinutes,
-      'totalSteps': instance.totalSteps,
+      'category': editWorkoutRequestCategoryToJson(instance.category),
+      'difficulty': editWorkoutRequestDifficultyToJson(instance.difficulty),
     };
 
 WorkoutResponse _$WorkoutResponseFromJson(Map<String, dynamic> json) =>
@@ -99,10 +77,6 @@ WorkoutResponse _$WorkoutResponseFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['lastModified'] as String),
       category: workoutResponseCategoryNullableFromJson(json['category']),
       difficulty: workoutResponseDifficultyNullableFromJson(json['difficulty']),
-      stepDetails: json['stepDetails'] == null
-          ? null
-          : GeneralStepDetailsDto.fromJson(
-              json['stepDetails'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$WorkoutResponseToJson(WorkoutResponse instance) =>
@@ -115,7 +89,31 @@ Map<String, dynamic> _$WorkoutResponseToJson(WorkoutResponse instance) =>
       'lastModified': instance.lastModified?.toIso8601String(),
       'category': workoutResponseCategoryToJson(instance.category),
       'difficulty': workoutResponseDifficultyToJson(instance.difficulty),
-      'stepDetails': instance.stepDetails?.toJson(),
+    };
+
+CreateWorkoutRequest _$CreateWorkoutRequestFromJson(
+        Map<String, dynamic> json) =>
+    CreateWorkoutRequest(
+      title: json['title'] as String?,
+      description: json['description'] as String?,
+      category: createWorkoutRequestCategoryNullableFromJson(json['category']),
+      difficulty:
+          createWorkoutRequestDifficultyNullableFromJson(json['difficulty']),
+      steps: (json['steps'] as List<dynamic>?)
+              ?.map((e) =>
+                  ChangeWorkoutStepRequest.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+
+Map<String, dynamic> _$CreateWorkoutRequestToJson(
+        CreateWorkoutRequest instance) =>
+    <String, dynamic>{
+      'title': instance.title,
+      'description': instance.description,
+      'category': createWorkoutRequestCategoryToJson(instance.category),
+      'difficulty': createWorkoutRequestDifficultyToJson(instance.difficulty),
+      'steps': instance.steps?.map((e) => e.toJson()).toList(),
     };
 
 DetailedWorkoutsResponse _$DetailedWorkoutsResponseFromJson(
@@ -150,4 +148,18 @@ Map<String, dynamic> _$WorkoutListResponseToJson(
         WorkoutListResponse instance) =>
     <String, dynamic>{
       'workouts': instance.workouts?.map((e) => e.toJson()).toList(),
+    };
+
+WorkoutDetailsResponse _$WorkoutDetailsResponseFromJson(
+        Map<String, dynamic> json) =>
+    WorkoutDetailsResponse(
+      estimatedTimeInMinutes: json['estimatedTimeInMinutes'] as int?,
+      totalSteps: json['totalSteps'] as int?,
+    );
+
+Map<String, dynamic> _$WorkoutDetailsResponseToJson(
+        WorkoutDetailsResponse instance) =>
+    <String, dynamic>{
+      'estimatedTimeInMinutes': instance.estimatedTimeInMinutes,
+      'totalSteps': instance.totalSteps,
     };

@@ -14,16 +14,17 @@ import 'package:gymbuddy/service/workout/workout_service.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 
 class WorkoutManager extends StatefulWidget {
-  WorkoutManager({super.key, required this.type});
+  WorkoutManager({super.key, required this.type, this.workout});
 
   final CrudType type;
+  final Workout? workout;
 
   @override
   State<WorkoutManager> createState() => _WorkoutManagerState();
 }
 
 class _WorkoutManagerState extends State<WorkoutManager> {
-  final ChangeWorkoutDto _workout = ChangeWorkoutDto(
+  late ChangeWorkoutDto _workout = ChangeWorkoutDto(
     steps: [],
   );
   final _formkey = GlobalKey<FormState>();
@@ -34,7 +35,13 @@ class _WorkoutManagerState extends State<WorkoutManager> {
       return;
     }
     _formkey.currentState!.save();
-    await WorkoutService().createWorkout(context, _workout);
+    if (CrudType.add == widget.type) {
+      await WorkoutService().createWorkout(context, _workout);
+    }
+    if (CrudType.edit == widget.type) {
+      await WorkoutService()
+          .editWorkout(context, widget.workout!.workoutId, _workout);
+    }
   }
 
   addStep(CrudType type) async {
@@ -76,12 +83,18 @@ class _WorkoutManagerState extends State<WorkoutManager> {
                     children: [
                       // Name of the workout
                       DefaultTextFormField(
+                        initialValue: CrudType.edit == widget.type
+                            ? widget.workout!.title
+                            : null,
                         hintText: "Title",
                         onSaved: (value) => _workout.title = value,
                       ),
 
                       // Details about the workout
                       MultiLineTextFormField(
+                        initialValue: CrudType.edit == widget.type
+                            ? widget.workout!.description
+                            : null,
                         hintText: "Describe your workout",
                         maxLines: 30,
                         validator: (p0) => null,
@@ -109,33 +122,41 @@ class _WorkoutManagerState extends State<WorkoutManager> {
                   ),
 
                   // Add steps
-                  FormCategory(
-                    title: "Steps to complete this training",
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                addStep(CrudType.add);
-                              },
-                              icon: const Icon(Icons.add),
-                              label: Text(
-                                "Add step",
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              style: const ButtonStyle().copyWith(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Theme.of(context).primaryColorDark),
-                                  surfaceTintColor: MaterialStatePropertyAll(
-                                      Theme.of(context).primaryColorDark)),
+                  CrudType.add == widget.type
+                      ? FormCategory(
+                          title: "Steps to complete this training",
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      addStep(CrudType.add);
+                                    },
+                                    icon: const Icon(Icons.add),
+                                    label: Text(
+                                      "Add step",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
+                                    ),
+                                    style: const ButtonStyle().copyWith(
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                Theme.of(context)
+                                                    .primaryColorDark),
+                                        surfaceTintColor:
+                                            MaterialStatePropertyAll(
+                                                Theme.of(context)
+                                                    .primaryColorDark)),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                      renderSteps(),
-                    ],
-                  ),
+                            renderSteps(),
+                          ],
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -165,7 +186,9 @@ class _WorkoutManagerState extends State<WorkoutManager> {
               ),
             )
             .toList(),
-        value: WorkoutCategory.values[0].name,
+        value: CrudType.edit == widget.type
+            ? widget.workout!.category.name
+            : WorkoutCategory.values[0].name,
         onChanged: (value) =>
             _workout.category = WorkoutCategory.values.byName(value!),
         onSaved: (newValue) =>
@@ -193,7 +216,9 @@ class _WorkoutManagerState extends State<WorkoutManager> {
               ),
             )
             .toList(),
-        value: WorkoutDifficulty.values[0].name,
+        value: CrudType.edit == widget.type
+            ? widget.workout!.difficulty.name
+            : WorkoutDifficulty.values[0].name,
         onChanged: (value) =>
             _workout.difficulty = WorkoutDifficulty.values.byName(value!),
         onSaved: (newValue) =>

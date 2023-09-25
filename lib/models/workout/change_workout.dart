@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 
 import 'package:gymbuddy/models/workout.dart';
@@ -38,13 +35,22 @@ class ChangeWorkoutDto {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toAddWorkoutMap() {
     return <String, dynamic>{
       'title': title,
       'description': description,
       'category': category == null ? null : category!.name.toUpperCase(),
       'difficulty': difficulty == null ? null : difficulty!.name.toUpperCase(),
       'steps': steps.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  Map<String, dynamic> toEditWorkoutMap() {
+    return <String, dynamic>{
+      'title': title,
+      'description': description,
+      'category': category == null ? null : category!.name.toUpperCase(),
+      'difficulty': difficulty == null ? null : difficulty!.name.toUpperCase(),
     };
   }
 
@@ -66,11 +72,6 @@ class ChangeWorkoutDto {
       ),
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory ChangeWorkoutDto.fromJson(String source) =>
-      ChangeWorkoutDto.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
