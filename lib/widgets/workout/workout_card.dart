@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/api/training_api.models.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/screen/workout/workout_details_screen.dart';
+import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/workout/workout_service.dart';
 import 'package:gymbuddy/service/workout/workout_step_service.dart';
 
@@ -41,7 +42,7 @@ class WorkoutCard extends StatelessWidget {
               height: 4,
             ),
             Text(
-              '${workoutCategoryIcon[workout.category]} ${workout.category.name}, ${(totalSteps ?? 0).toString()} steps',
+              '${workoutCategoryIcon[workout.category]} ${FormatUtils.toCapitalized(workout.category.name)}, ${(totalSteps ?? 0).toString()} steps',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             workoutDifficultyRating[workout.difficulty] as Widget,

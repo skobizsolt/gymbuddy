@@ -6,6 +6,7 @@ import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/service/validators.dart';
 
@@ -40,7 +41,7 @@ class _WorkoutManagerState extends State<WorkoutStepManager> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-              "${widget.type.name[0].toUpperCase() + widget.type.name.substring(1)} workout step"),
+              "${FormatUtils.toCapitalized(widget.type.name)} workout step"),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -142,8 +143,8 @@ class _WorkoutManagerState extends State<WorkoutStepManager> {
           items: WorkoutType.values
               .map(
                 (e) => DropdownMenuItem(
-                  child: Text(
-                      "${e.name[0].toUpperCase() + e.name.substring(1)} based step"),
+                  child:
+                      Text("${FormatUtils.toCapitalized(e.name)} based step"),
                   value: e.name,
                 ),
               )

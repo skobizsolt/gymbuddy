@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_details_screen.dart';
+import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
 class StepsPanelList extends StatelessWidget {
@@ -53,22 +54,20 @@ class StepsPanelList extends StatelessWidget {
         itemCount: steps.length,
         itemBuilder: (context, index) {
           return Card(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: ListTile(
-                title: Text(steps[index].stepName),
-                subtitle: Text(
-                  'Type: ${steps[index].workoutType.name} based step, ${steps[index].estimatedTime} seconds',
-                  style: Theme.of(context).listTileTheme.subtitleTextStyle,
-                ),
-                trailing: IconButton(
-                  onPressed: () {
-                    openDetails(context, steps[index]);
-                  },
-                  icon: Icon(
-                    Icons.info_outline,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+            child: ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
+              onTap: () => openDetails(context, steps[index]),
+              title: Text(steps[index].stepName),
+              subtitle: Text(
+                '${FormatUtils.toCapitalized(steps[index].workoutType.name)} based step\n${steps[index].estimatedTime} seconds',
+                style: Theme.of(context).listTileTheme.subtitleTextStyle,
+              ),
+              trailing: IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.edit,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),

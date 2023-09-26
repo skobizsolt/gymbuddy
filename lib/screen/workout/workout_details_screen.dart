@@ -6,6 +6,7 @@ import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
+import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/workout/workout_service.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
@@ -139,7 +140,7 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
       var tags = [
         InformationTag(
           child: Text(
-            '${workoutCategoryIcon[workoutData.category]} ${workoutData.category.name[0].toUpperCase() + workoutData.category.name.substring(1)}',
+            '${workoutCategoryIcon[workoutData.category]} ${FormatUtils.toCapitalized(workoutData.category.name)}',
             style: TextStyle(color: primaryColor, fontSize: 14),
           ),
         ),
@@ -152,8 +153,7 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
                 width: 5,
               ),
               Text(
-                workoutData.difficulty.name[0].toUpperCase() +
-                    workoutData.difficulty.name.substring(1),
+                FormatUtils.toCapitalized(workoutData.difficulty.name),
                 style: const TextStyle(fontSize: 14),
               ),
             ],

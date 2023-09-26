@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
 class WorkoutStepDetailsScreen extends StatelessWidget {
@@ -120,8 +121,8 @@ class WorkoutStepDetailsScreen extends StatelessWidget {
           ),
           // Step type
           renderDetail(
-              title: step.workoutType.name[0].toUpperCase() +
-                  step.workoutType.name.substring(1),
+              title: FormatUtils.toCapitalized(
+                  '${step.workoutType.name} based step'),
               icon: Icons.star_border_purple500_outlined),
 
           const SizedBox(

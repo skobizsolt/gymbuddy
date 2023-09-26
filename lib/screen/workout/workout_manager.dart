@@ -9,6 +9,7 @@ import 'package:gymbuddy/models/workout/change_workout.dart';
 import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
 import 'package:gymbuddy/service/mapper/workout_internal_mapper.dart';
+import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/service/workout/workout_service.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
@@ -68,8 +69,7 @@ class _WorkoutManagerState extends State<WorkoutManager> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-              "${widget.type.name[0].toUpperCase() + widget.type.name.substring(1)} workout"),
+          title: Text("${FormatUtils.toCapitalized(widget.type.name)} workout"),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -153,7 +153,7 @@ class _WorkoutManagerState extends State<WorkoutManager> {
                                 ),
                               ],
                             ),
-                            renderSteps(),
+                            _renderSteps(),
                           ],
                         )
                       : const SizedBox(),
@@ -181,7 +181,7 @@ class _WorkoutManagerState extends State<WorkoutManager> {
             .map(
               (e) => DropdownMenuItem(
                 child: Text(
-                    "${workoutCategoryIcon[e]} ${e.name[0].toUpperCase() + e.name.substring(1)}"),
+                    "${workoutCategoryIcon[e]} ${FormatUtils.toCapitalized(e.name)}"),
                 value: e.name,
               ),
             )
@@ -210,7 +210,7 @@ class _WorkoutManagerState extends State<WorkoutManager> {
                   const SizedBox(
                     width: 8,
                   ),
-                  Text("${e.name[0].toUpperCase() + e.name.substring(1)}")
+                  Text("${FormatUtils.toCapitalized(e.name)}")
                 ]),
                 value: e.name,
               ),
@@ -231,7 +231,7 @@ class _WorkoutManagerState extends State<WorkoutManager> {
     );
   }
 
-  renderSteps() {
+  _renderSteps() {
     if (_workout.steps.isEmpty) {
       return const SizedBox();
     } else {
