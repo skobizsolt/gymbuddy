@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import 'package:gymbuddy/widgets/utils/themed_icon.dart';
@@ -32,6 +33,32 @@ class Workout {
       'category': category.name,
       'difficulty': difficulty.name,
     };
+  }
+
+  @override
+  bool operator ==(covariant Workout other) {
+    if (identical(this, other)) return true;
+
+    return other.workoutId == workoutId &&
+        other.userId == userId &&
+        other.title == title &&
+        other.description == description &&
+        other.category == category &&
+        other.registeredOn == registeredOn &&
+        other.lastModified == lastModified &&
+        other.difficulty == difficulty;
+  }
+
+  @override
+  int get hashCode {
+    return workoutId.hashCode ^
+        userId.hashCode ^
+        title.hashCode ^
+        description.hashCode ^
+        category.hashCode ^
+        registeredOn.hashCode ^
+        lastModified.hashCode ^
+        difficulty.hashCode;
   }
 }
 

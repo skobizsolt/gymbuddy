@@ -6,26 +6,52 @@ import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/workout/workout_service.dart';
 import 'package:gymbuddy/service/workout/workout_step_service.dart';
 
-class WorkoutCard extends StatelessWidget {
+class WorkoutCard extends StatefulWidget {
   const WorkoutCard({super.key, required this.workout});
   final Workout workout;
 
   @override
-  Widget build(BuildContext context) {
-    late var data =
-        WorkoutService().getGeneralStepDetails(workout.workoutId, context);
+  State<WorkoutCard> createState() => _WorkoutCardState();
+}
 
+class _WorkoutCardState extends State<WorkoutCard> {
+  late Workout workoutData;
+  late var generalStepDetails;
+
+  @override
+  void initState() {
+    super.initState();
+    workoutData = widget.workout;
+    generalStepDetails =
+        WorkoutService().getGeneralStepDetails(workoutData.workoutId, context);
+  }
+
+  updateData(Workout? value) {
+    if (value == null || workoutData == value) {
+      return;
+    }
+    setState(() {
+      workoutData = value;
+      generalStepDetails = WorkoutService()
+          .getGeneralStepDetails(workoutData.workoutId, context);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     Future<void> selectWorkout(Workout workout) async {
-      await WorkoutStepService().getSteps(workout.workoutId, context).then(
-            (steps) => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: ((context) => WorkoutDetailsScreen(
-                      workout: workout,
-                      steps: steps,
-                    )),
-              ),
-            ),
-          );
+      final Workout? returnedValue =
+          await WorkoutStepService().getSteps(workout.workoutId, context).then(
+                (steps) => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: ((context) => WorkoutDetailsScreen(
+                          workout: workout,
+                          steps: steps,
+                        )),
+                  ),
+                ),
+              );
+      updateData(returnedValue);
     }
 
     Widget workoutDetails(int? totalSteps) {
@@ -35,24 +61,24 @@ class WorkoutCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              workout.title,
+              widget.workout.title,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(
               height: 4,
             ),
             Text(
-              '${workoutCategoryIcon[workout.category]} ${FormatUtils.toCapitalized(workout.category.name)}, ${(totalSteps ?? 0).toString()} steps',
+              '${workoutCategoryIcon[workoutData.category]} ${FormatUtils.toCapitalized(workoutData.category.name)}, ${(totalSteps ?? 0).toString()} steps',
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            workoutDifficultyRating[workout.difficulty] as Widget,
+            workoutDifficultyRating[workoutData.difficulty] as Widget,
           ],
         ),
       );
     }
 
     return StreamBuilder<WorkoutDetailsResponse>(
-        stream: data,
+        stream: generalStepDetails,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SizedBox();
@@ -61,7 +87,7 @@ class WorkoutCard extends StatelessWidget {
           return Card(
             child: InkWell(
               onTap: () {
-                selectWorkout(workout);
+                selectWorkout(workoutData);
               },
               child: Container(
                 padding:
@@ -74,7 +100,7 @@ class WorkoutCard extends StatelessWidget {
                         workoutDetails(snapshot.data!.totalSteps),
                         Column(children: [
                           Text(
-                            '${(snapshot.data!.estimatedTimeInMinutes ?? 0).toString()}\nmins',
+                            '${snapshot.data!.estimatedTimeInMinutes!}\nmins',
                             style: Theme.of(context).textTheme.titleLarge,
                             textAlign: TextAlign.center,
                           )

@@ -5,6 +5,8 @@ import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout/change_workout.dart';
+import 'package:gymbuddy/models/workout/change_workout_step.dart';
+import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/screen/workout/workout_details_screen.dart';
 import 'package:gymbuddy/service/mapper/workout_mapper.dart';
 import 'package:gymbuddy/service/util/response_validator.dart';
@@ -78,5 +80,19 @@ class WorkoutService {
 
     showSucessSnackBar(context, "Workout deleted successfully!");
     Navigator.of(context).pop();
+  }
+
+  Future<WorkoutStep> createStep(
+      BuildContext context, int workoutId, ChangeWorkoutStepDto newStep) async {
+    var response = await _api.workoutsWorkoutIdStepsCreatePost(
+      workoutId: workoutId,
+      body: ChangeWorkoutStepRequest.fromJson(newStep.toMap()),
+    );
+
+    ResponseValidator.validateResponse(response, context);
+
+    showSucessSnackBar(
+        context, "New step (${response.body!.stepNumber}. step) added!");
+    return _workoutMapper.toWorkoutStep(response.body!);
   }
 }

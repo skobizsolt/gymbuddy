@@ -4,8 +4,10 @@ import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
+import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
+import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/workout/workout_service.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
@@ -32,6 +34,19 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
     return widget.workout.userId == FirebaseAuth.instance.currentUser!.uid;
   }
 
+  @override
+  initState() {
+    super.initState();
+    workoutData = widget.workout;
+    stepsData = widget.steps ?? [];
+    generalStepsData = loadDetails(context);
+  }
+
+  Stream<WorkoutDetailsResponse> loadDetails(BuildContext context) {
+    return _workoutService.getGeneralStepDetails(
+        widget.workout.workoutId, context);
+  }
+
   editWorkout(final BuildContext context) async {
     final Workout? editedWorkout = await Navigator.of(context).push(
       MaterialPageRoute(
@@ -54,17 +69,25 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
     _workoutService.deleteWorkout(context, workoutData.workoutId);
   }
 
-  @override
-  initState() {
-    super.initState();
-    workoutData = widget.workout;
-    stepsData = widget.steps ?? [];
-    generalStepsData = loadDetails(context);
-  }
-
-  Stream<WorkoutDetailsResponse> loadDetails(BuildContext context) {
-    return _workoutService.getGeneralStepDetails(
-        widget.workout.workoutId, context);
+  addStep(BuildContext context, CrudType type) async {
+    final ChangeWorkoutStepDto? newStep = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => WorkoutStepManager(type: type),
+      ),
+    );
+    if (newStep == null) {
+      return;
+    }
+    await _workoutService
+        .createStep(context, workoutData.workoutId, newStep)
+        .then(
+          (value) => setState(
+            () {
+              stepsData.add(value);
+              generalStepsData = loadDetails(context);
+            },
+          ),
+        );
   }
 
   @override
@@ -215,6 +238,7 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
         stream: generalStepsData,
         builder: (context, snapshot) {
           return DribbleLayout(
+            popValue: workoutData,
             actions: [
               // Delete button
               renderAppBarButtons(snapshot.data!.totalSteps!),
@@ -281,7 +305,7 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
                       Visibility(
                         visible: isSelfResource,
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () => addStep(context, CrudType.add),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(24),
                             child: Container(
