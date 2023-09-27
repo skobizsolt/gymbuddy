@@ -148,16 +148,20 @@ abstract class TrainingApi extends ChopperService {
   });
 
   ///
-  Future<chopper.Response<WorkoutListResponse>> workoutsGet() {
+  ///@param category
+  Future<chopper.Response<WorkoutListResponse>> workoutsGet(
+      {enums.WorkoutsGetCategory? category}) {
     generatedMapping.putIfAbsent(
         WorkoutListResponse, () => WorkoutListResponse.fromJsonFactory);
 
-    return _workoutsGet();
+    return _workoutsGet(category: category?.value?.toString());
   }
 
   ///
+  ///@param category
   @Get(path: '/workouts')
-  Future<chopper.Response<WorkoutListResponse>> _workoutsGet();
+  Future<chopper.Response<WorkoutListResponse>> _workoutsGet(
+      {@Query('category') String? category});
 
   ///
   ///@param workoutId
@@ -215,6 +219,22 @@ abstract class TrainingApi extends ChopperService {
     @Path('workoutId') required int? workoutId,
     @Path('stepNumber') required int? stepNumber,
   });
+
+  ///
+  ///@param userId
+  Future<chopper.Response<WorkoutListResponse>> workoutsOwnedGet(
+      {required String? userId}) {
+    generatedMapping.putIfAbsent(
+        WorkoutListResponse, () => WorkoutListResponse.fromJsonFactory);
+
+    return _workoutsOwnedGet(userId: userId);
+  }
+
+  ///
+  ///@param userId
+  @Get(path: '/workouts/owned')
+  Future<chopper.Response<WorkoutListResponse>> _workoutsOwnedGet(
+      {@Query('userId') required String? userId});
 
   ///
   ///@param workoutId

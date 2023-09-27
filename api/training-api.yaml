@@ -115,8 +115,19 @@ paths:
   /workouts:
     get:
       tags:
-        - workout-controller
+        - workout-list-controller
       operationId: getAllWorkouts
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - ENDURANCE
+              - STRENGTH
+              - BALANCE
+              - FLEXIBILITY
       responses:
         '200':
           description: OK
@@ -189,6 +200,24 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutStepResponse'
+  /workouts/owned:
+    get:
+      tags:
+        - workout-list-controller
+      operationId: getWorkoutsByUserId
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutListResponse'
   /workouts/data/{workoutId}/details:
     get:
       tags:

@@ -62,7 +62,7 @@ class HomeService {
   }
 
   static Future<List<Workout>> _loadMyWorkouts() async {
-    final trainings = await WorkoutService().getWorkouts();
+    final trainings = await WorkoutService().getOwnedWorkouts();
     if (trainings.isEmpty) {
       return [];
     }

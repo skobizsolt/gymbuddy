@@ -16,8 +16,18 @@ class WorkoutService {
   final _api =
       TrainingApi.create(baseUrl: Uri.http(GlobalValues.ANDROID_EMULATOR_URL));
 
-  Future<List<Workout>> getWorkouts() async {
-    final response = await _api.workoutsGet();
+  Future<List<Workout>> getWorkouts({WorkoutCategory? category}) async {
+    final response = category == null
+        ? await _api.workoutsGet()
+        : await _api.workoutsGet(
+            category: WorkoutsGetCategory.values.byName(category.name));
+
+    return _workoutMapper.toWorkoutList(response.body!);
+  }
+
+  getOwnedWorkouts() async {
+    final response = await _api.workoutsOwnedGet(
+        userId: FirebaseAuth.instance.currentUser!.uid);
 
     return _workoutMapper.toWorkoutList(response.body!);
   }

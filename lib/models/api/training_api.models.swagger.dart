@@ -1204,6 +1204,69 @@ List<enums.CreateWorkoutRequestDifficulty>?
       .toList();
 }
 
+String? workoutsGetCategoryToJson(
+    enums.WorkoutsGetCategory? workoutsGetCategory) {
+  return workoutsGetCategory?.value;
+}
+
+enums.WorkoutsGetCategory workoutsGetCategoryFromJson(
+  Object? workoutsGetCategory, [
+  enums.WorkoutsGetCategory? defaultValue,
+]) {
+  return enums.WorkoutsGetCategory.values.firstWhereOrNull((e) =>
+          e.value.toString().toLowerCase() ==
+          workoutsGetCategory?.toString().toLowerCase()) ??
+      defaultValue ??
+      enums.WorkoutsGetCategory.swaggerGeneratedUnknown;
+}
+
+enums.WorkoutsGetCategory? workoutsGetCategoryNullableFromJson(
+  Object? workoutsGetCategory, [
+  enums.WorkoutsGetCategory? defaultValue,
+]) {
+  if (workoutsGetCategory == null) {
+    return null;
+  }
+  return enums.WorkoutsGetCategory.values
+          .firstWhereOrNull((e) => e.value == workoutsGetCategory) ??
+      defaultValue;
+}
+
+List<String> workoutsGetCategoryListToJson(
+    List<enums.WorkoutsGetCategory>? workoutsGetCategory) {
+  if (workoutsGetCategory == null) {
+    return [];
+  }
+
+  return workoutsGetCategory.map((e) => e.value!).toList();
+}
+
+List<enums.WorkoutsGetCategory> workoutsGetCategoryListFromJson(
+  List? workoutsGetCategory, [
+  List<enums.WorkoutsGetCategory>? defaultValue,
+]) {
+  if (workoutsGetCategory == null) {
+    return defaultValue ?? [];
+  }
+
+  return workoutsGetCategory
+      .map((e) => workoutsGetCategoryFromJson(e.toString()))
+      .toList();
+}
+
+List<enums.WorkoutsGetCategory>? workoutsGetCategoryNullableListFromJson(
+  List? workoutsGetCategory, [
+  List<enums.WorkoutsGetCategory>? defaultValue,
+]) {
+  if (workoutsGetCategory == null) {
+    return defaultValue;
+  }
+
+  return workoutsGetCategory
+      .map((e) => workoutsGetCategoryFromJson(e.toString()))
+      .toList();
+}
+
 // ignore: unused_element
 String? _dateToJson(DateTime? date) {
   if (date == null) {

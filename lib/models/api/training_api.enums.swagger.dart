@@ -130,3 +130,21 @@ enum CreateWorkoutRequestDifficulty {
 
   const CreateWorkoutRequestDifficulty(this.value);
 }
+
+enum WorkoutsGetCategory {
+  @JsonValue(null)
+  swaggerGeneratedUnknown(null),
+
+  @JsonValue('ENDURANCE')
+  endurance('ENDURANCE'),
+  @JsonValue('STRENGTH')
+  strength('STRENGTH'),
+  @JsonValue('BALANCE')
+  balance('BALANCE'),
+  @JsonValue('FLEXIBILITY')
+  flexibility('FLEXIBILITY');
+
+  final String? value;
+
+  const WorkoutsGetCategory(this.value);
+}

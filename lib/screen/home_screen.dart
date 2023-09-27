@@ -42,6 +42,7 @@ class HomeScreen extends ConsumerWidget {
         },
       ];
 
+      // Render options on home page
       return Expanded(
         child: ListView.builder(
           itemCount: options.length,
@@ -56,12 +57,14 @@ class HomeScreen extends ConsumerWidget {
       );
     }
 
+    // If the user data cannot be loaded
     if (homeData.hasError) {
       return const Center(
         child: NoContentText(title: 'An error occured'),
       );
     }
 
+    // If userdata is loading
     if (homeData.isLoading) {
       return Center(
         child: Column(
@@ -85,6 +88,7 @@ class HomeScreen extends ConsumerWidget {
       );
     }
 
+    // Userdata is loaded, then build home
     final userData = homeData.value!;
 
     return DribbleLayout(
@@ -96,6 +100,7 @@ class HomeScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Greet the user
                 Flexible(
                   child: Text(
                     overflow: TextOverflow.ellipsis,
@@ -107,6 +112,8 @@ class HomeScreen extends ConsumerWidget {
                         ),
                   ),
                 ),
+
+                // Profile picture
                 ProfilePicture(
                   size: 32,
                   child: userData.profileImageUrl == null

@@ -12,7 +12,7 @@ class WorkoutSearchTile extends StatelessWidget {
   final WorkoutCategory workoutCategory;
 
   Future<List<Workout>> loadData() async {
-    var data = await WorkoutService().getWorkouts();
+    var data = await WorkoutService().getWorkouts(category: workoutCategory);
     if (data.isEmpty) {
       return [];
     }

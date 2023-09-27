@@ -87,12 +87,16 @@ class _$TrainingApi extends TrainingApi {
   }
 
   @override
-  Future<Response<WorkoutListResponse>> _workoutsGet() {
+  Future<Response<WorkoutListResponse>> _workoutsGet({String? category}) {
     final Uri $url = Uri.parse('/workouts');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'category': category
+    };
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
+      parameters: $params,
     );
     return client.send<WorkoutListResponse, WorkoutListResponse>($request);
   }
@@ -134,6 +138,20 @@ class _$TrainingApi extends TrainingApi {
       client.baseUrl,
     );
     return client.send<WorkoutStepResponse, WorkoutStepResponse>($request);
+  }
+
+  @override
+  Future<Response<WorkoutListResponse>> _workoutsOwnedGet(
+      {required String? userId}) {
+    final Uri $url = Uri.parse('/workouts/owned');
+    final Map<String, dynamic> $params = <String, dynamic>{'userId': userId};
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<WorkoutListResponse, WorkoutListResponse>($request);
   }
 
   @override
