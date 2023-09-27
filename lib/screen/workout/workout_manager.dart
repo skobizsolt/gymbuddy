@@ -236,8 +236,12 @@ class _WorkoutManagerState extends State<WorkoutManager> {
       return const SizedBox();
     } else {
       return StepsPanelList(
-          workoutSteps:
-              WorkoutInternalDataMapper().toWorkoutStepList(_workout.steps));
+        workoutSteps:
+            WorkoutInternalDataMapper().toWorkoutStepList(_workout.steps),
+        workoutId: widget.workout == null
+            ? GlobalValues.LOCAL_WORKOUT_ID
+            : widget.workout!.workoutId,
+      );
     }
   }
 }

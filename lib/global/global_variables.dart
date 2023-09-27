@@ -15,4 +15,7 @@ class GlobalValues {
 
   //ios emulator url
   static const IOS_EMAULATOR_URL = "localhost:8080";
+
+  // Local workout
+  static const int LOCAL_WORKOUT_ID = -1;
 }

@@ -32,8 +32,6 @@ class _WorkoutCardState extends State<WorkoutCard> {
     }
     setState(() {
       workoutData = value;
-      generalStepDetails = WorkoutService()
-          .getGeneralStepDetails(workoutData.workoutId, context);
     });
   }
 
@@ -51,6 +49,10 @@ class _WorkoutCardState extends State<WorkoutCard> {
                   ),
                 ),
               );
+      setState(() {
+        generalStepDetails = WorkoutService()
+            .getGeneralStepDetails(workoutData.workoutId, context);
+      });
       updateData(returnedValue);
     }
 

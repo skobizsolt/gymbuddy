@@ -4,25 +4,41 @@ import 'package:gymbuddy/screen/workout_steps/workout_step_details_screen.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
-class StepsPanelList extends StatelessWidget {
-  const StepsPanelList({super.key, required this.workoutSteps});
+class StepsPanelList extends StatefulWidget {
+  const StepsPanelList(
+      {super.key, required this.workoutSteps, required this.workoutId});
 
   final List<WorkoutStep> workoutSteps;
+  final int workoutId;
 
+  @override
+  State<StepsPanelList> createState() => _StepsPanelListState();
+}
+
+class _StepsPanelListState extends State<StepsPanelList> {
   List<WorkoutStep> get steps {
-    workoutSteps.sort(
+    widget.workoutSteps.sort(
         (step, nextStep) => step.stepNumber.compareTo(nextStep.stepNumber));
-    return workoutSteps;
+    return widget.workoutSteps;
   }
 
-  void openDetails(BuildContext context, WorkoutStep step) {
-    Navigator.of(context).push(
+  Future<void> openDetails(BuildContext context, WorkoutStep step) async {
+    final WorkoutStep? editedStep = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WorkoutStepDetailsScreen(
           step: step,
+          workoutId: widget.workoutId,
         ),
       ),
     );
+
+    if (editedStep == null || editedStep == step) {
+      return;
+    }
+
+    setState(() {
+      steps[steps.indexOf(step)] = editedStep;
+    });
   }
 
   @override
@@ -60,7 +76,7 @@ class StepsPanelList extends StatelessWidget {
               onTap: () => openDetails(context, steps[index]),
               title: Text(steps[index].stepName),
               subtitle: Text(
-                '${FormatUtils.toCapitalized(steps[index].workoutType.name)} based step\n${steps[index].estimatedTime} seconds',
+                '${FormatUtils.toCapitalized(steps[index].workoutType.name)} based step\n${FormatUtils.toTimeString(Duration(seconds: steps[index].estimatedTime))}',
                 style: Theme.of(context).listTileTheme.subtitleTextStyle,
               ),
               trailing: IconButton(

@@ -11,9 +11,10 @@ import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/service/validators.dart';
 
 class WorkoutStepManager extends StatefulWidget {
-  WorkoutStepManager({super.key, required this.type});
+  WorkoutStepManager({super.key, required this.type, this.workoutStep});
 
   final CrudType type;
+  final WorkoutStep? workoutStep;
 
   @override
   State<WorkoutStepManager> createState() => _WorkoutManagerState();
@@ -29,7 +30,7 @@ class _WorkoutManagerState extends State<WorkoutStepManager> {
       return;
     }
     _formKey.currentState!.save();
-    Navigator.pop(context, _step);
+    Navigator.of(context).pop(_step);
   }
 
   @override
@@ -56,12 +57,18 @@ class _WorkoutManagerState extends State<WorkoutStepManager> {
                       // Name of the workout
                       DefaultTextFormField(
                         hintText: "Step name",
+                        initialValue: CrudType.edit == widget.type
+                            ? widget.workoutStep!.stepName
+                            : null,
                         onSaved: (value) => _step.stepName = value,
                       ),
 
                       // Details about the workout
                       MultiLineTextFormField(
                         hintText: "Step descriptions",
+                        initialValue: CrudType.edit == widget.type
+                            ? widget.workoutStep!.details
+                            : null,
                         validator: (p0) {
                           return null;
                         },
@@ -80,6 +87,9 @@ class _WorkoutManagerState extends State<WorkoutStepManager> {
                     children: [
                       DefaultTextFormField(
                         hintText: "Estimated time in seconds",
+                        initialValue: CrudType.edit == widget.type
+                            ? widget.workoutStep!.estimatedTime.toString()
+                            : "0",
                         keyboardType: TextInputType.number,
                         validator: (value) =>
                             InputValidator().validateNumber(value),
@@ -149,7 +159,9 @@ class _WorkoutManagerState extends State<WorkoutStepManager> {
                 ),
               )
               .toList(),
-          value: WorkoutType.values[0].name,
+          value: CrudType.edit == widget.type
+              ? widget.workoutStep!.workoutType.name
+              : WorkoutType.values[0].name,
           onChanged: (value) {
             _step.workoutType = WorkoutType.values.byName(value!);
           },
