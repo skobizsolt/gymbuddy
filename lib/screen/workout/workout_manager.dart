@@ -241,6 +241,7 @@ class _WorkoutManagerState extends State<WorkoutManager> {
         workoutId: widget.workout == null
             ? GlobalValues.LOCAL_WORKOUT_ID
             : widget.workout!.workoutId,
+        isOwnResource: true,
       );
     }
   }

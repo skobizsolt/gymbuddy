@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gymbuddy/components/custom_modals.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/api/training_api.swagger.dart';
@@ -108,8 +109,7 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
       return Visibility(
         visible: isSelfResource,
         child: IconButton(
-          onPressed: () =>
-              _showConfirmDeleteDialog(workoutData.title, totalSteps),
+          onPressed: () => _showDeletionModal(context, workoutData, totalSteps),
           icon: Icon(
             Icons.delete,
             color: onPrimaryContainer,
@@ -334,6 +334,9 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
             StepsPanelList(
               workoutSteps: stepsData,
               workoutId: workoutData.workoutId,
+              isLocalMode: false,
+              isAuthEnabled: true,
+              isOwnResource: isSelfResource,
             ),
           ],
         ),
@@ -361,60 +364,47 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
     );
   }
 
-  _showConfirmDeleteDialog(String title, int totalSteps) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        actionsAlignment: MainAxisAlignment.spaceBetween,
-        title: const Text("❌ Delete workout"),
-        content: RichText(
-          // Controls visual overflow
-          overflow: TextOverflow.clip,
+  _showDeletionModal(
+      BuildContext context, Workout workoutData, int totalSteps) {
+    showConfirmDelete(
+      context,
+      title: RichText(
+        // Controls visual overflow
+        overflow: TextOverflow.clip,
 
-          // Controls how the text should be aligned horizontally
-          textAlign: TextAlign.center,
+        // Whether the text should break at soft line breaks
+        softWrap: true,
 
-          // Whether the text should break at soft line breaks
-          softWrap: true,
-
-          // The number of font pixels for each logical pixel
-          textScaleFactor: 1,
-          text: TextSpan(
-            style: Theme.of(context).textTheme.bodyLarge,
-            children: <TextSpan>[
-              TextSpan(
-                  text: '"$title"',
-                  style: TextStyle(
+        // The number of font pixels for each logical pixel
+        textScaleFactor: 1,
+        text: TextSpan(
+          style: Theme.of(context).textTheme.bodyLarge,
+          children: <TextSpan>[
+            const TextSpan(
+                text: 'Attention!\n',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                )),
+            const TextSpan(text: 'Workout '),
+            TextSpan(
+                text: '"${workoutData.title}"',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                )),
+            const TextSpan(text: ' with '),
+            TextSpan(
+                text: '$totalSteps steps',
+                style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  )),
-              const TextSpan(text: ' with '),
-              TextSpan(
-                  text: '$totalSteps steps',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer)),
-              const TextSpan(text: ' will be deleted. Are you sure?'),
-              const TextSpan(text: "\nThis operation cannot be undone!"),
-            ],
-          ),
+                    color: Theme.of(context).colorScheme.onPrimaryContainer)),
+            const TextSpan(text: ' is about to be deleted.'),
+          ],
         ),
-        actions: [
-          BackButton(
-            style: const ButtonStyle().copyWith(
-                foregroundColor: MaterialStatePropertyAll(
-                    Theme.of(context).colorScheme.primary)),
-          ),
-          ElevatedButton.icon(
-            onPressed: () => deleteWorkout(context),
-            style: const ButtonStyle().copyWith(
-                backgroundColor: MaterialStatePropertyAll(
-                    Theme.of(context).primaryColorDark)),
-            icon: const Icon(Icons.delete),
-            label: const Text("Delete"),
-          ),
-        ],
       ),
+      subtitle: const Text("Are you sure? This operation cannot be undone!"),
+      onTap: () => deleteWorkout(context),
     );
   }
 }

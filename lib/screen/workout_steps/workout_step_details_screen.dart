@@ -1,14 +1,9 @@
 // ignore_for_file: unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
-import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/models/workout_step.dart';
-import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
-import 'package:gymbuddy/service/mapper/workout_internal_mapper.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
-import 'package:gymbuddy/service/workout/workout_step_service.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
 class WorkoutStepDetailsScreen extends StatefulWidget {
@@ -32,49 +27,9 @@ class _WorkoutStepDetailsScreenState extends State<WorkoutStepDetailsScreen> {
     stepData = widget.step;
   }
 
-  editStep(BuildContext context) async {
-    ChangeWorkoutStepDto? editedStep = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => WorkoutStepManager(
-          type: CrudType.edit,
-          workoutStep: stepData,
-        ),
-      ),
-    );
-
-    if (editedStep == null) {
-      return;
-    }
-
-    if (widget.workoutId != GlobalValues.LOCAL_WORKOUT_ID) {
-      WorkoutStepService()
-          .editStep(context, widget.workoutId, stepData.stepNumber, editedStep);
-    }
-
-    setState(() {
-      stepData = WorkoutInternalDataMapper()
-          .toWorkoutStep(editedStep, widget.step.stepNumber);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
-
-    // Renders app bar buttons
-    Widget renderAppBarButtons() {
-      // Delete Button
-      return Visibility(
-        visible: true,
-        child: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.delete,
-            color: onPrimaryContainer,
-          ),
-        ),
-      );
-    }
 
     // Renders the Workouts name
     Widget renderTitle() {
@@ -153,9 +108,6 @@ class _WorkoutStepDetailsScreenState extends State<WorkoutStepDetailsScreen> {
 
     return DribbleLayout(
       popValue: stepData,
-      actions: [
-        renderAppBarButtons(),
-      ],
       headerContent: Column(
         children: [
           // Title
@@ -181,18 +133,6 @@ class _WorkoutStepDetailsScreenState extends State<WorkoutStepDetailsScreen> {
 
           const SizedBox(
             height: 8,
-          ),
-
-          // Edit step button
-          Visibility(
-            visible: true,
-            child: ElevatedButton.icon(
-              onPressed: () => editStep(context),
-              icon: const Icon(Icons.edit),
-              label: const Text('Edit step'),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: onPrimaryContainer, elevation: 0),
-            ),
           ),
         ],
       ),

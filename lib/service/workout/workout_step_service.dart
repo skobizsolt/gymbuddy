@@ -37,4 +37,12 @@ class WorkoutStepService {
         context, "Training ${response.body!.stepName} changed successfully!");
     return WorkoutModelMapper().toWorkoutStep(response.body!);
   }
+
+  Future<void> deleteStep(
+      BuildContext context, int workoutId, int stepNumber) async {
+    final response = await _api.workoutsWorkoutIdStepsStepNumberDeleteDelete(
+        workoutId: workoutId, stepNumber: stepNumber);
+
+    ResponseValidator.validateResponse(response, context);
+  }
 }
