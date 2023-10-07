@@ -5,6 +5,7 @@ import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/service/mapper/workout_internal_mapper.dart';
 import 'package:gymbuddy/service/mapper/workout_mapper.dart';
 import 'package:gymbuddy/service/util/response_validator.dart';
 
@@ -12,14 +13,17 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
   WorkoutStepService() : super([]);
 
   final _workoutMapper = WorkoutModelMapper();
+  final _workoutInternalMapper = WorkoutInternalDataMapper();
   final _api =
       TrainingApi.create(baseUrl: Uri.http(GlobalValues.ANDROID_EMULATOR_URL));
 
-  Future<List<WorkoutStep>> getSteps(
-      int workoutId, BuildContext context) async {
+  Future<List<WorkoutStep>> getSteps(int workoutId) async {
     var response = await _api.workoutsWorkoutIdStepsGet(workoutId: workoutId);
 
-    ResponseValidator.validateResponse(response, context);
+    if (!response.isSuccessful || response.body == null) {
+      state = [];
+      return state;
+    }
 
     final workoutSteps = _workoutMapper.toWorkoutSteps(response.body!);
     state = workoutSteps;
@@ -27,8 +31,19 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
     return workoutSteps;
   }
 
-  Future<WorkoutStep> createStep(
-      BuildContext context, int workoutId, ChangeWorkoutStepDto newStep) async {
+  Future<void> createStep(BuildContext context, int workoutId,
+      ChangeWorkoutStepDto? newStep, bool isLocalMode,
+      [int? localStepNumber]) async {
+    if (newStep == null) {
+      return;
+    }
+    if (isLocalMode) {
+      state = [
+        ...state,
+        _workoutInternalMapper.toWorkoutStep(newStep, localStepNumber!)
+      ];
+    }
+
     var response = await _api.workoutsWorkoutIdStepsPost(
       workoutId: workoutId,
       body: ChangeWorkoutStepRequest.fromJson(newStep.toMap()),
@@ -36,16 +51,29 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
 
     ResponseValidator.validateResponse(response, context);
 
-    var mappedNewStep = _workoutMapper.toWorkoutStep(response.body!);
-    state = [...state, mappedNewStep];
+    state = [...state, _workoutMapper.toWorkoutStep(response.body!)];
 
     showSucessSnackBar(
         context, "New step (${response.body!.stepNumber}. step) added!");
-    return mappedNewStep;
   }
 
-  Future<WorkoutStep> editStep(BuildContext context, int workoutId,
-      int stepNumber, ChangeWorkoutStepDto editedStep) async {
+  Future<void> editStep(
+      {required BuildContext context,
+      required int workoutId,
+      required int stepNumber,
+      required ChangeWorkoutStepDto? editedStep,
+      required bool isLocalMode}) async {
+    if (editedStep == null) {
+      return;
+    }
+    // Handle locally edited step
+    if (isLocalMode || workoutId == GlobalValues.LOCAL_WORKOUT_ID) {
+      state = _editWorkoutStepState(
+          _workoutInternalMapper.toWorkoutStep(editedStep, stepNumber));
+      return;
+    }
+
+    // Handle globally edited step
     var response = await _api.workoutsWorkoutIdStepsStepNumberPut(
       workoutId: workoutId,
       stepNumber: stepNumber,
@@ -54,19 +82,11 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
 
     ResponseValidator.validateResponse(response, context);
 
-    var mappedEditedStep = WorkoutModelMapper().toWorkoutStep(response.body!);
-    final updatedStepList = state
-        .map(
-          (e) => e.stepNumber == mappedEditedStep.stepNumber
-              ? mappedEditedStep
-              : e,
-        )
-        .toList();
-    state = updatedStepList;
+    state = _editWorkoutStepState(
+        WorkoutModelMapper().toWorkoutStep(response.body!));
 
     showSucessSnackBar(
         context, "Training ${response.body!.stepName} changed successfully!");
-    return mappedEditedStep;
   }
 
   Future<void> deleteStep(
@@ -77,5 +97,15 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
     ResponseValidator.validateResponse(response, context);
 
     state = [...state.where((element) => element.stepNumber != stepNumber)];
+  }
+
+  List<WorkoutStep> _editWorkoutStepState(WorkoutStep mappedEditedStep) {
+    return state
+        .map(
+          (e) => e.stepNumber == mappedEditedStep.stepNumber
+              ? mappedEditedStep
+              : e,
+        )
+        .toList();
   }
 }

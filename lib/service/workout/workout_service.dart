@@ -18,7 +18,16 @@ class WorkoutService extends StateNotifier<List<Workout>> {
       TrainingApi.create(baseUrl: Uri.http(GlobalValues.ANDROID_EMULATOR_URL));
 
   Future<List<Workout>> getWorkouts() async {
+    if (state.isNotEmpty) {
+      return state;
+    }
+
     final response = await _api.workoutsGet();
+
+    if (!response.isSuccessful && response.body == null) {
+      state = [];
+      return state;
+    }
 
     var workouts = _workoutMapper.toWorkoutList(response.body!);
     state = workouts;
@@ -44,10 +53,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
     await Navigator.of(context)
         .push(MaterialPageRoute(
           builder: (context) => WorkoutDetailsScreen(
-            workout: newWorkout,
-            steps: response.body!.steps == null
-                ? []
-                : _workoutMapper.toWorkoutSteps(response.body!.steps!),
+            workoutId: GlobalValues.LOCAL_WORKOUT_ID,
           ),
         ))
         .whenComplete(() => Navigator.of(context).pop());
@@ -92,6 +98,5 @@ class WorkoutService extends StateNotifier<List<Workout>> {
     state = [...state.where((element) => element.workoutId != workoutId)];
 
     showSucessSnackBar(context, "Workout deleted successfully!");
-    Navigator.of(context).pop();
   }
 }

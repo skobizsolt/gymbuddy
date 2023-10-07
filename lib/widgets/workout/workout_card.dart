@@ -5,40 +5,29 @@ import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workout_details_screen.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
-import 'package:gymbuddy/service/workout/workout_step_service.dart';
 
-class WorkoutCard extends ConsumerStatefulWidget {
-  const WorkoutCard({super.key, required this.workout});
-  final Workout workout;
-
-  @override
-  ConsumerState<WorkoutCard> createState() => _WorkoutCardState();
-}
-
-class _WorkoutCardState extends ConsumerState<WorkoutCard> {
-  late Workout workoutData;
+class WorkoutCard extends ConsumerWidget {
+  const WorkoutCard({super.key, required this.workoutId});
+  final int workoutId;
 
   @override
-  void initState() {
-    super.initState();
-    workoutData = widget.workout;
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    var workoutRef = ref.watch(workoutByIdProvider(workoutId));
+    if (!workoutRef.hasValue) {
+      return const SizedBox();
+    }
 
-  @override
-  Widget build(BuildContext context) {
+    Workout workout = workoutRef.value!;
     AsyncValue<WorkoutDetailsResponse> generalStepDetails =
-        ref.watch(workoutGeneralDetailsProvider(workoutData.workoutId));
+        ref.watch(workoutGeneralDetailsProvider(workout.workoutId));
     Future<void> selectWorkout(Workout workout) async {
-      await WorkoutStepService().getSteps(workout.workoutId, context).then(
-            (steps) => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: ((context) => WorkoutDetailsScreen(
-                      workout: workout,
-                      steps: steps,
-                    )),
-              ),
-            ),
-          );
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: ((context) => WorkoutDetailsScreen(
+                workoutId: workout.workoutId,
+              )),
+        ),
+      );
     }
 
     Widget workoutDetails(int? totalSteps) {
@@ -48,17 +37,19 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.workout.title,
+              workout.title,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(
               height: 4,
             ),
             Text(
-              '${workoutCategoryIcon[workoutData.category]} ${FormatUtils.toCapitalized(workoutData.category.name)}, ${(totalSteps ?? 0).toString()} steps',
+              '${workoutCategoryIcon[workout.category]} ' +
+                  '${FormatUtils.toCapitalized(workout.category.name)}, ' +
+                  '${(totalSteps ?? 0).toString()} steps',
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            workoutDifficultyRating[workoutData.difficulty] as Widget,
+            workoutDifficultyRating[workout.difficulty] as Widget,
           ],
         ),
       );
@@ -68,7 +59,7 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
         ? Card(
             child: InkWell(
               onTap: () {
-                selectWorkout(workoutData);
+                selectWorkout(workout);
               },
               child: Container(
                 padding:

@@ -11,65 +11,53 @@ import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
-import 'package:gymbuddy/service/workout/workout_step_service.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 import 'package:ionicons/ionicons.dart';
 
-class WorkoutDetailsScreen extends ConsumerStatefulWidget {
-  WorkoutDetailsScreen({super.key, required this.workout, required this.steps});
+class WorkoutDetailsScreen extends ConsumerWidget {
+  WorkoutDetailsScreen({super.key, required this.workoutId});
 
-  final Workout workout;
-  final List<WorkoutStep> steps;
+  final int workoutId;
 
-  @override
-  ConsumerState<WorkoutDetailsScreen> createState() =>
-      _WorkoutDetailsScreenState();
-}
-
-class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
-  late Workout workoutData;
-  late List<WorkoutStep> stepsData;
-
-  bool get isSelfResource {
-    return widget.workout.userId == FirebaseAuth.instance.currentUser!.uid;
+  bool isResourceOwnedByTheUser(Workout workout) {
+    return workout.userId == FirebaseAuth.instance.currentUser!.uid;
   }
 
-  String get estimatedTime {
+  String calculateEstimatedTime(List<WorkoutStep> steps) {
     final duration = Duration(
-        seconds: stepsData
+        seconds: steps
             .map((step) => step.estimatedTime)
             .toList()
             .fold(0, (previousValue, element) => previousValue + element));
     return FormatUtils.toTimeString(duration);
   }
 
-  @override
-  initState() {
-    super.initState();
-    workoutData = widget.workout;
-    stepsData = widget.steps;
-  }
-
-  editWorkout(final BuildContext context) async {
+  editWorkout(final BuildContext context, Workout workout) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WorkoutManager(
           type: CrudType.edit,
-          workout: workoutData,
+          workout: workout,
         ),
       ),
     );
   }
 
-  deleteWorkout(BuildContext context) {
+  deleteWorkout(BuildContext context, WidgetRef ref, Workout workout) {
     Navigator.of(context).pop();
     ref
         .read(workoutStateProvider.notifier)
-        .deleteWorkout(context, workoutData.workoutId);
+        .deleteWorkout(context, workout.workoutId)
+        .then((value) => ref.invalidate(workoutStateProvider))
+        .whenComplete(() => Navigator.of(context).pop());
   }
 
-  addStep(BuildContext context, CrudType type) async {
+  addStep(
+      {required BuildContext context,
+      required WidgetRef ref,
+      required CrudType type,
+      required Workout workout}) async {
     final ChangeWorkoutStepDto? newStep = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WorkoutStepManager(type: type),
@@ -78,30 +66,41 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
     if (newStep == null) {
       return;
     }
-    await WorkoutStepService()
-        .createStep(context, workoutData.workoutId, newStep)
-        .then(
-          (value) => setState(
-            () {
-              stepsData.add(value);
-            },
-          ),
-        );
+    await ref
+        .read(workoutStepStateProvider.notifier)
+        .createStep(context, workout.workoutId, newStep, false);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
     final primaryColor = Theme.of(context).colorScheme.primary;
     final backgroundColor = Theme.of(context).colorScheme.background;
 
+    var workoutRef = ref.watch(workoutByIdProvider(workoutId));
+    var stepsRef = ref.watch(workoutStepProvider(workoutId));
+    if (!(workoutRef.hasValue && stepsRef.hasValue)) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    Workout workout = workoutRef.value!;
+    final steps = stepsRef.value!;
+    final isSelfRecorce = isResourceOwnedByTheUser(workout);
+    final estimatedTime = calculateEstimatedTime(steps);
+
     // Renders app bar buttons
     Widget renderAppBarButtons(int totalSteps) {
       // Delete Button
-      return isSelfResource
+      return isSelfRecorce
           ? IconButton(
-              onPressed: () =>
-                  _showDeletionModal(context, workoutData, totalSteps),
+              onPressed: () => _showDeletionModal(
+                context: context,
+                ref: ref,
+                workout: workout,
+                totalSteps: totalSteps,
+              ),
               icon: Icon(
                 Icons.delete,
                 color: onPrimaryContainer,
@@ -116,7 +115,7 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
         children: [
           Expanded(
             child: Text(
-              workoutData.title,
+              workout.title,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color: onPrimaryContainer,
                     fontSize: 32,
@@ -161,7 +160,7 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
       var tags = [
         InformationTag(
           child: Text(
-            '${workoutCategoryIcon[workoutData.category]} ${FormatUtils.toCapitalized(workoutData.category.name)}',
+            '${workoutCategoryIcon[workout.category]} ${FormatUtils.toCapitalized(workout.category.name)}',
             style: TextStyle(color: primaryColor, fontSize: 14),
           ),
         ),
@@ -169,12 +168,12 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              workoutDifficultyRating[workoutData.difficulty] as Widget,
+              workoutDifficultyRating[workout.difficulty] as Widget,
               const SizedBox(
                 width: 5,
               ),
               Text(
-                FormatUtils.toCapitalized(workoutData.difficulty.name),
+                FormatUtils.toCapitalized(workout.difficulty.name),
                 style: const TextStyle(fontSize: 14),
               ),
             ],
@@ -186,7 +185,7 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
         height: 40,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          shrinkWrap: isSelfResource,
+          shrinkWrap: isSelfRecorce,
           itemCount: tags.length,
           itemBuilder: (context, index) {
             return Padding(
@@ -200,7 +199,7 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
 
     // Renders the deatils if added
     Widget renderDescription() {
-      if (workoutData.description == null || workoutData.description!.isEmpty) {
+      if (workout.description == null || workout.description!.isEmpty) {
         return const SizedBox();
       }
       return Column(
@@ -210,7 +209,7 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
               Expanded(
                 child: InformationTag(
                   child: Text(
-                    workoutData.description!,
+                    workout.description!,
                     style: const TextStyle(
                       fontSize: 15,
                       fontStyle: FontStyle.italic,
@@ -231,7 +230,7 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
     return DribbleLayout(
       actions: [
         // Delete button
-        renderAppBarButtons(stepsData.length),
+        renderAppBarButtons(steps.length),
       ],
       headerContent: Column(
         children: [
@@ -246,16 +245,16 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
 
           // Steps
           renderDetail(
-              title: '${stepsData.length} Steps', icon: Ionicons.footsteps),
+              title: '${steps.length} Steps', icon: Ionicons.footsteps),
 
           const SizedBox(
             height: 8,
           ),
 
           // Edit workout button
-          isSelfResource
+          isSelfRecorce
               ? ElevatedButton.icon(
-                  onPressed: () => editWorkout(context),
+                  onPressed: () => editWorkout(context, workout),
                   icon: const Icon(Icons.edit),
                   label: const Text('Edit workout'),
                   style: ElevatedButton.styleFrom(
@@ -290,9 +289,13 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
                 ),
 
                 // Add new step
-                isSelfResource
+                isSelfRecorce
                     ? InkWell(
-                        onTap: () => addStep(context, CrudType.add),
+                        onTap: () => addStep(
+                            context: context,
+                            ref: ref,
+                            type: CrudType.add,
+                            workout: workout),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(24),
                           child: Container(
@@ -321,11 +324,10 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
 
             // Renders all steps belongs with this workout
             StepsPanelList(
-              workoutSteps: stepsData,
-              workoutId: workoutData.workoutId,
+              workoutId: workout.workoutId,
               isLocalMode: false,
               isAuthEnabled: true,
-              isOwnResource: isSelfResource,
+              isOwnResource: isSelfRecorce,
             ),
           ],
         ),
@@ -354,7 +356,10 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
   }
 
   _showDeletionModal(
-      BuildContext context, Workout workoutData, int totalSteps) {
+      {required BuildContext context,
+      required Workout workout,
+      required int totalSteps,
+      required WidgetRef ref}) {
     showConfirmDelete(
       context,
       title: RichText(
@@ -377,7 +382,7 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
                 )),
             const TextSpan(text: 'Workout '),
             TextSpan(
-                text: '"${workoutData.title}"',
+                text: '"${workout.title}"',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -393,7 +398,7 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
         ),
       ),
       subtitle: const Text("Are you sure? This operation cannot be undone!"),
-      onTap: () => deleteWorkout(context),
+      onTap: () => deleteWorkout(context, ref, workout),
     );
   }
 }

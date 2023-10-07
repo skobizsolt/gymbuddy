@@ -20,7 +20,7 @@ class WorkoutsScreen extends StatelessWidget {
     return ListView.builder(
       itemCount: workoutList.length,
       itemBuilder: (context, index) {
-        return WorkoutCard(workout: workoutList[index]);
+        return WorkoutCard(workoutId: workoutList[index].workoutId);
       },
     );
   }
@@ -28,12 +28,6 @@ class WorkoutsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget renderContent() {
-      if (workoutsRef.isLoading) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-
       return workoutsRef.value!.isEmpty
           ? Center(
               child: Column(
@@ -78,6 +72,12 @@ class WorkoutsScreen extends StatelessWidget {
                 ),
               ],
             );
+    }
+
+    if (workoutsRef.isLoading || !workoutsRef.hasValue) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
     }
 
     return Scaffold(

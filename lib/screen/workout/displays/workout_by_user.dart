@@ -8,7 +8,7 @@ class WorkoutsByUser extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var data = ref.watch(workoutByUserProvider);
+    var data = ref.watch(workoutsByUserProvider);
     return WorkoutsScreen(title: "My workouts", workoutsRef: data);
   }
 }

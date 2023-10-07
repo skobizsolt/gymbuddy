@@ -9,38 +9,56 @@ import 'package:gymbuddy/service/workout/workout_step_service.dart';
 var workoutStateProvider = StateNotifierProvider<WorkoutService, List<Workout>>(
     (ref) => WorkoutService());
 
-FutureProvider<List<Workout>> workoutsProvider = FutureProvider(
-    (ref) => ref.watch(workoutStateProvider.notifier).getWorkouts());
+FutureProvider<List<Workout>> workoutsProvider = FutureProvider((ref) {
+  return WorkoutService().getWorkouts();
+});
 
-var workoutByCategoryProvider =
+var workoutsByCategoryProvider =
     FutureProvider.family<List<Workout>, WorkoutCategory>(
-  (ref, category) => ref.watch(workoutsProvider).hasValue
-      ? ref
-          .watch(workoutsProvider)
-          .value!
-          .where((element) => element.category == category)
-          .toList()
-      : [] as List<Workout>,
+  (ref, category) {
+    ref.watch(workoutStateProvider);
+    return ref
+        .watch(workoutsProvider)
+        .value!
+        .where((element) => element.category == category)
+        .toList();
+  },
 );
 
-var workoutByUserProvider = FutureProvider(
-  (ref) => ref.watch(workoutsProvider).hasValue
-      ? ref
-          .watch(workoutsProvider)
-          .value!
-          .where((element) =>
-              element.userId == FirebaseAuth.instance.currentUser!.uid)
-          .toList()
-      : [] as List<Workout>,
+var workoutsByUserProvider = FutureProvider<List<Workout>>(
+  (ref) {
+    ref.watch(workoutStateProvider);
+    return ref
+        .watch(workoutsProvider)
+        .value!
+        .where((element) =>
+            element.userId == FirebaseAuth.instance.currentUser!.uid)
+        .toList();
+  },
 );
 
-var workoutStepProvider =
+var workoutByIdProvider = FutureProvider.family<Workout?, int>(
+  (ref, workoutId) {
+    ref.watch(workoutStateProvider);
+    return ref
+        .watch(workoutsProvider)
+        .value!
+        .firstWhere((element) => element.workoutId == workoutId, orElse: null);
+  },
+);
+
+var workoutStepStateProvider =
     StateNotifierProvider<WorkoutStepService, List<WorkoutStep>>(
         (ref) => WorkoutStepService());
 
+var workoutStepProvider =
+    FutureProvider.family<List<WorkoutStep>, int>((ref, workoutId) {
+  ref.watch(workoutStepStateProvider);
+  return WorkoutStepService().getSteps(workoutId);
+});
+
 var workoutGeneralDetailsProvider =
     StreamProvider.family<WorkoutDetailsResponse, int>((ref, workoutId) {
-  ref.watch(workoutStateProvider);
-  ref.watch(workoutStepProvider);
+  ref.watch(workoutStepStateProvider);
   return WorkoutService().getGeneralStepDetails(workoutId);
 });

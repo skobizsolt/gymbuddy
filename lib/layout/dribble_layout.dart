@@ -39,7 +39,7 @@ class DribbleLayout extends StatelessWidget {
                   headerColor,
                 ),
               ),
-              onPressed: () => Navigator.of(context).pop(popValue),
+              onPressed: () => Navigator.of(context).pop(),
             ),
             // Other actions
             Row(
