@@ -9,191 +9,6 @@ import 'training_api.enums.swagger.dart' as enums;
 part 'training_api.models.swagger.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class ChangeWorkoutStepRequest {
-  const ChangeWorkoutStepRequest({
-    this.stepName,
-    this.details,
-    this.workoutType,
-    this.estimatedTime,
-  });
-
-  factory ChangeWorkoutStepRequest.fromJson(Map<String, dynamic> json) =>
-      _$ChangeWorkoutStepRequestFromJson(json);
-
-  static const toJsonFactory = _$ChangeWorkoutStepRequestToJson;
-  Map<String, dynamic> toJson() => _$ChangeWorkoutStepRequestToJson(this);
-
-  @JsonKey(name: 'stepName')
-  final String? stepName;
-  @JsonKey(name: 'details')
-  final String? details;
-  @JsonKey(
-    name: 'workoutType',
-    toJson: changeWorkoutStepRequestWorkoutTypeToJson,
-    fromJson: changeWorkoutStepRequestWorkoutTypeNullableFromJson,
-  )
-  final enums.ChangeWorkoutStepRequestWorkoutType? workoutType;
-  @JsonKey(name: 'estimatedTime')
-  final int? estimatedTime;
-  static const fromJsonFactory = _$ChangeWorkoutStepRequestFromJson;
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is ChangeWorkoutStepRequest &&
-            (identical(other.stepName, stepName) ||
-                const DeepCollectionEquality()
-                    .equals(other.stepName, stepName)) &&
-            (identical(other.details, details) ||
-                const DeepCollectionEquality()
-                    .equals(other.details, details)) &&
-            (identical(other.workoutType, workoutType) ||
-                const DeepCollectionEquality()
-                    .equals(other.workoutType, workoutType)) &&
-            (identical(other.estimatedTime, estimatedTime) ||
-                const DeepCollectionEquality()
-                    .equals(other.estimatedTime, estimatedTime)));
-  }
-
-  @override
-  String toString() => jsonEncode(this);
-
-  @override
-  int get hashCode =>
-      const DeepCollectionEquality().hash(stepName) ^
-      const DeepCollectionEquality().hash(details) ^
-      const DeepCollectionEquality().hash(workoutType) ^
-      const DeepCollectionEquality().hash(estimatedTime) ^
-      runtimeType.hashCode;
-}
-
-extension $ChangeWorkoutStepRequestExtension on ChangeWorkoutStepRequest {
-  ChangeWorkoutStepRequest copyWith(
-      {String? stepName,
-      String? details,
-      enums.ChangeWorkoutStepRequestWorkoutType? workoutType,
-      int? estimatedTime}) {
-    return ChangeWorkoutStepRequest(
-        stepName: stepName ?? this.stepName,
-        details: details ?? this.details,
-        workoutType: workoutType ?? this.workoutType,
-        estimatedTime: estimatedTime ?? this.estimatedTime);
-  }
-
-  ChangeWorkoutStepRequest copyWithWrapped(
-      {Wrapped<String?>? stepName,
-      Wrapped<String?>? details,
-      Wrapped<enums.ChangeWorkoutStepRequestWorkoutType?>? workoutType,
-      Wrapped<int?>? estimatedTime}) {
-    return ChangeWorkoutStepRequest(
-        stepName: (stepName != null ? stepName.value : this.stepName),
-        details: (details != null ? details.value : this.details),
-        workoutType:
-            (workoutType != null ? workoutType.value : this.workoutType),
-        estimatedTime:
-            (estimatedTime != null ? estimatedTime.value : this.estimatedTime));
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
-class WorkoutStepResponse {
-  const WorkoutStepResponse({
-    this.stepNumber,
-    this.stepName,
-    this.details,
-    this.workoutType,
-    this.estimatedTime,
-  });
-
-  factory WorkoutStepResponse.fromJson(Map<String, dynamic> json) =>
-      _$WorkoutStepResponseFromJson(json);
-
-  static const toJsonFactory = _$WorkoutStepResponseToJson;
-  Map<String, dynamic> toJson() => _$WorkoutStepResponseToJson(this);
-
-  @JsonKey(name: 'stepNumber')
-  final int? stepNumber;
-  @JsonKey(name: 'stepName')
-  final String? stepName;
-  @JsonKey(name: 'details')
-  final String? details;
-  @JsonKey(
-    name: 'workoutType',
-    toJson: workoutStepResponseWorkoutTypeToJson,
-    fromJson: workoutStepResponseWorkoutTypeNullableFromJson,
-  )
-  final enums.WorkoutStepResponseWorkoutType? workoutType;
-  @JsonKey(name: 'estimatedTime')
-  final int? estimatedTime;
-  static const fromJsonFactory = _$WorkoutStepResponseFromJson;
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is WorkoutStepResponse &&
-            (identical(other.stepNumber, stepNumber) ||
-                const DeepCollectionEquality()
-                    .equals(other.stepNumber, stepNumber)) &&
-            (identical(other.stepName, stepName) ||
-                const DeepCollectionEquality()
-                    .equals(other.stepName, stepName)) &&
-            (identical(other.details, details) ||
-                const DeepCollectionEquality()
-                    .equals(other.details, details)) &&
-            (identical(other.workoutType, workoutType) ||
-                const DeepCollectionEquality()
-                    .equals(other.workoutType, workoutType)) &&
-            (identical(other.estimatedTime, estimatedTime) ||
-                const DeepCollectionEquality()
-                    .equals(other.estimatedTime, estimatedTime)));
-  }
-
-  @override
-  String toString() => jsonEncode(this);
-
-  @override
-  int get hashCode =>
-      const DeepCollectionEquality().hash(stepNumber) ^
-      const DeepCollectionEquality().hash(stepName) ^
-      const DeepCollectionEquality().hash(details) ^
-      const DeepCollectionEquality().hash(workoutType) ^
-      const DeepCollectionEquality().hash(estimatedTime) ^
-      runtimeType.hashCode;
-}
-
-extension $WorkoutStepResponseExtension on WorkoutStepResponse {
-  WorkoutStepResponse copyWith(
-      {int? stepNumber,
-      String? stepName,
-      String? details,
-      enums.WorkoutStepResponseWorkoutType? workoutType,
-      int? estimatedTime}) {
-    return WorkoutStepResponse(
-        stepNumber: stepNumber ?? this.stepNumber,
-        stepName: stepName ?? this.stepName,
-        details: details ?? this.details,
-        workoutType: workoutType ?? this.workoutType,
-        estimatedTime: estimatedTime ?? this.estimatedTime);
-  }
-
-  WorkoutStepResponse copyWithWrapped(
-      {Wrapped<int?>? stepNumber,
-      Wrapped<String?>? stepName,
-      Wrapped<String?>? details,
-      Wrapped<enums.WorkoutStepResponseWorkoutType?>? workoutType,
-      Wrapped<int?>? estimatedTime}) {
-    return WorkoutStepResponse(
-        stepNumber: (stepNumber != null ? stepNumber.value : this.stepNumber),
-        stepName: (stepName != null ? stepName.value : this.stepName),
-        details: (details != null ? details.value : this.details),
-        workoutType:
-            (workoutType != null ? workoutType.value : this.workoutType),
-        estimatedTime:
-            (estimatedTime != null ? estimatedTime.value : this.estimatedTime));
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
 class EditWorkoutRequest {
   const EditWorkoutRequest({
     this.title,
@@ -413,6 +228,191 @@ extension $WorkoutResponseExtension on WorkoutResponse {
             (lastModified != null ? lastModified.value : this.lastModified),
         category: (category != null ? category.value : this.category),
         difficulty: (difficulty != null ? difficulty.value : this.difficulty));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class ChangeWorkoutStepRequest {
+  const ChangeWorkoutStepRequest({
+    this.stepName,
+    this.details,
+    this.workoutType,
+    this.estimatedTime,
+  });
+
+  factory ChangeWorkoutStepRequest.fromJson(Map<String, dynamic> json) =>
+      _$ChangeWorkoutStepRequestFromJson(json);
+
+  static const toJsonFactory = _$ChangeWorkoutStepRequestToJson;
+  Map<String, dynamic> toJson() => _$ChangeWorkoutStepRequestToJson(this);
+
+  @JsonKey(name: 'stepName')
+  final String? stepName;
+  @JsonKey(name: 'details')
+  final String? details;
+  @JsonKey(
+    name: 'workoutType',
+    toJson: changeWorkoutStepRequestWorkoutTypeToJson,
+    fromJson: changeWorkoutStepRequestWorkoutTypeNullableFromJson,
+  )
+  final enums.ChangeWorkoutStepRequestWorkoutType? workoutType;
+  @JsonKey(name: 'estimatedTime')
+  final int? estimatedTime;
+  static const fromJsonFactory = _$ChangeWorkoutStepRequestFromJson;
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is ChangeWorkoutStepRequest &&
+            (identical(other.stepName, stepName) ||
+                const DeepCollectionEquality()
+                    .equals(other.stepName, stepName)) &&
+            (identical(other.details, details) ||
+                const DeepCollectionEquality()
+                    .equals(other.details, details)) &&
+            (identical(other.workoutType, workoutType) ||
+                const DeepCollectionEquality()
+                    .equals(other.workoutType, workoutType)) &&
+            (identical(other.estimatedTime, estimatedTime) ||
+                const DeepCollectionEquality()
+                    .equals(other.estimatedTime, estimatedTime)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(stepName) ^
+      const DeepCollectionEquality().hash(details) ^
+      const DeepCollectionEquality().hash(workoutType) ^
+      const DeepCollectionEquality().hash(estimatedTime) ^
+      runtimeType.hashCode;
+}
+
+extension $ChangeWorkoutStepRequestExtension on ChangeWorkoutStepRequest {
+  ChangeWorkoutStepRequest copyWith(
+      {String? stepName,
+      String? details,
+      enums.ChangeWorkoutStepRequestWorkoutType? workoutType,
+      int? estimatedTime}) {
+    return ChangeWorkoutStepRequest(
+        stepName: stepName ?? this.stepName,
+        details: details ?? this.details,
+        workoutType: workoutType ?? this.workoutType,
+        estimatedTime: estimatedTime ?? this.estimatedTime);
+  }
+
+  ChangeWorkoutStepRequest copyWithWrapped(
+      {Wrapped<String?>? stepName,
+      Wrapped<String?>? details,
+      Wrapped<enums.ChangeWorkoutStepRequestWorkoutType?>? workoutType,
+      Wrapped<int?>? estimatedTime}) {
+    return ChangeWorkoutStepRequest(
+        stepName: (stepName != null ? stepName.value : this.stepName),
+        details: (details != null ? details.value : this.details),
+        workoutType:
+            (workoutType != null ? workoutType.value : this.workoutType),
+        estimatedTime:
+            (estimatedTime != null ? estimatedTime.value : this.estimatedTime));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class WorkoutStepResponse {
+  const WorkoutStepResponse({
+    this.stepNumber,
+    this.stepName,
+    this.details,
+    this.workoutType,
+    this.estimatedTime,
+  });
+
+  factory WorkoutStepResponse.fromJson(Map<String, dynamic> json) =>
+      _$WorkoutStepResponseFromJson(json);
+
+  static const toJsonFactory = _$WorkoutStepResponseToJson;
+  Map<String, dynamic> toJson() => _$WorkoutStepResponseToJson(this);
+
+  @JsonKey(name: 'stepNumber')
+  final int? stepNumber;
+  @JsonKey(name: 'stepName')
+  final String? stepName;
+  @JsonKey(name: 'details')
+  final String? details;
+  @JsonKey(
+    name: 'workoutType',
+    toJson: workoutStepResponseWorkoutTypeToJson,
+    fromJson: workoutStepResponseWorkoutTypeNullableFromJson,
+  )
+  final enums.WorkoutStepResponseWorkoutType? workoutType;
+  @JsonKey(name: 'estimatedTime')
+  final int? estimatedTime;
+  static const fromJsonFactory = _$WorkoutStepResponseFromJson;
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is WorkoutStepResponse &&
+            (identical(other.stepNumber, stepNumber) ||
+                const DeepCollectionEquality()
+                    .equals(other.stepNumber, stepNumber)) &&
+            (identical(other.stepName, stepName) ||
+                const DeepCollectionEquality()
+                    .equals(other.stepName, stepName)) &&
+            (identical(other.details, details) ||
+                const DeepCollectionEquality()
+                    .equals(other.details, details)) &&
+            (identical(other.workoutType, workoutType) ||
+                const DeepCollectionEquality()
+                    .equals(other.workoutType, workoutType)) &&
+            (identical(other.estimatedTime, estimatedTime) ||
+                const DeepCollectionEquality()
+                    .equals(other.estimatedTime, estimatedTime)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(stepNumber) ^
+      const DeepCollectionEquality().hash(stepName) ^
+      const DeepCollectionEquality().hash(details) ^
+      const DeepCollectionEquality().hash(workoutType) ^
+      const DeepCollectionEquality().hash(estimatedTime) ^
+      runtimeType.hashCode;
+}
+
+extension $WorkoutStepResponseExtension on WorkoutStepResponse {
+  WorkoutStepResponse copyWith(
+      {int? stepNumber,
+      String? stepName,
+      String? details,
+      enums.WorkoutStepResponseWorkoutType? workoutType,
+      int? estimatedTime}) {
+    return WorkoutStepResponse(
+        stepNumber: stepNumber ?? this.stepNumber,
+        stepName: stepName ?? this.stepName,
+        details: details ?? this.details,
+        workoutType: workoutType ?? this.workoutType,
+        estimatedTime: estimatedTime ?? this.estimatedTime);
+  }
+
+  WorkoutStepResponse copyWithWrapped(
+      {Wrapped<int?>? stepNumber,
+      Wrapped<String?>? stepName,
+      Wrapped<String?>? details,
+      Wrapped<enums.WorkoutStepResponseWorkoutType?>? workoutType,
+      Wrapped<int?>? estimatedTime}) {
+    return WorkoutStepResponse(
+        stepNumber: (stepNumber != null ? stepNumber.value : this.stepNumber),
+        stepName: (stepName != null ? stepName.value : this.stepName),
+        details: (details != null ? details.value : this.details),
+        workoutType:
+            (workoutType != null ? workoutType.value : this.workoutType),
+        estimatedTime:
+            (estimatedTime != null ? estimatedTime.value : this.estimatedTime));
   }
 }
 
@@ -676,143 +676,6 @@ extension $WorkoutDetailsResponseExtension on WorkoutDetailsResponse {
   }
 }
 
-String? changeWorkoutStepRequestWorkoutTypeToJson(
-    enums.ChangeWorkoutStepRequestWorkoutType?
-        changeWorkoutStepRequestWorkoutType) {
-  return changeWorkoutStepRequestWorkoutType?.value;
-}
-
-enums.ChangeWorkoutStepRequestWorkoutType
-    changeWorkoutStepRequestWorkoutTypeFromJson(
-  Object? changeWorkoutStepRequestWorkoutType, [
-  enums.ChangeWorkoutStepRequestWorkoutType? defaultValue,
-]) {
-  return enums.ChangeWorkoutStepRequestWorkoutType.values.firstWhereOrNull(
-          (e) =>
-              e.value.toString().toLowerCase() ==
-              changeWorkoutStepRequestWorkoutType?.toString().toLowerCase()) ??
-      defaultValue ??
-      enums.ChangeWorkoutStepRequestWorkoutType.swaggerGeneratedUnknown;
-}
-
-enums.ChangeWorkoutStepRequestWorkoutType?
-    changeWorkoutStepRequestWorkoutTypeNullableFromJson(
-  Object? changeWorkoutStepRequestWorkoutType, [
-  enums.ChangeWorkoutStepRequestWorkoutType? defaultValue,
-]) {
-  if (changeWorkoutStepRequestWorkoutType == null) {
-    return null;
-  }
-  return enums.ChangeWorkoutStepRequestWorkoutType.values.firstWhereOrNull(
-          (e) => e.value == changeWorkoutStepRequestWorkoutType) ??
-      defaultValue;
-}
-
-List<String> changeWorkoutStepRequestWorkoutTypeListToJson(
-    List<enums.ChangeWorkoutStepRequestWorkoutType>?
-        changeWorkoutStepRequestWorkoutType) {
-  if (changeWorkoutStepRequestWorkoutType == null) {
-    return [];
-  }
-
-  return changeWorkoutStepRequestWorkoutType.map((e) => e.value!).toList();
-}
-
-List<enums.ChangeWorkoutStepRequestWorkoutType>
-    changeWorkoutStepRequestWorkoutTypeListFromJson(
-  List? changeWorkoutStepRequestWorkoutType, [
-  List<enums.ChangeWorkoutStepRequestWorkoutType>? defaultValue,
-]) {
-  if (changeWorkoutStepRequestWorkoutType == null) {
-    return defaultValue ?? [];
-  }
-
-  return changeWorkoutStepRequestWorkoutType
-      .map((e) => changeWorkoutStepRequestWorkoutTypeFromJson(e.toString()))
-      .toList();
-}
-
-List<enums.ChangeWorkoutStepRequestWorkoutType>?
-    changeWorkoutStepRequestWorkoutTypeNullableListFromJson(
-  List? changeWorkoutStepRequestWorkoutType, [
-  List<enums.ChangeWorkoutStepRequestWorkoutType>? defaultValue,
-]) {
-  if (changeWorkoutStepRequestWorkoutType == null) {
-    return defaultValue;
-  }
-
-  return changeWorkoutStepRequestWorkoutType
-      .map((e) => changeWorkoutStepRequestWorkoutTypeFromJson(e.toString()))
-      .toList();
-}
-
-String? workoutStepResponseWorkoutTypeToJson(
-    enums.WorkoutStepResponseWorkoutType? workoutStepResponseWorkoutType) {
-  return workoutStepResponseWorkoutType?.value;
-}
-
-enums.WorkoutStepResponseWorkoutType workoutStepResponseWorkoutTypeFromJson(
-  Object? workoutStepResponseWorkoutType, [
-  enums.WorkoutStepResponseWorkoutType? defaultValue,
-]) {
-  return enums.WorkoutStepResponseWorkoutType.values.firstWhereOrNull((e) =>
-          e.value.toString().toLowerCase() ==
-          workoutStepResponseWorkoutType?.toString().toLowerCase()) ??
-      defaultValue ??
-      enums.WorkoutStepResponseWorkoutType.swaggerGeneratedUnknown;
-}
-
-enums.WorkoutStepResponseWorkoutType?
-    workoutStepResponseWorkoutTypeNullableFromJson(
-  Object? workoutStepResponseWorkoutType, [
-  enums.WorkoutStepResponseWorkoutType? defaultValue,
-]) {
-  if (workoutStepResponseWorkoutType == null) {
-    return null;
-  }
-  return enums.WorkoutStepResponseWorkoutType.values
-          .firstWhereOrNull((e) => e.value == workoutStepResponseWorkoutType) ??
-      defaultValue;
-}
-
-List<String> workoutStepResponseWorkoutTypeListToJson(
-    List<enums.WorkoutStepResponseWorkoutType>?
-        workoutStepResponseWorkoutType) {
-  if (workoutStepResponseWorkoutType == null) {
-    return [];
-  }
-
-  return workoutStepResponseWorkoutType.map((e) => e.value!).toList();
-}
-
-List<enums.WorkoutStepResponseWorkoutType>
-    workoutStepResponseWorkoutTypeListFromJson(
-  List? workoutStepResponseWorkoutType, [
-  List<enums.WorkoutStepResponseWorkoutType>? defaultValue,
-]) {
-  if (workoutStepResponseWorkoutType == null) {
-    return defaultValue ?? [];
-  }
-
-  return workoutStepResponseWorkoutType
-      .map((e) => workoutStepResponseWorkoutTypeFromJson(e.toString()))
-      .toList();
-}
-
-List<enums.WorkoutStepResponseWorkoutType>?
-    workoutStepResponseWorkoutTypeNullableListFromJson(
-  List? workoutStepResponseWorkoutType, [
-  List<enums.WorkoutStepResponseWorkoutType>? defaultValue,
-]) {
-  if (workoutStepResponseWorkoutType == null) {
-    return defaultValue;
-  }
-
-  return workoutStepResponseWorkoutType
-      .map((e) => workoutStepResponseWorkoutTypeFromJson(e.toString()))
-      .toList();
-}
-
 String? editWorkoutRequestCategoryToJson(
     enums.EditWorkoutRequestCategory? editWorkoutRequestCategory) {
   return editWorkoutRequestCategory?.value;
@@ -1071,6 +934,143 @@ List<enums.WorkoutResponseDifficulty>?
       .toList();
 }
 
+String? changeWorkoutStepRequestWorkoutTypeToJson(
+    enums.ChangeWorkoutStepRequestWorkoutType?
+        changeWorkoutStepRequestWorkoutType) {
+  return changeWorkoutStepRequestWorkoutType?.value;
+}
+
+enums.ChangeWorkoutStepRequestWorkoutType
+    changeWorkoutStepRequestWorkoutTypeFromJson(
+  Object? changeWorkoutStepRequestWorkoutType, [
+  enums.ChangeWorkoutStepRequestWorkoutType? defaultValue,
+]) {
+  return enums.ChangeWorkoutStepRequestWorkoutType.values.firstWhereOrNull(
+          (e) =>
+              e.value.toString().toLowerCase() ==
+              changeWorkoutStepRequestWorkoutType?.toString().toLowerCase()) ??
+      defaultValue ??
+      enums.ChangeWorkoutStepRequestWorkoutType.swaggerGeneratedUnknown;
+}
+
+enums.ChangeWorkoutStepRequestWorkoutType?
+    changeWorkoutStepRequestWorkoutTypeNullableFromJson(
+  Object? changeWorkoutStepRequestWorkoutType, [
+  enums.ChangeWorkoutStepRequestWorkoutType? defaultValue,
+]) {
+  if (changeWorkoutStepRequestWorkoutType == null) {
+    return null;
+  }
+  return enums.ChangeWorkoutStepRequestWorkoutType.values.firstWhereOrNull(
+          (e) => e.value == changeWorkoutStepRequestWorkoutType) ??
+      defaultValue;
+}
+
+List<String> changeWorkoutStepRequestWorkoutTypeListToJson(
+    List<enums.ChangeWorkoutStepRequestWorkoutType>?
+        changeWorkoutStepRequestWorkoutType) {
+  if (changeWorkoutStepRequestWorkoutType == null) {
+    return [];
+  }
+
+  return changeWorkoutStepRequestWorkoutType.map((e) => e.value!).toList();
+}
+
+List<enums.ChangeWorkoutStepRequestWorkoutType>
+    changeWorkoutStepRequestWorkoutTypeListFromJson(
+  List? changeWorkoutStepRequestWorkoutType, [
+  List<enums.ChangeWorkoutStepRequestWorkoutType>? defaultValue,
+]) {
+  if (changeWorkoutStepRequestWorkoutType == null) {
+    return defaultValue ?? [];
+  }
+
+  return changeWorkoutStepRequestWorkoutType
+      .map((e) => changeWorkoutStepRequestWorkoutTypeFromJson(e.toString()))
+      .toList();
+}
+
+List<enums.ChangeWorkoutStepRequestWorkoutType>?
+    changeWorkoutStepRequestWorkoutTypeNullableListFromJson(
+  List? changeWorkoutStepRequestWorkoutType, [
+  List<enums.ChangeWorkoutStepRequestWorkoutType>? defaultValue,
+]) {
+  if (changeWorkoutStepRequestWorkoutType == null) {
+    return defaultValue;
+  }
+
+  return changeWorkoutStepRequestWorkoutType
+      .map((e) => changeWorkoutStepRequestWorkoutTypeFromJson(e.toString()))
+      .toList();
+}
+
+String? workoutStepResponseWorkoutTypeToJson(
+    enums.WorkoutStepResponseWorkoutType? workoutStepResponseWorkoutType) {
+  return workoutStepResponseWorkoutType?.value;
+}
+
+enums.WorkoutStepResponseWorkoutType workoutStepResponseWorkoutTypeFromJson(
+  Object? workoutStepResponseWorkoutType, [
+  enums.WorkoutStepResponseWorkoutType? defaultValue,
+]) {
+  return enums.WorkoutStepResponseWorkoutType.values.firstWhereOrNull((e) =>
+          e.value.toString().toLowerCase() ==
+          workoutStepResponseWorkoutType?.toString().toLowerCase()) ??
+      defaultValue ??
+      enums.WorkoutStepResponseWorkoutType.swaggerGeneratedUnknown;
+}
+
+enums.WorkoutStepResponseWorkoutType?
+    workoutStepResponseWorkoutTypeNullableFromJson(
+  Object? workoutStepResponseWorkoutType, [
+  enums.WorkoutStepResponseWorkoutType? defaultValue,
+]) {
+  if (workoutStepResponseWorkoutType == null) {
+    return null;
+  }
+  return enums.WorkoutStepResponseWorkoutType.values
+          .firstWhereOrNull((e) => e.value == workoutStepResponseWorkoutType) ??
+      defaultValue;
+}
+
+List<String> workoutStepResponseWorkoutTypeListToJson(
+    List<enums.WorkoutStepResponseWorkoutType>?
+        workoutStepResponseWorkoutType) {
+  if (workoutStepResponseWorkoutType == null) {
+    return [];
+  }
+
+  return workoutStepResponseWorkoutType.map((e) => e.value!).toList();
+}
+
+List<enums.WorkoutStepResponseWorkoutType>
+    workoutStepResponseWorkoutTypeListFromJson(
+  List? workoutStepResponseWorkoutType, [
+  List<enums.WorkoutStepResponseWorkoutType>? defaultValue,
+]) {
+  if (workoutStepResponseWorkoutType == null) {
+    return defaultValue ?? [];
+  }
+
+  return workoutStepResponseWorkoutType
+      .map((e) => workoutStepResponseWorkoutTypeFromJson(e.toString()))
+      .toList();
+}
+
+List<enums.WorkoutStepResponseWorkoutType>?
+    workoutStepResponseWorkoutTypeNullableListFromJson(
+  List? workoutStepResponseWorkoutType, [
+  List<enums.WorkoutStepResponseWorkoutType>? defaultValue,
+]) {
+  if (workoutStepResponseWorkoutType == null) {
+    return defaultValue;
+  }
+
+  return workoutStepResponseWorkoutType
+      .map((e) => workoutStepResponseWorkoutTypeFromJson(e.toString()))
+      .toList();
+}
+
 String? createWorkoutRequestCategoryToJson(
     enums.CreateWorkoutRequestCategory? createWorkoutRequestCategory) {
   return createWorkoutRequestCategory?.value;
@@ -1201,69 +1201,6 @@ List<enums.CreateWorkoutRequestDifficulty>?
 
   return createWorkoutRequestDifficulty
       .map((e) => createWorkoutRequestDifficultyFromJson(e.toString()))
-      .toList();
-}
-
-String? workoutsGetCategoryToJson(
-    enums.WorkoutsGetCategory? workoutsGetCategory) {
-  return workoutsGetCategory?.value;
-}
-
-enums.WorkoutsGetCategory workoutsGetCategoryFromJson(
-  Object? workoutsGetCategory, [
-  enums.WorkoutsGetCategory? defaultValue,
-]) {
-  return enums.WorkoutsGetCategory.values.firstWhereOrNull((e) =>
-          e.value.toString().toLowerCase() ==
-          workoutsGetCategory?.toString().toLowerCase()) ??
-      defaultValue ??
-      enums.WorkoutsGetCategory.swaggerGeneratedUnknown;
-}
-
-enums.WorkoutsGetCategory? workoutsGetCategoryNullableFromJson(
-  Object? workoutsGetCategory, [
-  enums.WorkoutsGetCategory? defaultValue,
-]) {
-  if (workoutsGetCategory == null) {
-    return null;
-  }
-  return enums.WorkoutsGetCategory.values
-          .firstWhereOrNull((e) => e.value == workoutsGetCategory) ??
-      defaultValue;
-}
-
-List<String> workoutsGetCategoryListToJson(
-    List<enums.WorkoutsGetCategory>? workoutsGetCategory) {
-  if (workoutsGetCategory == null) {
-    return [];
-  }
-
-  return workoutsGetCategory.map((e) => e.value!).toList();
-}
-
-List<enums.WorkoutsGetCategory> workoutsGetCategoryListFromJson(
-  List? workoutsGetCategory, [
-  List<enums.WorkoutsGetCategory>? defaultValue,
-]) {
-  if (workoutsGetCategory == null) {
-    return defaultValue ?? [];
-  }
-
-  return workoutsGetCategory
-      .map((e) => workoutsGetCategoryFromJson(e.toString()))
-      .toList();
-}
-
-List<enums.WorkoutsGetCategory>? workoutsGetCategoryNullableListFromJson(
-  List? workoutsGetCategory, [
-  List<enums.WorkoutsGetCategory>? defaultValue,
-]) {
-  if (workoutsGetCategory == null) {
-    return defaultValue;
-  }
-
-  return workoutsGetCategory
-      .map((e) => workoutsGetCategoryFromJson(e.toString()))
       .toList();
 }
 

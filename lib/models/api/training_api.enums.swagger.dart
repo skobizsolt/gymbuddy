@@ -1,34 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
 
-enum ChangeWorkoutStepRequestWorkoutType {
-  @JsonValue(null)
-  swaggerGeneratedUnknown(null),
-
-  @JsonValue('INTERVAL')
-  interval('INTERVAL'),
-  @JsonValue('REP')
-  rep('REP');
-
-  final String? value;
-
-  const ChangeWorkoutStepRequestWorkoutType(this.value);
-}
-
-enum WorkoutStepResponseWorkoutType {
-  @JsonValue(null)
-  swaggerGeneratedUnknown(null),
-
-  @JsonValue('INTERVAL')
-  interval('INTERVAL'),
-  @JsonValue('REP')
-  rep('REP');
-
-  final String? value;
-
-  const WorkoutStepResponseWorkoutType(this.value);
-}
-
 enum EditWorkoutRequestCategory {
   @JsonValue(null)
   swaggerGeneratedUnknown(null),
@@ -97,6 +69,34 @@ enum WorkoutResponseDifficulty {
   const WorkoutResponseDifficulty(this.value);
 }
 
+enum ChangeWorkoutStepRequestWorkoutType {
+  @JsonValue(null)
+  swaggerGeneratedUnknown(null),
+
+  @JsonValue('INTERVAL')
+  interval('INTERVAL'),
+  @JsonValue('REP')
+  rep('REP');
+
+  final String? value;
+
+  const ChangeWorkoutStepRequestWorkoutType(this.value);
+}
+
+enum WorkoutStepResponseWorkoutType {
+  @JsonValue(null)
+  swaggerGeneratedUnknown(null),
+
+  @JsonValue('INTERVAL')
+  interval('INTERVAL'),
+  @JsonValue('REP')
+  rep('REP');
+
+  final String? value;
+
+  const WorkoutStepResponseWorkoutType(this.value);
+}
+
 enum CreateWorkoutRequestCategory {
   @JsonValue(null)
   swaggerGeneratedUnknown(null),
@@ -129,22 +129,4 @@ enum CreateWorkoutRequestDifficulty {
   final String? value;
 
   const CreateWorkoutRequestDifficulty(this.value);
-}
-
-enum WorkoutsGetCategory {
-  @JsonValue(null)
-  swaggerGeneratedUnknown(null),
-
-  @JsonValue('ENDURANCE')
-  endurance('ENDURANCE'),
-  @JsonValue('STRENGTH')
-  strength('STRENGTH'),
-  @JsonValue('BALANCE')
-  balance('BALANCE'),
-  @JsonValue('FLEXIBILITY')
-  flexibility('FLEXIBILITY');
-
-  final String? value;
-
-  const WorkoutsGetCategory(this.value);
 }

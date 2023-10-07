@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/service/home/home_service.dart';
 
 enum HomeOptions { search, popular, newTraining, myTrainings, recentlyLaunched }
 
-class HomeOption extends ConsumerWidget {
+class HomeOption extends StatelessWidget {
   const HomeOption({
     super.key,
     required this.id,
@@ -17,7 +16,7 @@ class HomeOption extends ConsumerWidget {
   final IconData icon;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
@@ -26,7 +25,7 @@ class HomeOption extends ConsumerWidget {
             HomeService.searchWorkouts(context);
           }
           if (id == HomeOptions.myTrainings.index) {
-            HomeService.showMyTrainings(context, ref);
+            HomeService.showMyTrainings(context);
           }
           if (id == HomeOptions.newTraining.index) {
             HomeService.addNewTraining(context);

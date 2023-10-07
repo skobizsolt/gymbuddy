@@ -6,46 +6,6 @@ part of 'training_api.models.swagger.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ChangeWorkoutStepRequest _$ChangeWorkoutStepRequestFromJson(
-        Map<String, dynamic> json) =>
-    ChangeWorkoutStepRequest(
-      stepName: json['stepName'] as String?,
-      details: json['details'] as String?,
-      workoutType: changeWorkoutStepRequestWorkoutTypeNullableFromJson(
-          json['workoutType']),
-      estimatedTime: json['estimatedTime'] as int?,
-    );
-
-Map<String, dynamic> _$ChangeWorkoutStepRequestToJson(
-        ChangeWorkoutStepRequest instance) =>
-    <String, dynamic>{
-      'stepName': instance.stepName,
-      'details': instance.details,
-      'workoutType':
-          changeWorkoutStepRequestWorkoutTypeToJson(instance.workoutType),
-      'estimatedTime': instance.estimatedTime,
-    };
-
-WorkoutStepResponse _$WorkoutStepResponseFromJson(Map<String, dynamic> json) =>
-    WorkoutStepResponse(
-      stepNumber: json['stepNumber'] as int?,
-      stepName: json['stepName'] as String?,
-      details: json['details'] as String?,
-      workoutType:
-          workoutStepResponseWorkoutTypeNullableFromJson(json['workoutType']),
-      estimatedTime: json['estimatedTime'] as int?,
-    );
-
-Map<String, dynamic> _$WorkoutStepResponseToJson(
-        WorkoutStepResponse instance) =>
-    <String, dynamic>{
-      'stepNumber': instance.stepNumber,
-      'stepName': instance.stepName,
-      'details': instance.details,
-      'workoutType': workoutStepResponseWorkoutTypeToJson(instance.workoutType),
-      'estimatedTime': instance.estimatedTime,
-    };
-
 EditWorkoutRequest _$EditWorkoutRequestFromJson(Map<String, dynamic> json) =>
     EditWorkoutRequest(
       title: json['title'] as String?,
@@ -89,6 +49,46 @@ Map<String, dynamic> _$WorkoutResponseToJson(WorkoutResponse instance) =>
       'lastModified': instance.lastModified?.toIso8601String(),
       'category': workoutResponseCategoryToJson(instance.category),
       'difficulty': workoutResponseDifficultyToJson(instance.difficulty),
+    };
+
+ChangeWorkoutStepRequest _$ChangeWorkoutStepRequestFromJson(
+        Map<String, dynamic> json) =>
+    ChangeWorkoutStepRequest(
+      stepName: json['stepName'] as String?,
+      details: json['details'] as String?,
+      workoutType: changeWorkoutStepRequestWorkoutTypeNullableFromJson(
+          json['workoutType']),
+      estimatedTime: json['estimatedTime'] as int?,
+    );
+
+Map<String, dynamic> _$ChangeWorkoutStepRequestToJson(
+        ChangeWorkoutStepRequest instance) =>
+    <String, dynamic>{
+      'stepName': instance.stepName,
+      'details': instance.details,
+      'workoutType':
+          changeWorkoutStepRequestWorkoutTypeToJson(instance.workoutType),
+      'estimatedTime': instance.estimatedTime,
+    };
+
+WorkoutStepResponse _$WorkoutStepResponseFromJson(Map<String, dynamic> json) =>
+    WorkoutStepResponse(
+      stepNumber: json['stepNumber'] as int?,
+      stepName: json['stepName'] as String?,
+      details: json['details'] as String?,
+      workoutType:
+          workoutStepResponseWorkoutTypeNullableFromJson(json['workoutType']),
+      estimatedTime: json['estimatedTime'] as int?,
+    );
+
+Map<String, dynamic> _$WorkoutStepResponseToJson(
+        WorkoutStepResponse instance) =>
+    <String, dynamic>{
+      'stepNumber': instance.stepNumber,
+      'stepName': instance.stepName,
+      'details': instance.details,
+      'workoutType': workoutStepResponseWorkoutTypeToJson(instance.workoutType),
+      'estimatedTime': instance.estimatedTime,
     };
 
 CreateWorkoutRequest _$CreateWorkoutRequestFromJson(

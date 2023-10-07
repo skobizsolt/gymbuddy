@@ -1,32 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_modals.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
-import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
-import 'package:gymbuddy/service/workout/workout_service.dart';
+import 'package:gymbuddy/service/workout/workout_step_service.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 import 'package:ionicons/ionicons.dart';
 
-class WorkoutDetailsScreen extends StatefulWidget {
+class WorkoutDetailsScreen extends ConsumerStatefulWidget {
   WorkoutDetailsScreen({super.key, required this.workout, required this.steps});
 
   final Workout workout;
   final List<WorkoutStep> steps;
 
   @override
-  State<WorkoutDetailsScreen> createState() => _WorkoutDetailsScreenState();
+  ConsumerState<WorkoutDetailsScreen> createState() =>
+      _WorkoutDetailsScreenState();
 }
 
-class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
-  final _workoutService = WorkoutService();
+class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
   late Workout workoutData;
   late List<WorkoutStep> stepsData;
 
@@ -50,13 +51,8 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
     stepsData = widget.steps;
   }
 
-  Stream<WorkoutDetailsResponse> loadDetails(BuildContext context) {
-    return _workoutService.getGeneralStepDetails(
-        widget.workout.workoutId, context);
-  }
-
   editWorkout(final BuildContext context) async {
-    final Workout? editedWorkout = await Navigator.of(context).push(
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WorkoutManager(
           type: CrudType.edit,
@@ -64,17 +60,13 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
         ),
       ),
     );
-    if (editedWorkout == null) {
-      return;
-    }
-    setState(() {
-      workoutData = editedWorkout;
-    });
   }
 
   deleteWorkout(BuildContext context) {
     Navigator.of(context).pop();
-    _workoutService.deleteWorkout(context, workoutData.workoutId);
+    ref
+        .read(workoutStateProvider.notifier)
+        .deleteWorkout(context, workoutData.workoutId);
   }
 
   addStep(BuildContext context, CrudType type) async {
@@ -86,7 +78,7 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
     if (newStep == null) {
       return;
     }
-    await _workoutService
+    await WorkoutStepService()
         .createStep(context, workoutData.workoutId, newStep)
         .then(
           (value) => setState(
@@ -106,16 +98,16 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
     // Renders app bar buttons
     Widget renderAppBarButtons(int totalSteps) {
       // Delete Button
-      return Visibility(
-        visible: isSelfResource,
-        child: IconButton(
-          onPressed: () => _showDeletionModal(context, workoutData, totalSteps),
-          icon: Icon(
-            Icons.delete,
-            color: onPrimaryContainer,
-          ),
-        ),
-      );
+      return isSelfResource
+          ? IconButton(
+              onPressed: () =>
+                  _showDeletionModal(context, workoutData, totalSteps),
+              icon: Icon(
+                Icons.delete,
+                color: onPrimaryContainer,
+              ),
+            )
+          : const SizedBox();
     }
 
     // Renders the Workouts name
@@ -237,7 +229,6 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
     }
 
     return DribbleLayout(
-      popValue: workoutData,
       actions: [
         // Delete button
         renderAppBarButtons(stepsData.length),
@@ -262,16 +253,15 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
           ),
 
           // Edit workout button
-          Visibility(
-            visible: isSelfResource,
-            child: ElevatedButton.icon(
-              onPressed: () => editWorkout(context),
-              icon: const Icon(Icons.edit),
-              label: const Text('Edit workout'),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: onPrimaryContainer, elevation: 0),
-            ),
-          ),
+          isSelfResource
+              ? ElevatedButton.icon(
+                  onPressed: () => editWorkout(context),
+                  icon: const Icon(Icons.edit),
+                  label: const Text('Edit workout'),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: onPrimaryContainer, elevation: 0),
+                )
+              : const SizedBox(),
         ],
       ),
       body: SingleChildScrollView(
@@ -300,30 +290,29 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
                 ),
 
                 // Add new step
-                Visibility(
-                  visible: isSelfResource,
-                  child: InkWell(
-                    onTap: () => addStep(context, CrudType.add),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4.0),
-                        color: Theme.of(context).primaryColorLight,
-                        child: Row(
-                          children: [
-                            const Text('Add new'),
-                            Icon(
-                              Ionicons.add,
-                              size: 24,
-                              color: primaryColor,
+                isSelfResource
+                    ? InkWell(
+                        onTap: () => addStep(context, CrudType.add),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4.0),
+                            color: Theme.of(context).primaryColorLight,
+                            child: Row(
+                              children: [
+                                const Text('Add new'),
+                                Icon(
+                                  Ionicons.add,
+                                  size: 24,
+                                  color: primaryColor,
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                ),
+                      )
+                    : const SizedBox(),
               ],
             ),
             const SizedBox(

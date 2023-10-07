@@ -1,41 +1,34 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout/change_workout.dart';
-import 'package:gymbuddy/models/workout/change_workout_step.dart';
-import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/screen/workout/workout_details_screen.dart';
 import 'package:gymbuddy/service/mapper/workout_mapper.dart';
 import 'package:gymbuddy/service/util/response_validator.dart';
 
-class WorkoutService {
+class WorkoutService extends StateNotifier<List<Workout>> {
+  WorkoutService() : super([]);
+
   final _workoutMapper = WorkoutModelMapper();
   final _api =
       TrainingApi.create(baseUrl: Uri.http(GlobalValues.ANDROID_EMULATOR_URL));
 
-  Future<List<Workout>> getWorkouts({WorkoutCategory? category}) async {
-    final response = category == null
-        ? await _api.workoutsGet()
-        : await _api.workoutsGet(
-            category: WorkoutsGetCategory.values.byName(category.name));
+  Future<List<Workout>> getWorkouts() async {
+    final response = await _api.workoutsGet();
 
-    return _workoutMapper.toWorkoutList(response.body!);
-  }
-
-  getOwnedWorkouts() async {
-    final response = await _api.workoutsOwnedGet(
-        userId: FirebaseAuth.instance.currentUser!.uid);
-
-    return _workoutMapper.toWorkoutList(response.body!);
+    var workouts = _workoutMapper.toWorkoutList(response.body!);
+    state = workouts;
+    return workouts;
   }
 
   Future<void> createWorkout(
       BuildContext context, ChangeWorkoutDto workout) async {
     var request = CreateWorkoutRequest.fromJson(workout.toAddWorkoutMap());
-    var response = await _api.workoutsCreatePost(
+    var response = await _api.workoutsPost(
         userId: FirebaseAuth.instance.currentUser!.uid, body: request);
 
     ResponseValidator.validateResponse(response, context);
@@ -45,10 +38,13 @@ class WorkoutService {
         'Training "${response.body!.workout!.title}"' +
             ' ${workoutCategoryIcon[WorkoutCategory.values.byName(response.body!.workout!.category!.name)]} has created successfully!');
 
+    final newWorkout = _workoutMapper.toWorkout(response.body!.workout!);
+    state = [...state, newWorkout];
+
     await Navigator.of(context)
         .push(MaterialPageRoute(
           builder: (context) => WorkoutDetailsScreen(
-            workout: _workoutMapper.toWorkout(response.body!.workout!),
+            workout: newWorkout,
             steps: response.body!.steps == null
                 ? []
                 : _workoutMapper.toWorkoutSteps(response.body!.steps!),
@@ -58,11 +54,8 @@ class WorkoutService {
   }
 
   Stream<WorkoutDetailsResponse> getGeneralStepDetails(
-      final int workoutId, BuildContext context) async* {
-    var response =
-        await _api.workoutsDataWorkoutIdDetailsGet(workoutId: workoutId);
-
-    ResponseValidator.validateResponse(response, context);
+      final int workoutId) async* {
+    var response = await _api.workoutsWorkoutIdDetailsGet(workoutId: workoutId);
     yield response.body!;
   }
 
@@ -71,7 +64,7 @@ class WorkoutService {
     final int workoutId,
     final ChangeWorkoutDto workout,
   ) async {
-    var response = await _api.workoutsWorkoutIdEditPut(
+    var response = await _api.workoutsWorkoutIdPut(
         workoutId: workoutId,
         body: EditWorkoutRequest.fromJson(workout.toEditWorkoutMap()));
 
@@ -79,30 +72,26 @@ class WorkoutService {
 
     showSucessSnackBar(
         context, "Training ${response.body!.title} edited successfully!");
-    return _workoutMapper.toWorkout(response.body!);
+
+    var editedWorkout = _workoutMapper.toWorkout(response.body!);
+    final List<Workout> updatedList = state
+        .map(
+          (e) => e.workoutId == editedWorkout.workoutId ? editedWorkout : e,
+        )
+        .toList();
+    state = updatedList;
+
+    return editedWorkout;
   }
 
   Future<void> deleteWorkout(BuildContext context, int workoutId) async {
-    final response =
-        await _api.workoutsWorkoutIdDeleteDelete(workoutId: workoutId);
+    final response = await _api.workoutsWorkoutIdDelete(workoutId: workoutId);
 
     ResponseValidator.validateResponse(response, context);
+
+    state = [...state.where((element) => element.workoutId != workoutId)];
 
     showSucessSnackBar(context, "Workout deleted successfully!");
     Navigator.of(context).pop();
-  }
-
-  Future<WorkoutStep> createStep(
-      BuildContext context, int workoutId, ChangeWorkoutStepDto newStep) async {
-    var response = await _api.workoutsWorkoutIdStepsCreatePost(
-      workoutId: workoutId,
-      body: ChangeWorkoutStepRequest.fromJson(newStep.toMap()),
-    );
-
-    ResponseValidator.validateResponse(response, context);
-
-    showSucessSnackBar(
-        context, "New step (${response.body!.stepNumber}. step) added!");
-    return _workoutMapper.toWorkoutStep(response.body!);
   }
 }

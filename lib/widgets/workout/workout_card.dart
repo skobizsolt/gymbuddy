@@ -1,59 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/models/api/training_api.models.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
+import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workout_details_screen.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
-import 'package:gymbuddy/service/workout/workout_service.dart';
 import 'package:gymbuddy/service/workout/workout_step_service.dart';
 
-class WorkoutCard extends StatefulWidget {
+class WorkoutCard extends ConsumerStatefulWidget {
   const WorkoutCard({super.key, required this.workout});
   final Workout workout;
 
   @override
-  State<WorkoutCard> createState() => _WorkoutCardState();
+  ConsumerState<WorkoutCard> createState() => _WorkoutCardState();
 }
 
-class _WorkoutCardState extends State<WorkoutCard> {
+class _WorkoutCardState extends ConsumerState<WorkoutCard> {
   late Workout workoutData;
-  late var generalStepDetails;
 
   @override
   void initState() {
     super.initState();
     workoutData = widget.workout;
-    generalStepDetails =
-        WorkoutService().getGeneralStepDetails(workoutData.workoutId, context);
-  }
-
-  updateData(Workout? value) {
-    if (value == null || workoutData == value) {
-      return;
-    }
-    setState(() {
-      workoutData = value;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    AsyncValue<WorkoutDetailsResponse> generalStepDetails =
+        ref.watch(workoutGeneralDetailsProvider(workoutData.workoutId));
     Future<void> selectWorkout(Workout workout) async {
-      final Workout? returnedValue =
-          await WorkoutStepService().getSteps(workout.workoutId, context).then(
-                (steps) => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: ((context) => WorkoutDetailsScreen(
-                          workout: workout,
-                          steps: steps,
-                        )),
-                  ),
-                ),
-              );
-      setState(() {
-        generalStepDetails = WorkoutService()
-            .getGeneralStepDetails(workoutData.workoutId, context);
-      });
-      updateData(returnedValue);
+      await WorkoutStepService().getSteps(workout.workoutId, context).then(
+            (steps) => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: ((context) => WorkoutDetailsScreen(
+                      workout: workout,
+                      steps: steps,
+                    )),
+              ),
+            ),
+          );
     }
 
     Widget workoutDetails(int? totalSteps) {
@@ -79,14 +64,8 @@ class _WorkoutCardState extends State<WorkoutCard> {
       );
     }
 
-    return StreamBuilder<WorkoutDetailsResponse>(
-        stream: generalStepDetails,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SizedBox();
-          }
-
-          return Card(
+    return generalStepDetails.hasValue
+        ? Card(
             child: InkWell(
               onTap: () {
                 selectWorkout(workoutData);
@@ -99,10 +78,10 @@ class _WorkoutCardState extends State<WorkoutCard> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        workoutDetails(snapshot.data!.totalSteps),
+                        workoutDetails(generalStepDetails.value!.totalSteps),
                         Column(children: [
                           Text(
-                            '${snapshot.data!.estimatedTimeInMinutes!}\nmins',
+                            '${generalStepDetails.value!.estimatedTimeInMinutes!}\nmins',
                             style: Theme.of(context).textTheme.titleLarge,
                             textAlign: TextAlign.center,
                           )
@@ -113,7 +92,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
                 ),
               ),
             ),
-          );
-        });
+          )
+        : const SizedBox();
   }
 }
