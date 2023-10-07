@@ -35,7 +35,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
 
   Future<void> createWorkout(
       BuildContext context, ChangeWorkoutDto workout) async {
-    var request = CreateWorkoutRequest.fromJson(workout.toAddWorkoutMap());
+    var request = ChangeWorkoutRequest.fromJson(workout.toAddWorkoutMap());
     var response = await _api.workoutsPost(
         userId: FirebaseAuth.instance.currentUser!.uid, body: request);
 
@@ -43,16 +43,16 @@ class WorkoutService extends StateNotifier<List<Workout>> {
 
     showSucessSnackBar(
         context,
-        'Training "${response.body!.workout!.title}"' +
-            ' ${workoutCategoryIcon[WorkoutCategory.values.byName(response.body!.workout!.category!.name)]} has created successfully!');
+        'Training "${response.body!.title}"' +
+            ' ${workoutCategoryIcon[WorkoutCategory.values.byName(response.body!.category!.name)]} has created successfully!');
 
-    final newWorkout = _workoutMapper.toWorkout(response.body!.workout!);
+    final newWorkout = _workoutMapper.toWorkout(response.body!);
     state = [...state, newWorkout];
 
     await Navigator.of(context)
         .push(MaterialPageRoute(
           builder: (context) => WorkoutDetailsScreen(
-            workoutId: GlobalValues.LOCAL_WORKOUT_ID,
+            workoutId: response.body!.workoutId!,
           ),
         ))
         .whenComplete(() => Navigator.of(context).pop());
@@ -71,7 +71,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
   ) async {
     var response = await _api.workoutsWorkoutIdPut(
         workoutId: workoutId,
-        body: EditWorkoutRequest.fromJson(workout.toEditWorkoutMap()));
+        body: ChangeWorkoutRequest.fromJson(workout.toEditWorkoutMap()));
 
     ResponseValidator.validateResponse(response, context);
 

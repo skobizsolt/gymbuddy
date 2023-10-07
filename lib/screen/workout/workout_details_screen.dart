@@ -68,7 +68,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     }
     await ref
         .read(workoutStepStateProvider.notifier)
-        .createStep(context, workout.workoutId, newStep, false);
+        .createStep(context, workout.workoutId, newStep);
   }
 
   @override
@@ -325,7 +325,6 @@ class WorkoutDetailsScreen extends ConsumerWidget {
             // Renders all steps belongs with this workout
             StepsPanelList(
               workoutId: workout.workoutId,
-              isLocalMode: false,
               isAuthEnabled: true,
               isOwnResource: isSelfRecorce,
             ),

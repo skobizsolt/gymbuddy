@@ -5,7 +5,6 @@ import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/models/workout_step.dart';
-import 'package:gymbuddy/service/mapper/workout_internal_mapper.dart';
 import 'package:gymbuddy/service/mapper/workout_mapper.dart';
 import 'package:gymbuddy/service/util/response_validator.dart';
 
@@ -13,7 +12,6 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
   WorkoutStepService() : super([]);
 
   final _workoutMapper = WorkoutModelMapper();
-  final _workoutInternalMapper = WorkoutInternalDataMapper();
   final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
 
   Future<List<WorkoutStep>> getSteps(int workoutId) async {
@@ -30,17 +28,13 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
     return workoutSteps;
   }
 
-  Future<void> createStep(BuildContext context, int workoutId,
-      ChangeWorkoutStepDto? newStep, bool isLocalMode,
-      [int? localStepNumber]) async {
+  Future<void> createStep(
+    BuildContext context,
+    int workoutId,
+    ChangeWorkoutStepDto? newStep,
+  ) async {
     if (newStep == null) {
       return;
-    }
-    if (isLocalMode) {
-      state = [
-        ...state,
-        _workoutInternalMapper.toWorkoutStep(newStep, localStepNumber!)
-      ];
     }
 
     var response = await _api.workoutsWorkoutIdStepsPost(
@@ -56,23 +50,16 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
         context, "New step (${response.body!.stepNumber}. step) added!");
   }
 
-  Future<void> editStep(
-      {required BuildContext context,
-      required int workoutId,
-      required int stepNumber,
-      required ChangeWorkoutStepDto? editedStep,
-      required bool isLocalMode}) async {
+  Future<void> editStep({
+    required BuildContext context,
+    required int workoutId,
+    required int stepNumber,
+    required ChangeWorkoutStepDto? editedStep,
+  }) async {
     if (editedStep == null) {
       return;
     }
-    // Handle locally edited step
-    if (isLocalMode || workoutId == GlobalValues.LOCAL_WORKOUT_ID) {
-      state = _editWorkoutStepState(
-          _workoutInternalMapper.toWorkoutStep(editedStep, stepNumber));
-      return;
-    }
 
-    // Handle globally edited step
     var response = await _api.workoutsWorkoutIdStepsStepNumberPut(
       workoutId: workoutId,
       stepNumber: stepNumber,

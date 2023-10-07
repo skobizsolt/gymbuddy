@@ -31,7 +31,7 @@ class _$TrainingApi extends TrainingApi {
   @override
   Future<Response<WorkoutResponse>> _workoutsWorkoutIdPut({
     required int? workoutId,
-    required EditWorkoutRequest? body,
+    required ChangeWorkoutRequest? body,
   }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}');
     final $body = body;
@@ -113,9 +113,9 @@ class _$TrainingApi extends TrainingApi {
   }
 
   @override
-  Future<Response<DetailedWorkoutsResponse>> _workoutsPost({
+  Future<Response<WorkoutResponse>> _workoutsPost({
     required String? userId,
-    required CreateWorkoutRequest? body,
+    required ChangeWorkoutRequest? body,
   }) {
     final Uri $url = Uri.parse('/workouts');
     final Map<String, dynamic> $params = <String, dynamic>{'userId': userId};
@@ -127,8 +127,7 @@ class _$TrainingApi extends TrainingApi {
       body: $body,
       parameters: $params,
     );
-    return client
-        .send<DetailedWorkoutsResponse, DetailedWorkoutsResponse>($request);
+    return client.send<WorkoutResponse, WorkoutResponse>($request);
   }
 
   @override

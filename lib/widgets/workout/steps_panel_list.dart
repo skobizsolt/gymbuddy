@@ -13,13 +13,11 @@ class StepsPanelList extends ConsumerWidget {
   const StepsPanelList({
     super.key,
     required this.workoutId,
-    this.isLocalMode = true,
     this.isOwnResource = false,
     this.isAuthEnabled = false,
   });
 
   final int workoutId;
-  final bool isLocalMode;
   final bool isAuthEnabled;
   final bool isOwnResource;
 
@@ -49,20 +47,17 @@ class StepsPanelList extends ConsumerWidget {
               context: context,
               workoutId: workoutId,
               stepNumber: step.stepNumber,
-              editedStep: value,
-              isLocalMode: isLocalMode),
+              editedStep: value),
         );
   }
 
   deleteStep(
       BuildContext context, WidgetRef ref, final WorkoutStep step) async {
-    if (!isLocalMode) {
-      await ref
-          .read(workoutStepStateProvider.notifier)
-          .deleteStep(context, workoutId, step.stepNumber)
-          .whenComplete(() => showSucessSnackBar(context,
-              'Workout step "${step.stepName}" has been deleted successfully!'));
-    }
+    await ref
+        .read(workoutStepStateProvider.notifier)
+        .deleteStep(context, workoutId, step.stepNumber)
+        .whenComplete(() => showSucessSnackBar(context,
+            'Workout step "${step.stepName}" has been deleted successfully!'));
   }
 
   @override
@@ -75,14 +70,14 @@ class StepsPanelList extends ConsumerWidget {
     List<WorkoutStep> workoutSteps = stepsRef.value!;
     // Notify the user if no steps added yet
     if (workoutSteps.isEmpty) {
-      return Row(
+      return const Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: InformationTag(
               child: Text(
-                isLocalMode ? 'No steps added yet' : 'No steps to show!',
-                style: const TextStyle(
+                'No steps added yet',
+                style: TextStyle(
                   fontStyle: FontStyle.italic,
                 ),
                 textAlign: TextAlign.center,
@@ -99,7 +94,7 @@ class StepsPanelList extends ConsumerWidget {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: workoutSteps.length,
         itemBuilder: (context, index) {
-          return isLocalMode || (isAuthEnabled && isOwnResource)
+          return isAuthEnabled && isOwnResource
               ? Dismissible(
                   key: UniqueKey(),
                   onDismissed: (direction) =>
@@ -125,7 +120,7 @@ class StepsPanelList extends ConsumerWidget {
               '${FormatUtils.toTimeString(Duration(seconds: step.estimatedTime))}',
           style: Theme.of(context).listTileTheme.subtitleTextStyle,
         ),
-        trailing: isLocalMode || (isAuthEnabled && isOwnResource)
+        trailing: isAuthEnabled && isOwnResource
             ? IconButton(
                 onPressed: () => editStep(context, ref, step),
                 icon: Icon(

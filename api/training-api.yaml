@@ -41,7 +41,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EditWorkoutRequest'
+              $ref: '#/components/schemas/ChangeWorkoutRequest'
         required: true
       responses:
         '200':
@@ -165,7 +165,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateWorkoutRequest'
+              $ref: '#/components/schemas/ChangeWorkoutRequest'
         required: true
       responses:
         '200':
@@ -173,7 +173,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/DetailedWorkoutsResponse'
+                $ref: '#/components/schemas/WorkoutResponse'
   /workouts/{workoutId}/steps:
     get:
       tags:
@@ -240,7 +240,7 @@ paths:
                 $ref: '#/components/schemas/WorkoutDetailsResponse'
 components:
   schemas:
-    EditWorkoutRequest:
+    ChangeWorkoutRequest:
       type: object
       properties:
         title:
@@ -324,39 +324,6 @@ components:
         estimatedTime:
           type: integer
           format: int32
-    CreateWorkoutRequest:
-      type: object
-      properties:
-        title:
-          type: string
-        description:
-          type: string
-        category:
-          type: string
-          enum:
-            - ENDURANCE
-            - STRENGTH
-            - BALANCE
-            - FLEXIBILITY
-        difficulty:
-          type: string
-          enum:
-            - EASY
-            - INTERMEDIATE
-            - HARD
-        steps:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChangeWorkoutStepRequest'
-    DetailedWorkoutsResponse:
-      type: object
-      properties:
-        workout:
-          $ref: '#/components/schemas/WorkoutResponse'
-        steps:
-          type: array
-          items:
-            $ref: '#/components/schemas/WorkoutStepResponse'
     WorkoutListResponse:
       type: object
       properties:
