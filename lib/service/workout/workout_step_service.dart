@@ -14,8 +14,7 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
 
   final _workoutMapper = WorkoutModelMapper();
   final _workoutInternalMapper = WorkoutInternalDataMapper();
-  final _api =
-      TrainingApi.create(baseUrl: Uri.http(GlobalValues.ANDROID_EMULATOR_URL));
+  final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
 
   Future<List<WorkoutStep>> getSteps(int workoutId) async {
     var response = await _api.workoutsWorkoutIdStepsGet(workoutId: workoutId);

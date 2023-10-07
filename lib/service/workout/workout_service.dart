@@ -14,8 +14,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
   WorkoutService() : super([]);
 
   final _workoutMapper = WorkoutModelMapper();
-  final _api =
-      TrainingApi.create(baseUrl: Uri.http(GlobalValues.ANDROID_EMULATOR_URL));
+  final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
 
   Future<List<Workout>> getWorkouts() async {
     if (state.isNotEmpty) {

@@ -10,6 +10,9 @@ class GlobalValues {
   // Main navigation key
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+  // Current route
+  static const SERVER_URL = ANDROID_EMULATOR_URL;
+
   //android emulator url
   static const ANDROID_EMULATOR_URL = "10.0.2.2:8080";
 
