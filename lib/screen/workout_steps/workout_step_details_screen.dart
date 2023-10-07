@@ -107,7 +107,6 @@ class _WorkoutStepDetailsScreenState extends State<WorkoutStepDetailsScreen> {
     //Renders all steps belongs with this workout
 
     return DribbleLayout(
-      popValue: stepData,
       headerContent: Column(
         children: [
           // Title

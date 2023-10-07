@@ -10,13 +10,13 @@ var workoutStateProvider = StateNotifierProvider<WorkoutService, List<Workout>>(
     (ref) => WorkoutService());
 
 FutureProvider<List<Workout>> workoutsProvider = FutureProvider((ref) {
+  ref.watch(workoutStateProvider);
   return WorkoutService().getWorkouts();
 });
 
 var workoutsByCategoryProvider =
     FutureProvider.family<List<Workout>, WorkoutCategory>(
   (ref, category) {
-    ref.watch(workoutStateProvider);
     return ref
         .watch(workoutsProvider)
         .value!
@@ -27,7 +27,6 @@ var workoutsByCategoryProvider =
 
 var workoutsByUserProvider = FutureProvider<List<Workout>>(
   (ref) {
-    ref.watch(workoutStateProvider);
     return ref
         .watch(workoutsProvider)
         .value!
@@ -39,7 +38,6 @@ var workoutsByUserProvider = FutureProvider<List<Workout>>(
 
 var workoutByIdProvider = FutureProvider.family<Workout?, int>(
   (ref, workoutId) {
-    ref.watch(workoutStateProvider);
     return ref
         .watch(workoutsProvider)
         .value!

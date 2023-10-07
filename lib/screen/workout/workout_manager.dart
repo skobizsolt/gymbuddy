@@ -42,7 +42,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
       await ref
           .read(workoutStateProvider.notifier)
           .editWorkout(context, widget.workout!.workoutId, _workout)
-          .then((value) => Navigator.of(context).pop(value));
+          .then((value) => Navigator.of(context).pop());
     }
   }
 

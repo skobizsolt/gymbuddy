@@ -64,7 +64,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
     yield response.body!;
   }
 
-  Future<Workout> editWorkout(
+  Future<void> editWorkout(
     final BuildContext context,
     final int workoutId,
     final ChangeWorkoutDto workout,
@@ -85,8 +85,6 @@ class WorkoutService extends StateNotifier<List<Workout>> {
         )
         .toList();
     state = updatedList;
-
-    return editedWorkout;
   }
 
   Future<void> deleteWorkout(BuildContext context, int workoutId) async {
