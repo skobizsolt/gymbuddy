@@ -1,35 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
 
-enum ChangeWorkoutStepRequestWorkoutType {
-  @JsonValue(null)
-  swaggerGeneratedUnknown(null),
-
-  @JsonValue('INTERVAL')
-  interval('INTERVAL'),
-  @JsonValue('REP')
-  rep('REP');
-
-  final String? value;
-
-  const ChangeWorkoutStepRequestWorkoutType(this.value);
-}
-
-enum WorkoutStepResponseWorkoutType {
-  @JsonValue(null)
-  swaggerGeneratedUnknown(null),
-
-  @JsonValue('INTERVAL')
-  interval('INTERVAL'),
-  @JsonValue('REP')
-  rep('REP');
-
-  final String? value;
-
-  const WorkoutStepResponseWorkoutType(this.value);
-}
-
-enum EditWorkoutRequestCategory {
+enum ChangeWorkoutRequestCategory {
   @JsonValue(null)
   swaggerGeneratedUnknown(null),
 
@@ -44,10 +16,10 @@ enum EditWorkoutRequestCategory {
 
   final String? value;
 
-  const EditWorkoutRequestCategory(this.value);
+  const ChangeWorkoutRequestCategory(this.value);
 }
 
-enum EditWorkoutRequestDifficulty {
+enum ChangeWorkoutRequestDifficulty {
   @JsonValue(null)
   swaggerGeneratedUnknown(null),
 
@@ -60,7 +32,7 @@ enum EditWorkoutRequestDifficulty {
 
   final String? value;
 
-  const EditWorkoutRequestDifficulty(this.value);
+  const ChangeWorkoutRequestDifficulty(this.value);
 }
 
 enum WorkoutResponseCategory {
@@ -97,54 +69,30 @@ enum WorkoutResponseDifficulty {
   const WorkoutResponseDifficulty(this.value);
 }
 
-enum CreateWorkoutRequestCategory {
+enum ChangeWorkoutStepRequestWorkoutType {
   @JsonValue(null)
   swaggerGeneratedUnknown(null),
 
-  @JsonValue('ENDURANCE')
-  endurance('ENDURANCE'),
-  @JsonValue('STRENGTH')
-  strength('STRENGTH'),
-  @JsonValue('BALANCE')
-  balance('BALANCE'),
-  @JsonValue('FLEXIBILITY')
-  flexibility('FLEXIBILITY');
+  @JsonValue('INTERVAL')
+  interval('INTERVAL'),
+  @JsonValue('REP')
+  rep('REP');
 
   final String? value;
 
-  const CreateWorkoutRequestCategory(this.value);
+  const ChangeWorkoutStepRequestWorkoutType(this.value);
 }
 
-enum CreateWorkoutRequestDifficulty {
+enum WorkoutStepResponseWorkoutType {
   @JsonValue(null)
   swaggerGeneratedUnknown(null),
 
-  @JsonValue('EASY')
-  easy('EASY'),
-  @JsonValue('INTERMEDIATE')
-  intermediate('INTERMEDIATE'),
-  @JsonValue('HARD')
-  hard('HARD');
+  @JsonValue('INTERVAL')
+  interval('INTERVAL'),
+  @JsonValue('REP')
+  rep('REP');
 
   final String? value;
 
-  const CreateWorkoutRequestDifficulty(this.value);
-}
-
-enum WorkoutsGetCategory {
-  @JsonValue(null)
-  swaggerGeneratedUnknown(null),
-
-  @JsonValue('ENDURANCE')
-  endurance('ENDURANCE'),
-  @JsonValue('STRENGTH')
-  strength('STRENGTH'),
-  @JsonValue('BALANCE')
-  balance('BALANCE'),
-  @JsonValue('FLEXIBILITY')
-  flexibility('FLEXIBILITY');
-
-  final String? value;
-
-  const WorkoutsGetCategory(this.value);
+  const WorkoutStepResponseWorkoutType(this.value);
 }

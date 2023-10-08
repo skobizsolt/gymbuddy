@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/crud/form_category.dart';
 import 'package:gymbuddy/components/inputs/default_text_form_field.dart';
 import 'package:gymbuddy/components/inputs/multiline_text_form_field.dart';
@@ -6,25 +7,21 @@ import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout/change_workout.dart';
-import 'package:gymbuddy/models/workout/change_workout_step.dart';
-import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
-import 'package:gymbuddy/service/mapper/workout_internal_mapper.dart';
+import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
-import 'package:gymbuddy/service/workout/workout_service.dart';
-import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 
-class WorkoutManager extends StatefulWidget {
+class WorkoutManager extends ConsumerStatefulWidget {
   WorkoutManager({super.key, required this.type, this.workout});
 
   final CrudType type;
   final Workout? workout;
 
   @override
-  State<WorkoutManager> createState() => _WorkoutManagerState();
+  ConsumerState<WorkoutManager> createState() => _WorkoutManagerState();
 }
 
-class _WorkoutManagerState extends State<WorkoutManager> {
+class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
   late ChangeWorkoutDto _workout = ChangeWorkoutDto(
     steps: [],
   );
@@ -37,28 +34,16 @@ class _WorkoutManagerState extends State<WorkoutManager> {
     }
     _formkey.currentState!.save();
     if (CrudType.add == widget.type) {
-      await WorkoutService().createWorkout(context, _workout);
+      await ref
+          .read(workoutStateProvider.notifier)
+          .createWorkout(context, _workout);
     }
     if (CrudType.edit == widget.type) {
-      await WorkoutService()
+      await ref
+          .read(workoutStateProvider.notifier)
           .editWorkout(context, widget.workout!.workoutId, _workout)
-          .then((value) => Navigator.of(context).pop(value));
+          .then((value) => Navigator.of(context).pop());
     }
-  }
-
-  addStep(CrudType type) async {
-    final ChangeWorkoutStepDto? addedStep = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => WorkoutStepManager(type: type),
-      ),
-    );
-    if (addedStep == null) {
-      return;
-    }
-    setState(() {
-      _workout.steps.add(addedStep);
-      print("Added step $addedStep");
-    });
   }
 
   @override
@@ -121,42 +106,6 @@ class _WorkoutManagerState extends State<WorkoutManager> {
                   const SizedBox(
                     height: 16,
                   ),
-
-                  // Add steps
-                  CrudType.add == widget.type
-                      ? FormCategory(
-                          title: "Steps to complete this training",
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      addStep(CrudType.add);
-                                    },
-                                    icon: const Icon(Icons.add),
-                                    label: Text(
-                                      "Add step",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                    style: const ButtonStyle().copyWith(
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Theme.of(context).primaryColorDark),
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Theme.of(context)
-                                                  .primaryColorDark),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            _renderSteps(),
-                          ],
-                        )
-                      : const SizedBox(),
                 ],
               ),
             ),
@@ -229,20 +178,5 @@ class _WorkoutManagerState extends State<WorkoutManager> {
         borderRadius: BorderRadius.circular(12),
       ),
     );
-  }
-
-  _renderSteps() {
-    if (_workout.steps.isEmpty) {
-      return const SizedBox();
-    } else {
-      return StepsPanelList(
-        workoutSteps:
-            WorkoutInternalDataMapper().toWorkoutStepList(_workout.steps),
-        workoutId: widget.workout == null
-            ? GlobalValues.LOCAL_WORKOUT_ID
-            : widget.workout!.workoutId,
-        isOwnResource: true,
-      );
-    }
   }
 }

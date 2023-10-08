@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/training_api.swagger.dart';
@@ -7,25 +8,59 @@ import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/service/mapper/workout_mapper.dart';
 import 'package:gymbuddy/service/util/response_validator.dart';
 
-class WorkoutStepService {
-  final _workoutMapper = WorkoutModelMapper();
-  final _api =
-      TrainingApi.create(baseUrl: Uri.http(GlobalValues.ANDROID_EMULATOR_URL));
+class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
+  WorkoutStepService() : super([]);
 
-  Future<List<WorkoutStep>> getSteps(
-      int workoutId, BuildContext context) async {
+  final _workoutMapper = WorkoutModelMapper();
+  final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
+
+  Future<List<WorkoutStep>> getSteps(int workoutId) async {
     var response = await _api.workoutsWorkoutIdStepsGet(workoutId: workoutId);
+
+    if (!response.isSuccessful || response.body == null) {
+      state = [];
+      return state;
+    }
+
+    final workoutSteps = _workoutMapper.toWorkoutSteps(response.body!);
+    state = workoutSteps;
+
+    return workoutSteps;
+  }
+
+  Future<void> createStep(
+    BuildContext context,
+    int workoutId,
+    ChangeWorkoutStepDto? newStep,
+  ) async {
+    if (newStep == null) {
+      return;
+    }
+
+    var response = await _api.workoutsWorkoutIdStepsPost(
+      workoutId: workoutId,
+      body: ChangeWorkoutStepRequest.fromJson(newStep.toMap()),
+    );
 
     ResponseValidator.validateResponse(response, context);
 
-    return response.body == null
-        ? []
-        : _workoutMapper.toWorkoutSteps(response.body!);
+    state = [...state, _workoutMapper.toWorkoutStep(response.body!)];
+
+    showSucessSnackBar(
+        context, "New step (${response.body!.stepNumber}. step) added!");
   }
 
-  Future<WorkoutStep> editStep(BuildContext context, int workoutId,
-      int stepNumber, ChangeWorkoutStepDto editedStep) async {
-    var response = await _api.workoutsWorkoutIdStepsStepNumberEditPut(
+  Future<void> editStep({
+    required BuildContext context,
+    required int workoutId,
+    required int stepNumber,
+    required ChangeWorkoutStepDto? editedStep,
+  }) async {
+    if (editedStep == null) {
+      return;
+    }
+
+    var response = await _api.workoutsWorkoutIdStepsStepNumberPut(
       workoutId: workoutId,
       stepNumber: stepNumber,
       body: ChangeWorkoutStepRequest.fromJson(editedStep.toMap()),
@@ -33,16 +68,30 @@ class WorkoutStepService {
 
     ResponseValidator.validateResponse(response, context);
 
+    state = _editWorkoutStepState(
+        WorkoutModelMapper().toWorkoutStep(response.body!));
+
     showSucessSnackBar(
         context, "Training ${response.body!.stepName} changed successfully!");
-    return WorkoutModelMapper().toWorkoutStep(response.body!);
   }
 
   Future<void> deleteStep(
       BuildContext context, int workoutId, int stepNumber) async {
-    final response = await _api.workoutsWorkoutIdStepsStepNumberDeleteDelete(
+    final response = await _api.workoutsWorkoutIdStepsStepNumberDelete(
         workoutId: workoutId, stepNumber: stepNumber);
 
     ResponseValidator.validateResponse(response, context);
+
+    state = [...state.where((element) => element.stepNumber != stepNumber)];
+  }
+
+  List<WorkoutStep> _editWorkoutStepState(WorkoutStep mappedEditedStep) {
+    return state
+        .map(
+          (e) => e.stepNumber == mappedEditedStep.stepNumber
+              ? mappedEditedStep
+              : e,
+        )
+        .toList();
   }
 }

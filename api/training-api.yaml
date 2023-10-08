@@ -7,7 +7,88 @@ servers:
   - url: http://localhost:8080
     description: Generated server url
 paths:
-  /workouts/{workoutId}/steps/{stepNumber}/edit:
+  /workouts/{workoutId}:
+    get:
+      tags:
+        - workout-controller
+      operationId: getWorkout
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutResponse'
+    put:
+      tags:
+        - workout-controller
+      operationId: editWorkout
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeWorkoutRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutResponse'
+    delete:
+      tags:
+        - workout-controller
+      operationId: deleteWorkout
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+  /workouts/{workoutId}/steps/{stepNumber}:
+    get:
+      tags:
+        - workout-steps-controller
+      operationId: getStep
+      parameters:
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: stepNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutStepResponse'
     put:
       tags:
         - workout-steps-controller
@@ -38,36 +119,10 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutStepResponse'
-  /workouts/{workoutId}/edit:
-    put:
-      tags:
-        - workout-controller
-      operationId: editWorkout
-      parameters:
-        - name: workoutId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EditWorkoutRequest'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/WorkoutResponse'
-  /workouts/{workoutId}/steps/create:
-    post:
+    delete:
       tags:
         - workout-steps-controller
-      operationId: addStep
+      operationId: deleteStep
       parameters:
         - name: workoutId
           in: path
@@ -75,20 +130,27 @@ paths:
           schema:
             type: integer
             format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChangeWorkoutStepRequest'
-        required: true
+        - name: stepNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+  /workouts:
+    get:
+      tags:
+        - workout-list-controller
+      operationId: getAllWorkouts
       responses:
         '200':
           description: OK
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/WorkoutStepResponse'
-  /workouts/create:
+                $ref: '#/components/schemas/WorkoutListResponse'
     post:
       tags:
         - workout-controller
@@ -103,50 +165,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateWorkoutRequest'
+              $ref: '#/components/schemas/ChangeWorkoutRequest'
         required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/DetailedWorkoutsResponse'
-  /workouts:
-    get:
-      tags:
-        - workout-list-controller
-      operationId: getAllWorkouts
-      parameters:
-        - name: category
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - ENDURANCE
-              - STRENGTH
-              - BALANCE
-              - FLEXIBILITY
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/WorkoutListResponse'
-  /workouts/{workoutId}:
-    get:
-      tags:
-        - workout-controller
-      operationId: getWorkout
-      parameters:
-        - name: workoutId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
       responses:
         '200':
           description: OK
@@ -175,11 +195,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/WorkoutStepResponse'
-  /workouts/{workoutId}/steps/{stepNumber}:
-    get:
+    post:
       tags:
         - workout-steps-controller
-      operationId: getStep
+      operationId: addStep
       parameters:
         - name: workoutId
           in: path
@@ -187,12 +206,12 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: stepNumber
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeWorkoutStepRequest'
+        required: true
       responses:
         '200':
           description: OK
@@ -200,25 +219,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutStepResponse'
-  /workouts/owned:
-    get:
-      tags:
-        - workout-list-controller
-      operationId: getWorkoutsByUserId
-      parameters:
-        - name: userId
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/WorkoutListResponse'
-  /workouts/data/{workoutId}/details:
+  /workouts/{workoutId}/details:
     get:
       tags:
         - workout-util-controller
@@ -237,78 +238,9 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutDetailsResponse'
-  /workouts/{workoutId}/steps/{stepNumber}/delete:
-    delete:
-      tags:
-        - workout-steps-controller
-      operationId: deleteStep
-      parameters:
-        - name: workoutId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: stepNumber
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-  /workouts/{workoutId}/delete:
-    delete:
-      tags:
-        - workout-controller
-      operationId: deleteWorkout
-      parameters:
-        - name: workoutId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
 components:
   schemas:
-    ChangeWorkoutStepRequest:
-      type: object
-      properties:
-        stepName:
-          type: string
-        details:
-          type: string
-        workoutType:
-          type: string
-          enum:
-            - INTERVAL
-            - REP
-        estimatedTime:
-          type: integer
-          format: int32
-    WorkoutStepResponse:
-      type: object
-      properties:
-        stepNumber:
-          type: integer
-          format: int32
-        stepName:
-          type: string
-        details:
-          type: string
-        workoutType:
-          type: string
-          enum:
-            - INTERVAL
-            - REP
-        estimatedTime:
-          type: integer
-          format: int32
-    EditWorkoutRequest:
+    ChangeWorkoutRequest:
       type: object
       properties:
         title:
@@ -359,39 +291,39 @@ components:
             - EASY
             - INTERMEDIATE
             - HARD
-    CreateWorkoutRequest:
+    ChangeWorkoutStepRequest:
       type: object
       properties:
-        title:
+        stepName:
           type: string
-        description:
+        details:
           type: string
-        category:
-          type: string
-          enum:
-            - ENDURANCE
-            - STRENGTH
-            - BALANCE
-            - FLEXIBILITY
-        difficulty:
+        workoutType:
           type: string
           enum:
-            - EASY
-            - INTERMEDIATE
-            - HARD
-        steps:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChangeWorkoutStepRequest'
-    DetailedWorkoutsResponse:
+            - INTERVAL
+            - REP
+        estimatedTime:
+          type: integer
+          format: int32
+    WorkoutStepResponse:
       type: object
       properties:
-        workout:
-          $ref: '#/components/schemas/WorkoutResponse'
-        steps:
-          type: array
-          items:
-            $ref: '#/components/schemas/WorkoutStepResponse'
+        stepNumber:
+          type: integer
+          format: int32
+        stepName:
+          type: string
+        details:
+          type: string
+        workoutType:
+          type: string
+          enum:
+            - INTERVAL
+            - REP
+        estimatedTime:
+          type: integer
+          format: int32
     WorkoutListResponse:
       type: object
       properties:

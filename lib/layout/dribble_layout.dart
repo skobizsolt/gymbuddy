@@ -9,7 +9,6 @@ class DribbleLayout extends StatelessWidget {
     this.headerContent,
     this.body,
     this.footing,
-    this.popValue,
   });
 
   final bool addAppBar;
@@ -17,7 +16,6 @@ class DribbleLayout extends StatelessWidget {
   final Widget? headerContent;
   final Widget? body;
   final Widget? footing;
-  final dynamic popValue;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +37,7 @@ class DribbleLayout extends StatelessWidget {
                   headerColor,
                 ),
               ),
-              onPressed: () => Navigator.of(context).pop(popValue),
+              onPressed: () => Navigator.of(context).pop(),
             ),
             // Other actions
             Row(

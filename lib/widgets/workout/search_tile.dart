@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/screen/workout/workouts_screen.dart';
+import 'package:gymbuddy/screen/workout/displays/workout_by_category.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
-import 'package:gymbuddy/service/workout/workout_service.dart';
 
 class WorkoutSearchTile extends StatelessWidget {
   const WorkoutSearchTile({
@@ -11,29 +10,18 @@ class WorkoutSearchTile extends StatelessWidget {
   });
   final WorkoutCategory workoutCategory;
 
-  Future<List<Workout>> loadData() async {
-    var data = await WorkoutService().getWorkouts(category: workoutCategory);
-    if (data.isEmpty) {
-      return [];
-    }
-    return data
-        .where((workout) => workout.category == workoutCategory)
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     final String title =
         '${FormatUtils.toCapitalized(workoutCategory.name)} ${workoutCategoryIcon[workoutCategory]}';
 
-    Future<void> onTap() async {
-      final loadedWorkouts = await loadData();
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => WorkoutsScreen(
-          title: 'Category - $title',
-          workouts: loadedWorkouts,
+    void onTap() {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) =>
+              WorkoutByCategoryScreen(category: workoutCategory),
         ),
-      ));
+      );
     }
 
     return Padding(

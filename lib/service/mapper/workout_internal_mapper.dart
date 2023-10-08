@@ -10,9 +10,9 @@ class WorkoutInternalDataMapper {
         .toList();
   }
 
-  WorkoutStep toWorkoutStep(ChangeWorkoutStepDto step, int stepIndex) {
+  WorkoutStep toWorkoutStep(ChangeWorkoutStepDto step, int stepNumber) {
     return WorkoutStep(
-        stepNumber: stepIndex,
+        stepNumber: stepNumber,
         stepName: step.stepName!,
         details: step.details!,
         workoutType: step.workoutType!,
