@@ -7,11 +7,16 @@ import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
 class WorkoutStepDetailsScreen extends StatefulWidget {
-  const WorkoutStepDetailsScreen(
-      {super.key, required this.step, required this.workoutId});
+  const WorkoutStepDetailsScreen({
+    super.key,
+    required this.step,
+    required this.workoutId,
+    required this.placeInList,
+  });
 
   final WorkoutStep step;
   final int workoutId;
+  final int placeInList;
 
   @override
   State<WorkoutStepDetailsScreen> createState() =>
@@ -86,7 +91,9 @@ class _WorkoutStepDetailsScreenState extends State<WorkoutStepDetailsScreen> {
               Expanded(
                 child: InformationTag(
                   child: Text(
-                    stepData.details,
+                    stepData.details.isEmpty
+                        ? "No description added for this step."
+                        : stepData.details,
                     style: const TextStyle(
                       fontSize: 15,
                       fontStyle: FontStyle.italic,
@@ -114,7 +121,7 @@ class _WorkoutStepDetailsScreenState extends State<WorkoutStepDetailsScreen> {
 
           // Step number
           renderDetail(
-            title: '${stepData.stepNumber}. step',
+            title: '${widget.placeInList}. step',
             icon: Icons.grid_3x3_outlined,
           ),
           // Step type
@@ -147,10 +154,7 @@ class _WorkoutStepDetailsScreenState extends State<WorkoutStepDetailsScreen> {
               height: 10,
             ),
             // Description
-            Visibility(
-              visible: stepData.details != null && stepData.details.isNotEmpty,
-              child: renderDescription(),
-            ),
+            renderDescription(),
           ],
         ),
       ),

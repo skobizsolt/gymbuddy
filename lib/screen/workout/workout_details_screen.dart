@@ -5,7 +5,6 @@ import 'package:gymbuddy/components/custom_modals.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
@@ -53,22 +52,16 @@ class WorkoutDetailsScreen extends ConsumerWidget {
         .whenComplete(() => Navigator.of(context).pop());
   }
 
-  addStep(
-      {required BuildContext context,
-      required WidgetRef ref,
-      required CrudType type,
-      required Workout workout}) async {
-    final ChangeWorkoutStepDto? newStep = await Navigator.of(context).push(
+  addStep({
+    required BuildContext context,
+    required CrudType type,
+  }) async {
+    await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => WorkoutStepManager(type: type),
+        builder: (context) =>
+            WorkoutStepManager(workoutId: workoutId, type: type),
       ),
     );
-    if (newStep == null) {
-      return;
-    }
-    await ref
-        .read(workoutStepStateProvider.notifier)
-        .createStep(context, workout.workoutId, newStep);
   }
 
   @override
@@ -291,11 +284,8 @@ class WorkoutDetailsScreen extends ConsumerWidget {
                 // Add new step
                 isSelfRecorce
                     ? InkWell(
-                        onTap: () => addStep(
-                            context: context,
-                            ref: ref,
-                            type: CrudType.add,
-                            workout: workout),
+                        onTap: () =>
+                            addStep(context: context, type: CrudType.add),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(24),
                           child: Container(

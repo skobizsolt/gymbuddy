@@ -21,34 +21,34 @@ class StepsPanelList extends ConsumerWidget {
   final bool isAuthEnabled;
   final bool isOwnResource;
 
-  Future<void> openDetails(BuildContext context, WorkoutStep step) async {
+  Future<void> openDetails(
+      BuildContext context, WorkoutStep step, int placeInList) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WorkoutStepDetailsScreen(
           step: step,
           workoutId: workoutId,
+          placeInList: placeInList,
         ),
       ),
     );
   }
 
-  editStep(BuildContext context, WidgetRef ref, WorkoutStep step) async {
-    await Navigator.of(context)
-        .push(
-          MaterialPageRoute(
-            builder: (context) => WorkoutStepManager(
-              type: CrudType.edit,
-              workoutStep: step,
-            ),
-          ),
-        )
-        .then(
-          (value) => ref.read(workoutStepStateProvider.notifier).editStep(
-              context: context,
-              workoutId: workoutId,
-              stepNumber: step.stepNumber,
-              editedStep: value),
-        );
+  editStep(
+    BuildContext context,
+    WidgetRef ref,
+    WorkoutStep step,
+  ) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => WorkoutStepManager(
+          workoutId: workoutId,
+          type: CrudType.edit,
+          workoutStep: step,
+          stepNumber: step.stepNumber,
+        ),
+      ),
+    );
   }
 
   deleteStep(
@@ -68,6 +68,9 @@ class StepsPanelList extends ConsumerWidget {
     }
 
     List<WorkoutStep> workoutSteps = stepsRef.value!;
+    workoutSteps.sort(
+      (a, b) => a.stepNumber.compareTo(b.stepNumber),
+    );
     // Notify the user if no steps added yet
     if (workoutSteps.isEmpty) {
       return const Row(
@@ -99,21 +102,26 @@ class StepsPanelList extends ConsumerWidget {
                   key: UniqueKey(),
                   onDismissed: (direction) =>
                       deleteStep(context, ref, workoutSteps[index]),
-                  child: _renderStepCard(context, ref, workoutSteps[index]),
+                  child:
+                      _renderStepCard(context, ref, workoutSteps[index], index),
                 )
-              : _renderStepCard(context, ref, workoutSteps[index]);
+              : _renderStepCard(context, ref, workoutSteps[index], index);
         },
       ),
     );
   }
 
   Widget _renderStepCard(
-      BuildContext context, WidgetRef ref, WorkoutStep step) {
+    BuildContext context,
+    WidgetRef ref,
+    WorkoutStep step,
+    int index,
+  ) {
     return Card(
       child: ListTile(
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
-        onTap: () => openDetails(context, step),
+        onTap: () => openDetails(context, step, index + 1),
         title: Text(step.stepName),
         subtitle: Text(
           '${FormatUtils.toCapitalized(step.workoutType.name)} based step\n' +

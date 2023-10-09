@@ -1,4 +1,6 @@
+import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/crud/form_category.dart';
 import 'package:gymbuddy/components/inputs/default_text_form_field.dart';
 import 'package:gymbuddy/components/inputs/multiline_text_form_field.dart';
@@ -6,31 +8,76 @@ import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
-import 'package:gymbuddy/service/validators.dart';
+import 'package:gymbuddy/widgets/utils/save_icon.dart';
 
-class WorkoutStepManager extends StatefulWidget {
-  WorkoutStepManager({super.key, required this.type, this.workoutStep});
+class WorkoutStepManager extends ConsumerStatefulWidget {
+  WorkoutStepManager(
+      {super.key,
+      required this.type,
+      required this.workoutId,
+      this.workoutStep,
+      this.stepNumber});
 
   final CrudType type;
+  final int workoutId;
   final WorkoutStep? workoutStep;
+  final int? stepNumber;
 
   @override
-  State<WorkoutStepManager> createState() => _WorkoutManagerState();
+  ConsumerState<WorkoutStepManager> createState() => _WorkoutManagerState();
 }
 
-class _WorkoutManagerState extends State<WorkoutStepManager> {
+class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
   final ChangeWorkoutStepDto _step = ChangeWorkoutStepDto();
   final _formKey = GlobalKey<FormState>();
+  bool _isSaving = false;
 
-  _saveForm() {
+  int? get currentEstimatedTime {
+    return CrudType.edit == widget.type
+        ? widget.workoutStep!.estimatedTime
+        : _step.estimatedTime;
+  }
+
+  @override
+  initState() {
+    super.initState();
+    _step.estimatedTime = currentEstimatedTime;
+  }
+
+  _saveForm() async {
     var isValid = _formKey.currentState!.validate();
     if (!isValid) {
       return;
     }
     _formKey.currentState!.save();
-    Navigator.of(context).pop(_step);
+    setState(() {
+      _isSaving = true;
+    });
+    saveOperation();
+
+    Navigator.of(context).pop();
+  }
+
+  void saveOperation() {
+    switch (widget.type) {
+      case CrudType.edit:
+        ref.read(workoutStepStateProvider.notifier).editStep(
+            context: context,
+            workoutId: widget.workoutId,
+            stepNumber: widget.stepNumber!,
+            editedStep: _step);
+        break;
+      case CrudType.add:
+        ref
+            .read(workoutStepStateProvider.notifier)
+            .createStep(context, widget.workoutId, _step);
+        break;
+      default:
+        break;
+    }
   }
 
   @override
@@ -85,17 +132,7 @@ class _WorkoutManagerState extends State<WorkoutStepManager> {
                   FormCategory(
                     title: "Details about this step",
                     children: [
-                      DefaultTextFormField(
-                        hintText: "Estimated time in seconds",
-                        initialValue: CrudType.edit == widget.type
-                            ? widget.workoutStep!.estimatedTime.toString()
-                            : "0",
-                        keyboardType: TextInputType.number,
-                        validator: (value) =>
-                            InputValidator().validateNumber(value),
-                        onSaved: (value) =>
-                            _step.estimatedTime = int.tryParse(value!),
-                      ),
+                      _buildTimePicker(),
                       _buildWorkoutStepTypeList(),
                     ],
                   ),
@@ -133,13 +170,9 @@ class _WorkoutManagerState extends State<WorkoutStepManager> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
+        floatingActionButton: SaveButton(
           onPressed: _saveForm,
-          icon: const Icon(
-            Icons.save,
-          ),
-          backgroundColor: Theme.of(context).primaryColorDark,
-          label: const Text("Save"),
+          isSaving: _isSaving,
         ),
       ),
     );
@@ -173,5 +206,59 @@ class _WorkoutManagerState extends State<WorkoutStepManager> {
         ),
       ),
     );
+  }
+
+  _buildTimePicker() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: RichText(
+              // Controls visual overflow
+              overflow: TextOverflow.clip,
+
+              // Whether the text should break at soft line breaks
+              softWrap: true,
+
+              // The number of font pixels for each logical pixel
+              textScaleFactor: 1,
+              text: TextSpan(
+                style: Theme.of(context).textTheme.bodyLarge,
+                children: [
+                  TextSpan(
+                      text: 'Estimated time:\n',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          )),
+                  TextSpan(
+                    text: FormatUtils.toTimeString(
+                        Duration(seconds: _step.estimatedTime ?? 0)),
+                    style: Theme.of(context).textTheme.bodyMedium!,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          ElevatedButton(
+              onPressed: () => _selectTime(context),
+              child: const Text("Select time")),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final pickedDuration = await showDurationPicker(
+      context: context,
+      initialTime: Duration(seconds: _step.estimatedTime ?? 30),
+      baseUnit: BaseUnit.second,
+    );
+    if (pickedDuration != null) {
+      setState(() {
+        _step.estimatedTime = pickedDuration.inSeconds;
+      });
+    }
   }
 }

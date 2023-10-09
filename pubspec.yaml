@@ -49,6 +49,7 @@ dependencies:
   firebase_messaging: ^14.6.7
   chopper: ^6.1.1
   json_annotation: ^4.8.0
+  duration_picker: ^1.1.1
 
 dev_dependencies:
   flutter_test:
