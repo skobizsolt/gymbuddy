@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_modals.dart';
+import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/workout.dart';
@@ -45,11 +46,19 @@ class WorkoutDetailsScreen extends ConsumerWidget {
 
   deleteWorkout(BuildContext context, WidgetRef ref, Workout workout) {
     Navigator.of(context).pop();
-    ref
-        .read(workoutStateProvider.notifier)
-        .deleteWorkout(context, workout.workoutId)
-        .then((value) => ref.invalidate(workoutStateProvider))
-        .whenComplete(() => Navigator.of(context).pop());
+    try {
+      ref
+          .read(workoutStateProvider.notifier)
+          .deleteWorkout(workout.workoutId)
+          .then((value) => ref.invalidate(workoutStateProvider))
+          .whenComplete(() {
+        showSucessSnackBar(context, "Workout deleted successfully!");
+        Navigator.of(context).pop();
+      });
+    } on Exception {
+      showErrorSnackBar(
+          context, "Failed to delete this workout, please try again later!");
+    }
   }
 
   addStep({
@@ -72,10 +81,24 @@ class WorkoutDetailsScreen extends ConsumerWidget {
 
     var workoutRef = ref.watch(workoutByIdProvider(workoutId));
     var stepsRef = ref.watch(workoutStepProvider(workoutId));
-    if (!(workoutRef.hasValue && stepsRef.hasValue)) {
-      return const Center(
-        child: CircularProgressIndicator(),
+
+    // If error, pop screen
+    if (workoutRef.hasError || stepsRef.hasError) {
+      showErrorSnackBar(context, "Error during retrieving data");
+      Navigator.of(context).pop();
+    }
+
+    if (workoutRef.isLoading && stepsRef.isLoading) {
+      return Scaffold(
+        backgroundColor: primaryColor,
+        body: Center(
+          child: CircularProgressIndicator(color: onPrimaryContainer),
+        ),
       );
+    }
+
+    if (!(workoutRef.hasValue && stepsRef.hasValue)) {
+      _renderNoContentFound(primaryColor, onPrimaryContainer, ref);
     }
 
     Workout workout = workoutRef.value!;
@@ -84,7 +107,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     final estimatedTime = calculateEstimatedTime(steps);
 
     // Renders app bar buttons
-    Widget renderAppBarButtons(int totalSteps) {
+    Widget _renderAppBarButtons(int totalSteps) {
       // Delete Button
       return isSelfRecorce
           ? IconButton(
@@ -103,7 +126,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     }
 
     // Renders the Workouts name
-    Widget renderTitle() {
+    Widget _renderTitle() {
       return Row(
         children: [
           Expanded(
@@ -121,7 +144,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     }
 
     // Renders the total workout time and steps
-    Widget renderDetail({
+    Widget _renderDetail({
       required final String title,
       required final IconData icon,
     }) {
@@ -149,7 +172,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     }
 
     // Renders the type and difficulty and other future tags
-    Widget renderTags() {
+    Widget _renderTags() {
       var tags = [
         InformationTag(
           child: Text(
@@ -191,7 +214,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     }
 
     // Renders the deatils if added
-    Widget renderDescription() {
+    Widget _renderDescription() {
       if (workout.description == null || workout.description!.isEmpty) {
         return const SizedBox();
       }
@@ -223,21 +246,21 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     return DribbleLayout(
       actions: [
         // Delete button
-        renderAppBarButtons(steps.length),
+        _renderAppBarButtons(steps.length),
       ],
       headerContent: Column(
         children: [
           // Title
-          renderTitle(),
+          _renderTitle(),
 
           // Time to complete
-          renderDetail(
+          _renderDetail(
             title: estimatedTime,
             icon: Icons.access_time_rounded,
           ),
 
           // Steps
-          renderDetail(
+          _renderDetail(
               title: '${steps.length} Steps', icon: Ionicons.footsteps),
 
           const SizedBox(
@@ -261,13 +284,13 @@ class WorkoutDetailsScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Tags
-            renderTags(),
+            _renderTags(),
             const SizedBox(
               height: 20,
             ),
 
             // Description
-            renderDescription(),
+            _renderDescription(),
 
             // Steps
             Row(
@@ -340,6 +363,36 @@ class WorkoutDetailsScreen extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  _renderNoContentFound(
+      Color primaryColor, Color onPrimaryContainer, WidgetRef ref) {
+    return Scaffold(
+      backgroundColor: primaryColor,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return RefreshIndicator(
+            onRefresh: () async =>
+                ref.invalidate(workoutByIdProvider(workoutId)),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Flexible(
+                  child: Text(
+                    "Failed to open this workout! Scroll down to refresh!",
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayLarge!
+                        .copyWith(color: onPrimaryContainer),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

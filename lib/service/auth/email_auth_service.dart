@@ -44,7 +44,7 @@ class AuthService extends StateNotifier<UserCredential?> {
             .whenComplete(() => FcmService().addTokenToUser());
       }
     } on FirebaseAuthException catch (e) {
-      KeyboardService().closeKeyboard();
+      KeyboardService.closeKeyboard();
       // User not found
       if (e.code == 'invalid-email' || e.code == 'user-not-found') {
         showErrorSnackBar(context, 'Incorrect email');

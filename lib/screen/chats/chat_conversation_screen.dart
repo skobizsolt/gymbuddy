@@ -56,7 +56,7 @@ class ConversationScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final _userData = ref.watch(userProvider).value;
     return GestureDetector(
-      onTap: () => KeyboardService().unFocusKeyboard(context),
+      onTap: KeyboardService.closeKeyboard,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
@@ -116,7 +116,7 @@ class ConversationScreen extends ConsumerWidget {
                     sendMessage(_userData);
                   }
                   _chatController.clear();
-                  KeyboardService().closeKeyboard();
+                  KeyboardService.closeKeyboard();
                 },
                 icon: const Icon(
                   Icons.send,

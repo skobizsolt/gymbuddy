@@ -12,9 +12,20 @@ class WorkoutByCategoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final data = ref.watch(workoutsByCategoryProvider(category));
-    return WorkoutsScreen(
-        title: "Category - ${FormatUtils.toCapitalized(category.name)}",
-        workoutsRef: data);
+    var data = ref.watch(workoutsByCategoryProvider(category));
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Category - ${FormatUtils.toCapitalized(category.name)}",
+        ),
+      ),
+      body: RefreshIndicator(
+          onRefresh: () => _refresh(ref, data),
+          child: WorkoutsScreen(workoutsRef: data)),
+    );
+  }
+
+  _refresh(WidgetRef ref, AsyncValue<List<Workout>> data) async {
+    data = await ref.refresh(workoutsByCategoryProvider(category));
   }
 }

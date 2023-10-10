@@ -51,7 +51,7 @@ class _TabsScreenState extends State<TabsScreen> {
     final Screen activeScreen = screens[_currentIndex];
 
     return GestureDetector(
-      onTap: () => KeyboardService().closeKeyboard(),
+      onTap: () => KeyboardService.closeKeyboard(),
       child: Scaffold(
         appBar: activeScreen.appBar,
         body: activeScreen.body,

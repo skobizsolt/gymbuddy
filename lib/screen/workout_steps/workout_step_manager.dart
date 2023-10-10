@@ -2,6 +2,7 @@ import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/crud/form_category.dart';
+import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/components/inputs/default_text_form_field.dart';
 import 'package:gymbuddy/components/inputs/multiline_text_form_field.dart';
 import 'package:gymbuddy/global/global_variables.dart';
@@ -56,6 +57,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
     setState(() {
       _isSaving = true;
     });
+    KeyboardService.closeKeyboard();
     saveOperation();
 
     Navigator.of(context).pop();
@@ -64,16 +66,25 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
   void saveOperation() {
     switch (widget.type) {
       case CrudType.edit:
-        ref.read(workoutStepStateProvider.notifier).editStep(
-            context: context,
-            workoutId: widget.workoutId,
-            stepNumber: widget.stepNumber!,
-            editedStep: _step);
+        try {
+          ref.read(workoutStepStateProvider.notifier).editStep(
+              workoutId: widget.workoutId,
+              stepNumber: widget.stepNumber!,
+              editedStep: _step);
+        } on Exception {
+          showErrorSnackBar(
+              context, "Failed to save changes, please try again later!");
+        }
         break;
       case CrudType.add:
-        ref
-            .read(workoutStepStateProvider.notifier)
-            .createStep(context, widget.workoutId, _step);
+        try {
+          ref
+              .read(workoutStepStateProvider.notifier)
+              .createStep(widget.workoutId, _step);
+        } on Exception {
+          showErrorSnackBar(
+              context, "Failed to add this step, please try again later!");
+        }
         break;
       default:
         break;
@@ -83,9 +94,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        KeyboardService().closeKeyboard();
-      },
+      onTap: KeyboardService.closeKeyboard,
       child: Scaffold(
         appBar: AppBar(
           title: Text(

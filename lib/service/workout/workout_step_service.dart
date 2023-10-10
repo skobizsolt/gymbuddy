@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout/change_workout_step.dart';
@@ -17,7 +16,9 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
   Future<List<WorkoutStep>> getSteps(int workoutId) async {
     var response = await _api.workoutsWorkoutIdStepsGet(workoutId: workoutId);
 
-    if (!response.isSuccessful || response.body == null) {
+    ResponseValidator.validateResponse(response);
+
+    if (response.body == null) {
       state = [];
       return state;
     }
@@ -29,7 +30,6 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
   }
 
   Future<void> createStep(
-    BuildContext context,
     int workoutId,
     ChangeWorkoutStepDto? newStep,
   ) async {
@@ -42,16 +42,12 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
       body: ChangeWorkoutStepRequest.fromJson(newStep.toMap()),
     );
 
-    ResponseValidator.validateResponse(response, context);
+    ResponseValidator.validateResponse(response);
 
     state = [...state, _workoutMapper.toWorkoutStep(response.body!)];
-
-    showSucessSnackBar(
-        context, "New step (${response.body!.stepNumber}. step) added!");
   }
 
   Future<void> editStep({
-    required BuildContext context,
     required int workoutId,
     required int stepNumber,
     required ChangeWorkoutStepDto? editedStep,
@@ -66,13 +62,10 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
       body: ChangeWorkoutStepRequest.fromJson(editedStep.toMap()),
     );
 
-    ResponseValidator.validateResponse(response, context);
+    ResponseValidator.validateResponse(response);
 
     state = _editWorkoutStepState(
         WorkoutModelMapper().toWorkoutStep(response.body!));
-
-    showSucessSnackBar(
-        context, "Training ${response.body!.stepName} changed successfully!");
   }
 
   Future<void> deleteStep(
@@ -80,7 +73,7 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
     final response = await _api.workoutsWorkoutIdStepsStepNumberDelete(
         workoutId: workoutId, stepNumber: stepNumber);
 
-    ResponseValidator.validateResponse(response, context);
+    ResponseValidator.validateResponse(response);
 
     state = [...state.where((element) => element.stepNumber != stepNumber)];
   }

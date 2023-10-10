@@ -11,13 +11,13 @@ class UserService {
       Navigator.pop(context);
       showSucessSnackBar(context, 'Password reset email sent!');
     } on FirebaseAuthException catch (e) {
-      KeyboardService().closeKeyboard();
+      KeyboardService.closeKeyboard();
       showErrorSnackBar(context, e.message.toString());
     }
   }
 
   void changePassword(BuildContext context, ChangePasswordDto passwords) async {
-    KeyboardService().closeKeyboard();
+    KeyboardService.closeKeyboard();
     if (!_isValidPasswords(context, passwords)) {
       return;
     }

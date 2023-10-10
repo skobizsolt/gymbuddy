@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/crud/form_category.dart';
+import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/components/inputs/default_text_form_field.dart';
 import 'package:gymbuddy/components/inputs/multiline_text_form_field.dart';
 import 'package:gymbuddy/global/global_variables.dart';
@@ -8,6 +9,7 @@ import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout/change_workout.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
+import 'package:gymbuddy/screen/workout/workout_details_screen.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 
@@ -33,25 +35,57 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
       return;
     }
     _formkey.currentState!.save();
-    if (CrudType.add == widget.type) {
-      await ref
-          .read(workoutStateProvider.notifier)
-          .createWorkout(context, _workout);
-    }
-    if (CrudType.edit == widget.type) {
-      await ref
-          .read(workoutStateProvider.notifier)
-          .editWorkout(context, widget.workout!.workoutId, _workout)
-          .then((value) => Navigator.of(context).pop());
+    KeyboardService.closeKeyboard();
+    performOperation();
+  }
+
+  void performOperation() async {
+    switch (widget.type) {
+      case CrudType.add:
+        try {
+          await ref
+              .read(workoutStateProvider.notifier)
+              .createWorkout(_workout)
+              .then(
+                (value) async => await Navigator.of(context)
+                    .push(MaterialPageRoute(
+                      builder: (context) => WorkoutDetailsScreen(
+                        workoutId: value.workoutId!,
+                      ),
+                    ))
+                    .whenComplete(
+                      () => Navigator.of(context).pop(),
+                    ),
+              );
+        } on Exception {
+          if (mounted) {
+            showErrorSnackBar(context,
+                "Failed to create this workout, please try again later!");
+          }
+        }
+        break;
+      case CrudType.edit:
+        try {
+          await ref
+              .read(workoutStateProvider.notifier)
+              .editWorkout(widget.workout!.workoutId, _workout)
+              .then((value) => Navigator.of(context).pop());
+        } on Exception {
+          if (mounted) {
+            showErrorSnackBar(
+                context, "Failed to save changes, please try again later!");
+          }
+        }
+        break;
+      default:
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        KeyboardService().closeKeyboard();
-      },
+      onTap: KeyboardService.closeKeyboard,
       child: Scaffold(
         appBar: AppBar(
           title: Text("${FormatUtils.toCapitalized(widget.type.name)} workout"),
