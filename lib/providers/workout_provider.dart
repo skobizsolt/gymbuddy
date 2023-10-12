@@ -15,33 +15,34 @@ FutureProvider<List<Workout>> workoutsProvider = FutureProvider((ref) {
 });
 
 var workoutsByCategoryProvider =
-    FutureProvider.family<List<Workout>, WorkoutCategory>(
+    FutureProvider.family<List<Workout>?, WorkoutCategory>(
   (ref, category) {
-    return ref
-        .watch(workoutsProvider)
-        .value!
-        .where((element) => element.category == category)
-        .toList();
+    var workouts = ref.watch(workoutsProvider).value;
+    return workouts == null
+        ? []
+        : workouts.where((element) => element.category == category).toList();
   },
 );
 
-var workoutsByUserProvider = FutureProvider<List<Workout>>(
+var workoutsByUserProvider = FutureProvider<List<Workout>?>(
   (ref) {
-    return ref
-        .watch(workoutsProvider)
-        .value!
-        .where((element) =>
-            element.userId == FirebaseAuth.instance.currentUser!.uid)
-        .toList();
+    var workouts = ref.watch(workoutsProvider).value;
+    return workouts == null
+        ? []
+        : workouts
+            .where((element) =>
+                element.userId == FirebaseAuth.instance.currentUser!.uid)
+            .toList();
   },
 );
 
 var workoutByIdProvider = FutureProvider.family<Workout?, int>(
   (ref, workoutId) {
-    return ref
-        .watch(workoutsProvider)
-        .value!
-        .firstWhere((element) => element.workoutId == workoutId, orElse: null);
+    var workouts = ref.watch(workoutsProvider).value;
+    return workouts == null
+        ? null
+        : workouts.firstWhere((element) => element.workoutId == workoutId,
+            orElse: null);
   },
 );
 

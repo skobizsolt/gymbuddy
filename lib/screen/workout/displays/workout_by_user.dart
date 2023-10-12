@@ -22,7 +22,7 @@ class WorkoutsByUser extends ConsumerWidget {
     );
   }
 
-  _refresh(WidgetRef ref, AsyncValue<List<Workout>> data) async {
+  _refresh(WidgetRef ref, AsyncValue<List<Workout>?> data) async {
     data = ref.refresh(workoutsByUserProvider);
   }
 }

@@ -39,7 +39,7 @@ class _ChangeProfileContentState
         .whenComplete(
       () {
         Navigator.of(context).pop();
-        showSucessSnackBar(context, 'Your data has updated!');
+        showSuccessSnackBar(context, 'Your data has updated!');
       },
     );
   }

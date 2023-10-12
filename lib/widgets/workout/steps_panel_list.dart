@@ -9,7 +9,7 @@ import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
-class StepsPanelList extends ConsumerWidget {
+class StepsPanelList extends ConsumerStatefulWidget {
   const StepsPanelList({
     super.key,
     required this.workoutId,
@@ -21,13 +21,18 @@ class StepsPanelList extends ConsumerWidget {
   final bool isAuthEnabled;
   final bool isOwnResource;
 
+  @override
+  ConsumerState<StepsPanelList> createState() => _StepsPanelListState();
+}
+
+class _StepsPanelListState extends ConsumerState<StepsPanelList> {
   Future<void> openDetails(
       BuildContext context, WorkoutStep step, int placeInList) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WorkoutStepDetailsScreen(
           step: step,
-          workoutId: workoutId,
+          workoutId: widget.workoutId,
           placeInList: placeInList,
         ),
       ),
@@ -42,7 +47,7 @@ class StepsPanelList extends ConsumerWidget {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WorkoutStepManager(
-          workoutId: workoutId,
+          workoutId: widget.workoutId,
           type: CrudType.edit,
           workoutStep: step,
           stepNumber: step.stepNumber,
@@ -51,18 +56,25 @@ class StepsPanelList extends ConsumerWidget {
     );
   }
 
-  deleteStep(
-      BuildContext context, WidgetRef ref, final WorkoutStep step) async {
-    await ref
-        .read(workoutStepStateProvider.notifier)
-        .deleteStep(context, workoutId, step.stepNumber)
-        .whenComplete(() => showSucessSnackBar(context,
-            'Workout step "${step.stepName}" has been deleted successfully!'));
+  deleteStep(BuildContext context, WidgetRef ref, final List<WorkoutStep> steps,
+      int index) async {
+    final deletedStep = steps[index];
+    try {
+      await ref
+          .read(workoutStepStateProvider.notifier)
+          .deleteStep(context, widget.workoutId, deletedStep.stepNumber)
+          .then((value) => showSuccessSnackBar(context,
+              'Workout step "${deletedStep.stepName}" has been deleted successfully!'));
+    } on Exception {
+      showErrorSnackBar(context,
+          "Error happened during step deletion, please try again later!");
+      setState(() {});
+    }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var stepsRef = ref.watch(workoutStepProvider(workoutId));
+  Widget build(BuildContext context) {
+    var stepsRef = ref.watch(workoutStepProvider(widget.workoutId));
     if (!stepsRef.hasValue) {
       return const SizedBox();
     }
@@ -91,22 +103,26 @@ class StepsPanelList extends ConsumerWidget {
       );
     }
 
-    return SingleChildScrollView(
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: workoutSteps.length,
-        itemBuilder: (context, index) {
-          return isAuthEnabled && isOwnResource
-              ? Dismissible(
-                  key: UniqueKey(),
-                  onDismissed: (direction) =>
-                      deleteStep(context, ref, workoutSteps[index]),
-                  child:
-                      _renderStepCard(context, ref, workoutSteps[index], index),
-                )
-              : _renderStepCard(context, ref, workoutSteps[index], index);
-        },
+    return RefreshIndicator(
+      onRefresh: () async =>
+          ref.invalidate(workoutStepProvider(widget.workoutId)),
+      child: SingleChildScrollView(
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: const BouncingScrollPhysics(),
+          itemCount: workoutSteps.length,
+          itemBuilder: (context, index) {
+            return widget.isAuthEnabled && widget.isOwnResource
+                ? Dismissible(
+                    key: UniqueKey(),
+                    onDismissed: (direction) =>
+                        deleteStep(context, ref, workoutSteps, index),
+                    child: _renderStepCard(
+                        context, ref, workoutSteps[index], index),
+                  )
+                : _renderStepCard(context, ref, workoutSteps[index], index);
+          },
+        ),
       ),
     );
   }
@@ -128,7 +144,7 @@ class StepsPanelList extends ConsumerWidget {
               '${FormatUtils.toTimeString(Duration(seconds: step.estimatedTime))}',
           style: Theme.of(context).listTileTheme.subtitleTextStyle,
         ),
-        trailing: isAuthEnabled && isOwnResource
+        trailing: widget.isAuthEnabled && widget.isOwnResource
             ? IconButton(
                 onPressed: () => editStep(context, ref, step),
                 icon: Icon(

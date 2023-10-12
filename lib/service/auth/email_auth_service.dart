@@ -69,6 +69,6 @@ class AuthService extends StateNotifier<UserCredential?> {
           (value) => FirebaseAuth.instance.signOut(),
         );
 
-    showSucessSnackBar(context, 'You\'ve logged out successfully! 👋');
+    showSuccessSnackBar(context, 'You\'ve logged out successfully! 👋');
   }
 }

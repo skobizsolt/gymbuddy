@@ -25,7 +25,7 @@ class WorkoutByCategoryScreen extends ConsumerWidget {
     );
   }
 
-  _refresh(WidgetRef ref, AsyncValue<List<Workout>> data) async {
+  _refresh(WidgetRef ref, AsyncValue<List<Workout>?> data) async {
     data = await ref.refresh(workoutsByCategoryProvider(category));
   }
 }

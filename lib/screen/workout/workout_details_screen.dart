@@ -44,15 +44,15 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     );
   }
 
-  deleteWorkout(BuildContext context, WidgetRef ref, Workout workout) {
+  deleteWorkout(BuildContext context, WidgetRef ref, Workout workout) async {
     Navigator.of(context).pop();
     try {
-      ref
+      await ref
           .read(workoutStateProvider.notifier)
           .deleteWorkout(workout.workoutId)
-          .then((value) => ref.invalidate(workoutStateProvider))
-          .whenComplete(() {
-        showSucessSnackBar(context, "Workout deleted successfully!");
+          .then((value) {
+        ref.invalidate(workoutStateProvider);
+        showSuccessSnackBar(context, "Workout deleted successfully!");
         Navigator.of(context).pop();
       });
     } on Exception {
@@ -82,13 +82,11 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     var workoutRef = ref.watch(workoutByIdProvider(workoutId));
     var stepsRef = ref.watch(workoutStepProvider(workoutId));
 
-    // If error, pop screen
-    if (workoutRef.hasError || stepsRef.hasError) {
-      showErrorSnackBar(context, "Error during retrieving data");
-      Navigator.of(context).pop();
-    }
-
-    if (workoutRef.isLoading && stepsRef.isLoading) {
+    if ((workoutRef.isLoading && stepsRef.isLoading) ||
+        workoutRef.hasError ||
+        stepsRef.hasError ||
+        !workoutRef.hasValue ||
+        workoutRef.value == null) {
       return Scaffold(
         backgroundColor: primaryColor,
         body: Center(
@@ -97,12 +95,8 @@ class WorkoutDetailsScreen extends ConsumerWidget {
       );
     }
 
-    if (!(workoutRef.hasValue && stepsRef.hasValue)) {
-      _renderNoContentFound(primaryColor, onPrimaryContainer, ref);
-    }
-
     Workout workout = workoutRef.value!;
-    final steps = stepsRef.value!;
+    final steps = stepsRef.value ?? [];
     final isSelfRecorce = isResourceOwnedByTheUser(workout);
     final estimatedTime = calculateEstimatedTime(steps);
 
@@ -363,36 +357,6 @@ class WorkoutDetailsScreen extends ConsumerWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  _renderNoContentFound(
-      Color primaryColor, Color onPrimaryContainer, WidgetRef ref) {
-    return Scaffold(
-      backgroundColor: primaryColor,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return RefreshIndicator(
-            onRefresh: () async =>
-                ref.invalidate(workoutByIdProvider(workoutId)),
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Flexible(
-                  child: Text(
-                    "Failed to open this workout! Scroll down to refresh!",
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayLarge!
-                        .copyWith(color: onPrimaryContainer),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
       ),
     );
   }

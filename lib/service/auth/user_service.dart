@@ -9,7 +9,7 @@ class UserService {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       Navigator.pop(context);
-      showSucessSnackBar(context, 'Password reset email sent!');
+      showSuccessSnackBar(context, 'Password reset email sent!');
     } on FirebaseAuthException catch (e) {
       KeyboardService.closeKeyboard();
       showErrorSnackBar(context, e.message.toString());
@@ -58,7 +58,7 @@ class UserService {
     return await currentUser
         .updatePassword(passwords.newPassword)
         .then((value) {
-      showSucessSnackBar(context, 'Password changed successfully!');
+      showSuccessSnackBar(context, 'Password changed successfully!');
       Navigator.of(context).pop();
     }).catchError((error) {
       showErrorSnackBar(context, 'Password change failed!');

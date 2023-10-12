@@ -12,6 +12,7 @@ import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workout_details_screen.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
+import 'package:gymbuddy/widgets/utils/save_icon.dart';
 
 class WorkoutManager extends ConsumerStatefulWidget {
   WorkoutManager({super.key, required this.type, this.workout});
@@ -28,6 +29,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
     steps: [],
   );
   final _formkey = GlobalKey<FormState>();
+  bool _isSaving = false;
 
   _saveForm() async {
     var isValid = _formkey.currentState!.validate();
@@ -35,28 +37,36 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
       return;
     }
     _formkey.currentState!.save();
+    setState(() {
+      _isSaving = true;
+    });
     KeyboardService.closeKeyboard();
-    performOperation();
+    await performOperation().whenComplete(
+      () => setState(() {
+        _isSaving = false;
+      }),
+    );
   }
 
-  void performOperation() async {
+  Future<void> performOperation() async {
     switch (widget.type) {
       case CrudType.add:
         try {
           await ref
               .read(workoutStateProvider.notifier)
               .createWorkout(_workout)
-              .then(
-                (value) async => await Navigator.of(context)
-                    .push(MaterialPageRoute(
-                      builder: (context) => WorkoutDetailsScreen(
-                        workoutId: value.workoutId!,
-                      ),
-                    ))
-                    .whenComplete(
-                      () => Navigator.of(context).pop(),
+              .then((value) async {
+            showSuccessSnackBar(context, "Workout ${value.title} created!");
+            await Navigator.of(context)
+                .push(
+                  MaterialPageRoute(
+                    builder: (context) => WorkoutDetailsScreen(
+                      workoutId: value.workoutId!,
                     ),
-              );
+                  ),
+                )
+                .then((value) => Navigator.of(context).pop());
+          });
         } on Exception {
           if (mounted) {
             showErrorSnackBar(context,
@@ -69,7 +79,12 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
           await ref
               .read(workoutStateProvider.notifier)
               .editWorkout(widget.workout!.workoutId, _workout)
-              .then((value) => Navigator.of(context).pop());
+              .then(
+            (value) {
+              showSuccessSnackBar(context, "Workout edited successfully!");
+              Navigator.of(context).pop();
+            },
+          );
         } on Exception {
           if (mounted) {
             showErrorSnackBar(
@@ -145,13 +160,9 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
+        floatingActionButton: SaveButton(
           onPressed: _saveForm,
-          icon: const Icon(
-            Icons.save,
-          ),
-          backgroundColor: Theme.of(context).primaryColorDark,
-          label: const Text("Save"),
+          isSaving: _isSaving,
         ),
       ),
     );

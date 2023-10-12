@@ -58,19 +58,28 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
       _isSaving = true;
     });
     KeyboardService.closeKeyboard();
-    saveOperation();
-
-    Navigator.of(context).pop();
+    await performOperation().whenComplete(
+      () {
+        setState(() {
+          _isSaving = false;
+        });
+      },
+    );
   }
 
-  void saveOperation() {
+  Future<void> performOperation() async {
     switch (widget.type) {
       case CrudType.edit:
         try {
-          ref.read(workoutStepStateProvider.notifier).editStep(
-              workoutId: widget.workoutId,
-              stepNumber: widget.stepNumber!,
-              editedStep: _step);
+          await ref
+              .read(workoutStepStateProvider.notifier)
+              .editStep(
+                  workoutId: widget.workoutId,
+                  stepNumber: widget.stepNumber!,
+                  editedStep: _step)
+              .then((value) =>
+                  showSuccessSnackBar(context, "Step edited successfully!"));
+          Navigator.of(context).pop();
         } on Exception {
           showErrorSnackBar(
               context, "Failed to save changes, please try again later!");
@@ -78,9 +87,11 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
         break;
       case CrudType.add:
         try {
-          ref
+          await ref
               .read(workoutStepStateProvider.notifier)
-              .createStep(widget.workoutId, _step);
+              .createStep(widget.workoutId, _step)
+              .then((value) => showSuccessSnackBar(context, "New step added!"));
+          Navigator.of(context).pop();
         } on Exception {
           showErrorSnackBar(
               context, "Failed to add this step, please try again later!");

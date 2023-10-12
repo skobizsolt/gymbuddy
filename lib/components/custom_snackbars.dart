@@ -5,7 +5,7 @@ void showErrorSnackBar(final BuildContext context, final String message) {
       backgroundColor: Theme.of(context).colorScheme.error);
 }
 
-void showSucessSnackBar(final BuildContext context, final String message) {
+void showSuccessSnackBar(final BuildContext context, final String message) {
   _showSnackbar(context, message,
       backgroundColor: const Color.fromARGB(255, 105, 201, 108));
 }

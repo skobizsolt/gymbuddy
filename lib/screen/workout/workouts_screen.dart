@@ -12,10 +12,11 @@ class WorkoutsScreen extends StatelessWidget {
     required this.workoutsRef,
   });
 
-  final AsyncValue<List<Workout>> workoutsRef;
+  final AsyncValue<List<Workout>?> workoutsRef;
 
   Widget _renderWorkouts({required List<Workout> workoutList}) {
     return ListView.builder(
+      shrinkWrap: true,
       itemCount: workoutList.length,
       itemBuilder: (context, index) {
         return WorkoutCard(workoutId: workoutList[index].workoutId);
@@ -28,6 +29,7 @@ class WorkoutsScreen extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
+          padding: const EdgeInsets.all(8.0),
           physics: const AlwaysScrollableScrollPhysics(),
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
@@ -50,7 +52,7 @@ class WorkoutsScreen extends StatelessWidget {
     if (workoutsRef.hasError) {
       return const NoContentText(
         title: "Failed to fetch data! 😞",
-        details: "Workout service currently unavailable",
+        details: "Workout service currently unavailable!",
       );
     }
     return workoutsRef.value!.isEmpty
@@ -86,14 +88,11 @@ class WorkoutsScreen extends StatelessWidget {
           )
         : Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             children: [
               const SizedBox(
                 height: 20,
               ),
-              Expanded(
-                child: _renderWorkouts(workoutList: workoutsRef.value!),
-              ),
+              _renderWorkouts(workoutList: workoutsRef.value!),
             ],
           );
   }
