@@ -46,62 +46,86 @@ abstract class TrainingApi extends ChopperService {
     return _$TrainingApi(newClient);
   }
 
-  ///
+  ///Gets a workout by it's id
+  ///@param Authorization
   ///@param workoutId
-  Future<chopper.Response<WorkoutResponse>> workoutsWorkoutIdGet(
-      {required int? workoutId}) {
+  Future<chopper.Response<WorkoutResponse>> workoutsWorkoutIdGet({
+    String? authorization,
+    required int? workoutId,
+  }) {
     generatedMapping.putIfAbsent(
         WorkoutResponse, () => WorkoutResponse.fromJsonFactory);
 
-    return _workoutsWorkoutIdGet(workoutId: workoutId);
+    return _workoutsWorkoutIdGet(
+        authorization: authorization?.toString(), workoutId: workoutId);
   }
 
-  ///
+  ///Gets a workout by it's id
+  ///@param Authorization
   ///@param workoutId
   @Get(path: '/workouts/{workoutId}')
-  Future<chopper.Response<WorkoutResponse>> _workoutsWorkoutIdGet(
-      {@Path('workoutId') required int? workoutId});
+  Future<chopper.Response<WorkoutResponse>> _workoutsWorkoutIdGet({
+    @Header('Authorization') String? authorization,
+    @Path('workoutId') required int? workoutId,
+  });
 
-  ///
+  ///Edits an existing workout
+  ///@param Authorization
   ///@param workoutId
   Future<chopper.Response<WorkoutResponse>> workoutsWorkoutIdPut({
+    String? authorization,
     required int? workoutId,
     required ChangeWorkoutRequest? body,
   }) {
     generatedMapping.putIfAbsent(
         WorkoutResponse, () => WorkoutResponse.fromJsonFactory);
 
-    return _workoutsWorkoutIdPut(workoutId: workoutId, body: body);
+    return _workoutsWorkoutIdPut(
+        authorization: authorization?.toString(),
+        workoutId: workoutId,
+        body: body);
   }
 
-  ///
+  ///Edits an existing workout
+  ///@param Authorization
   ///@param workoutId
   @Put(
     path: '/workouts/{workoutId}',
     optionalBody: true,
   )
   Future<chopper.Response<WorkoutResponse>> _workoutsWorkoutIdPut({
+    @Header('Authorization') String? authorization,
     @Path('workoutId') required int? workoutId,
     @Body() required ChangeWorkoutRequest? body,
   });
 
-  ///
+  ///Deletes the selected workout
+  ///@param Authorization
   ///@param workoutId
-  Future<chopper.Response> workoutsWorkoutIdDelete({required int? workoutId}) {
-    return _workoutsWorkoutIdDelete(workoutId: workoutId);
+  Future<chopper.Response> workoutsWorkoutIdDelete({
+    String? authorization,
+    required int? workoutId,
+  }) {
+    return _workoutsWorkoutIdDelete(
+        authorization: authorization?.toString(), workoutId: workoutId);
   }
 
-  ///
+  ///Deletes the selected workout
+  ///@param Authorization
   ///@param workoutId
   @Delete(path: '/workouts/{workoutId}')
-  Future<chopper.Response> _workoutsWorkoutIdDelete(
-      {@Path('workoutId') required int? workoutId});
+  Future<chopper.Response> _workoutsWorkoutIdDelete({
+    @Header('Authorization') String? authorization,
+    @Path('workoutId') required int? workoutId,
+  });
 
-  ///
+  ///Gets a step associated with the selected workout
+  ///@param Authorization
   ///@param workoutId
   ///@param stepNumber
   Future<chopper.Response<WorkoutStepResponse>>
       workoutsWorkoutIdStepsStepNumberGet({
+    String? authorization,
     required int? workoutId,
     required int? stepNumber,
   }) {
@@ -109,24 +133,30 @@ abstract class TrainingApi extends ChopperService {
         WorkoutStepResponse, () => WorkoutStepResponse.fromJsonFactory);
 
     return _workoutsWorkoutIdStepsStepNumberGet(
-        workoutId: workoutId, stepNumber: stepNumber);
+        authorization: authorization?.toString(),
+        workoutId: workoutId,
+        stepNumber: stepNumber);
   }
 
-  ///
+  ///Gets a step associated with the selected workout
+  ///@param Authorization
   ///@param workoutId
   ///@param stepNumber
   @Get(path: '/workouts/{workoutId}/steps/{stepNumber}')
   Future<chopper.Response<WorkoutStepResponse>>
       _workoutsWorkoutIdStepsStepNumberGet({
+    @Header('Authorization') String? authorization,
     @Path('workoutId') required int? workoutId,
     @Path('stepNumber') required int? stepNumber,
   });
 
-  ///
+  ///Edits an existing step
+  ///@param Authorization
   ///@param workoutId
   ///@param stepNumber
   Future<chopper.Response<WorkoutStepResponse>>
       workoutsWorkoutIdStepsStepNumberPut({
+    String? authorization,
     required int? workoutId,
     required int? stepNumber,
     required ChangeWorkoutStepRequest? body,
@@ -135,10 +165,14 @@ abstract class TrainingApi extends ChopperService {
         WorkoutStepResponse, () => WorkoutStepResponse.fromJsonFactory);
 
     return _workoutsWorkoutIdStepsStepNumberPut(
-        workoutId: workoutId, stepNumber: stepNumber, body: body);
+        authorization: authorization?.toString(),
+        workoutId: workoutId,
+        stepNumber: stepNumber,
+        body: body);
   }
 
-  ///
+  ///Edits an existing step
+  ///@param Authorization
   ///@param workoutId
   ///@param stepNumber
   @Put(
@@ -147,120 +181,160 @@ abstract class TrainingApi extends ChopperService {
   )
   Future<chopper.Response<WorkoutStepResponse>>
       _workoutsWorkoutIdStepsStepNumberPut({
+    @Header('Authorization') String? authorization,
     @Path('workoutId') required int? workoutId,
     @Path('stepNumber') required int? stepNumber,
     @Body() required ChangeWorkoutStepRequest? body,
   });
 
-  ///
+  ///Deletes a step from a workout
+  ///@param Authorization
   ///@param workoutId
   ///@param stepNumber
   Future<chopper.Response> workoutsWorkoutIdStepsStepNumberDelete({
+    String? authorization,
     required int? workoutId,
     required int? stepNumber,
   }) {
     return _workoutsWorkoutIdStepsStepNumberDelete(
-        workoutId: workoutId, stepNumber: stepNumber);
+        authorization: authorization?.toString(),
+        workoutId: workoutId,
+        stepNumber: stepNumber);
   }
 
-  ///
+  ///Deletes a step from a workout
+  ///@param Authorization
   ///@param workoutId
   ///@param stepNumber
   @Delete(path: '/workouts/{workoutId}/steps/{stepNumber}')
   Future<chopper.Response> _workoutsWorkoutIdStepsStepNumberDelete({
+    @Header('Authorization') String? authorization,
     @Path('workoutId') required int? workoutId,
     @Path('stepNumber') required int? stepNumber,
   });
 
-  ///
-  Future<chopper.Response<WorkoutListResponse>> workoutsGet() {
+  ///List all existing workouts
+  ///@param Authorization
+  Future<chopper.Response<WorkoutListResponse>> workoutsGet(
+      {String? authorization}) {
     generatedMapping.putIfAbsent(
         WorkoutListResponse, () => WorkoutListResponse.fromJsonFactory);
 
-    return _workoutsGet();
+    return _workoutsGet(authorization: authorization?.toString());
   }
 
-  ///
+  ///List all existing workouts
+  ///@param Authorization
   @Get(path: '/workouts')
-  Future<chopper.Response<WorkoutListResponse>> _workoutsGet();
+  Future<chopper.Response<WorkoutListResponse>> _workoutsGet(
+      {@Header('Authorization') String? authorization});
 
-  ///
+  ///Creates a new workout
+  ///@param Authorization
   ///@param userId
   Future<chopper.Response<WorkoutResponse>> workoutsPost({
+    String? authorization,
     required String? userId,
     required ChangeWorkoutRequest? body,
   }) {
     generatedMapping.putIfAbsent(
         WorkoutResponse, () => WorkoutResponse.fromJsonFactory);
 
-    return _workoutsPost(userId: userId, body: body);
+    return _workoutsPost(
+        authorization: authorization?.toString(), userId: userId, body: body);
   }
 
-  ///
+  ///Creates a new workout
+  ///@param Authorization
   ///@param userId
   @Post(
     path: '/workouts',
     optionalBody: true,
   )
   Future<chopper.Response<WorkoutResponse>> _workoutsPost({
+    @Header('Authorization') String? authorization,
     @Query('userId') required String? userId,
     @Body() required ChangeWorkoutRequest? body,
   });
 
-  ///
+  ///List all steps for a workout
+  ///@param Authorization
   ///@param workoutId
-  Future<chopper.Response<List<WorkoutStepResponse>>> workoutsWorkoutIdStepsGet(
-      {required int? workoutId}) {
+  Future<chopper.Response<List<WorkoutStepResponse>>>
+      workoutsWorkoutIdStepsGet({
+    String? authorization,
+    required int? workoutId,
+  }) {
     generatedMapping.putIfAbsent(
         WorkoutStepResponse, () => WorkoutStepResponse.fromJsonFactory);
 
-    return _workoutsWorkoutIdStepsGet(workoutId: workoutId);
+    return _workoutsWorkoutIdStepsGet(
+        authorization: authorization?.toString(), workoutId: workoutId);
   }
 
-  ///
+  ///List all steps for a workout
+  ///@param Authorization
   ///@param workoutId
   @Get(path: '/workouts/{workoutId}/steps')
   Future<chopper.Response<List<WorkoutStepResponse>>>
-      _workoutsWorkoutIdStepsGet({@Path('workoutId') required int? workoutId});
+      _workoutsWorkoutIdStepsGet({
+    @Header('Authorization') String? authorization,
+    @Path('workoutId') required int? workoutId,
+  });
 
-  ///
+  ///Creates a new step under the workout
+  ///@param Authorization
   ///@param workoutId
   Future<chopper.Response<WorkoutStepResponse>> workoutsWorkoutIdStepsPost({
+    String? authorization,
     required int? workoutId,
     required ChangeWorkoutStepRequest? body,
   }) {
     generatedMapping.putIfAbsent(
         WorkoutStepResponse, () => WorkoutStepResponse.fromJsonFactory);
 
-    return _workoutsWorkoutIdStepsPost(workoutId: workoutId, body: body);
+    return _workoutsWorkoutIdStepsPost(
+        authorization: authorization?.toString(),
+        workoutId: workoutId,
+        body: body);
   }
 
-  ///
+  ///Creates a new step under the workout
+  ///@param Authorization
   ///@param workoutId
   @Post(
     path: '/workouts/{workoutId}/steps',
     optionalBody: true,
   )
   Future<chopper.Response<WorkoutStepResponse>> _workoutsWorkoutIdStepsPost({
+    @Header('Authorization') String? authorization,
     @Path('workoutId') required int? workoutId,
     @Body() required ChangeWorkoutStepRequest? body,
   });
 
-  ///
+  ///Get total steps and estimated time for a workout
+  ///@param Authorization
   ///@param workoutId
-  Future<chopper.Response<WorkoutDetailsResponse>> workoutsWorkoutIdDetailsGet(
-      {required int? workoutId}) {
+  Future<chopper.Response<WorkoutDetailsResponse>> workoutsWorkoutIdDetailsGet({
+    String? authorization,
+    required int? workoutId,
+  }) {
     generatedMapping.putIfAbsent(
         WorkoutDetailsResponse, () => WorkoutDetailsResponse.fromJsonFactory);
 
-    return _workoutsWorkoutIdDetailsGet(workoutId: workoutId);
+    return _workoutsWorkoutIdDetailsGet(
+        authorization: authorization?.toString(), workoutId: workoutId);
   }
 
-  ///
+  ///Get total steps and estimated time for a workout
+  ///@param Authorization
   ///@param workoutId
   @Get(path: '/workouts/{workoutId}/details')
-  Future<chopper.Response<WorkoutDetailsResponse>> _workoutsWorkoutIdDetailsGet(
-      {@Path('workoutId') required int? workoutId});
+  Future<chopper.Response<WorkoutDetailsResponse>>
+      _workoutsWorkoutIdDetailsGet({
+    @Header('Authorization') String? authorization,
+    @Path('workoutId') required int? workoutId,
+  });
 }
 
 typedef $JsonFactory<T> = T Function(Map<String, dynamic> json);

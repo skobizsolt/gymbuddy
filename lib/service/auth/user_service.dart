@@ -5,6 +5,11 @@ import 'package:gymbuddy/models/auth/change_password_dto.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 
 class UserService {
+  static Future<String?> get firebaseUserJwtToken async {
+    var token = await FirebaseAuth.instance.currentUser!.getIdToken();
+    return "Bearer ${token}";
+  }
+
   passwordReset(final BuildContext context, final String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);

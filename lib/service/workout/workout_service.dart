@@ -4,6 +4,7 @@ import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout/change_workout.dart';
+import 'package:gymbuddy/service/auth/user_service.dart';
 import 'package:gymbuddy/service/mapper/workout_mapper.dart';
 import 'package:gymbuddy/service/util/response_validator.dart';
 
@@ -12,13 +13,18 @@ class WorkoutService extends StateNotifier<List<Workout>> {
 
   final _workoutMapper = WorkoutModelMapper();
   final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
+  var _jwt = UserService.firebaseUserJwtToken;
 
   Future<List<Workout>> getWorkouts() async {
     if (state.isNotEmpty) {
       return state;
     }
 
-    final response = await _api.workoutsGet();
+    final token = await _jwt;
+
+    final response = await _api.workoutsGet(
+      authorization: token,
+    );
 
     ResponseValidator.validateResponse(response);
 
@@ -34,8 +40,12 @@ class WorkoutService extends StateNotifier<List<Workout>> {
 
   Future<WorkoutResponse> createWorkout(ChangeWorkoutDto workout) async {
     var request = ChangeWorkoutRequest.fromJson(workout.toAddWorkoutMap());
+    final token = await _jwt;
     var response = await _api.workoutsPost(
-        userId: FirebaseAuth.instance.currentUser!.uid, body: request);
+      authorization: token,
+      userId: FirebaseAuth.instance.currentUser!.uid,
+      body: request,
+    );
 
     ResponseValidator.validateResponse(response);
 
@@ -47,7 +57,11 @@ class WorkoutService extends StateNotifier<List<Workout>> {
 
   Stream<WorkoutDetailsResponse> getGeneralStepDetails(
       final int workoutId) async* {
-    var response = await _api.workoutsWorkoutIdDetailsGet(workoutId: workoutId);
+    final token = await _jwt;
+    var response = await _api.workoutsWorkoutIdDetailsGet(
+      authorization: token,
+      workoutId: workoutId,
+    );
     yield response.body!;
   }
 
@@ -55,9 +69,12 @@ class WorkoutService extends StateNotifier<List<Workout>> {
     final int workoutId,
     final ChangeWorkoutDto workout,
   ) async {
+    final token = await _jwt;
     var response = await _api.workoutsWorkoutIdPut(
-        workoutId: workoutId,
-        body: ChangeWorkoutRequest.fromJson(workout.toEditWorkoutMap()));
+      authorization: token,
+      workoutId: workoutId,
+      body: ChangeWorkoutRequest.fromJson(workout.toEditWorkoutMap()),
+    );
 
     ResponseValidator.validateResponse(response);
 
@@ -71,7 +88,11 @@ class WorkoutService extends StateNotifier<List<Workout>> {
   }
 
   Future<void> deleteWorkout(int workoutId) async {
-    final response = await _api.workoutsWorkoutIdDelete(workoutId: workoutId);
+    final token = await _jwt;
+    final response = await _api.workoutsWorkoutIdDelete(
+      authorization: token,
+      workoutId: workoutId,
+    );
 
     ResponseValidator.validateResponse(response);
 

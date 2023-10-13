@@ -20,12 +20,8 @@ class WorkoutByCategoryScreen extends ConsumerWidget {
         ),
       ),
       body: RefreshIndicator(
-          onRefresh: () => _refresh(ref, data),
+          onRefresh: () async => ref.invalidate(workoutsProvider),
           child: WorkoutsScreen(workoutsRef: data)),
     );
-  }
-
-  _refresh(WidgetRef ref, AsyncValue<List<Workout>?> data) async {
-    data = await ref.refresh(workoutsByCategoryProvider(category));
   }
 }

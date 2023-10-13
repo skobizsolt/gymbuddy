@@ -16,6 +16,9 @@ class FormatUtils {
     if (duration.inMinutes > 0) {
       return '${timeBlocks[1]} $MINUTE_TAG, ${timeBlocks[2]} $SECOND_TAG';
     }
-    return '${timeBlocks[2]} $SECOND_TAG';
+    if (duration.inSeconds > 9) {
+      return '${timeBlocks[2]} $SECOND_TAG';
+    }
+    return '${duration.inSeconds} $SECOND_TAG';
   }
 }

@@ -4,6 +4,7 @@ import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/training_api.swagger.dart';
 import 'package:gymbuddy/models/workout/change_workout_step.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/service/auth/user_service.dart';
 import 'package:gymbuddy/service/mapper/workout_mapper.dart';
 import 'package:gymbuddy/service/util/response_validator.dart';
 
@@ -12,9 +13,14 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
 
   final _workoutMapper = WorkoutModelMapper();
   final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
+  var _jwt = UserService.firebaseUserJwtToken;
 
   Future<List<WorkoutStep>> getSteps(int workoutId) async {
-    var response = await _api.workoutsWorkoutIdStepsGet(workoutId: workoutId);
+    final token = await _jwt;
+    var response = await _api.workoutsWorkoutIdStepsGet(
+      authorization: token,
+      workoutId: workoutId,
+    );
 
     ResponseValidator.validateResponse(response);
 
@@ -37,7 +43,9 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
       return;
     }
 
+    final token = await _jwt;
     var response = await _api.workoutsWorkoutIdStepsPost(
+      authorization: token,
       workoutId: workoutId,
       body: ChangeWorkoutStepRequest.fromJson(newStep.toMap()),
     );
@@ -56,7 +64,9 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
       return;
     }
 
+    final token = await _jwt;
     var response = await _api.workoutsWorkoutIdStepsStepNumberPut(
+      authorization: token,
       workoutId: workoutId,
       stepNumber: stepNumber,
       body: ChangeWorkoutStepRequest.fromJson(editedStep.toMap()),
@@ -70,8 +80,12 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
 
   Future<void> deleteStep(
       BuildContext context, int workoutId, int stepNumber) async {
+    final token = await _jwt;
     final response = await _api.workoutsWorkoutIdStepsStepNumberDelete(
-        workoutId: workoutId, stepNumber: stepNumber);
+      authorization: token,
+      workoutId: workoutId,
+      stepNumber: stepNumber,
+    );
 
     ResponseValidator.validateResponse(response);
 

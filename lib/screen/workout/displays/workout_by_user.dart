@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workouts_screen.dart';
 
@@ -17,12 +16,8 @@ class WorkoutsByUser extends ConsumerWidget {
         ),
       ),
       body: RefreshIndicator(
-          onRefresh: () => _refresh(ref, data),
+          onRefresh: () async => ref.invalidate(workoutsProvider),
           child: WorkoutsScreen(workoutsRef: data)),
     );
-  }
-
-  _refresh(WidgetRef ref, AsyncValue<List<Workout>?> data) async {
-    data = ref.refresh(workoutsByUserProvider);
   }
 }

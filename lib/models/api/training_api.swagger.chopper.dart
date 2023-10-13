@@ -17,108 +17,148 @@ class _$TrainingApi extends TrainingApi {
   final definitionType = TrainingApi;
 
   @override
-  Future<Response<WorkoutResponse>> _workoutsWorkoutIdGet(
-      {required int? workoutId}) {
+  Future<Response<WorkoutResponse>> _workoutsWorkoutIdGet({
+    String? authorization,
+    required int? workoutId,
+  }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}');
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
+      headers: $headers,
     );
     return client.send<WorkoutResponse, WorkoutResponse>($request);
   }
 
   @override
   Future<Response<WorkoutResponse>> _workoutsWorkoutIdPut({
+    String? authorization,
     required int? workoutId,
     required ChangeWorkoutRequest? body,
   }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}');
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
     final $body = body;
     final Request $request = Request(
       'PUT',
       $url,
       client.baseUrl,
       body: $body,
+      headers: $headers,
     );
     return client.send<WorkoutResponse, WorkoutResponse>($request);
   }
 
   @override
-  Future<Response<dynamic>> _workoutsWorkoutIdDelete(
-      {required int? workoutId}) {
+  Future<Response<dynamic>> _workoutsWorkoutIdDelete({
+    String? authorization,
+    required int? workoutId,
+  }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}');
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
     final Request $request = Request(
       'DELETE',
       $url,
       client.baseUrl,
+      headers: $headers,
     );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<WorkoutStepResponse>> _workoutsWorkoutIdStepsStepNumberGet({
+    String? authorization,
     required int? workoutId,
     required int? stepNumber,
   }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}/steps/${stepNumber}');
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
+      headers: $headers,
     );
     return client.send<WorkoutStepResponse, WorkoutStepResponse>($request);
   }
 
   @override
   Future<Response<WorkoutStepResponse>> _workoutsWorkoutIdStepsStepNumberPut({
+    String? authorization,
     required int? workoutId,
     required int? stepNumber,
     required ChangeWorkoutStepRequest? body,
   }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}/steps/${stepNumber}');
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
     final $body = body;
     final Request $request = Request(
       'PUT',
       $url,
       client.baseUrl,
       body: $body,
+      headers: $headers,
     );
     return client.send<WorkoutStepResponse, WorkoutStepResponse>($request);
   }
 
   @override
   Future<Response<dynamic>> _workoutsWorkoutIdStepsStepNumberDelete({
+    String? authorization,
     required int? workoutId,
     required int? stepNumber,
   }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}/steps/${stepNumber}');
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
     final Request $request = Request(
       'DELETE',
       $url,
       client.baseUrl,
+      headers: $headers,
     );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<WorkoutListResponse>> _workoutsGet() {
+  Future<Response<WorkoutListResponse>> _workoutsGet({String? authorization}) {
     final Uri $url = Uri.parse('/workouts');
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
+      headers: $headers,
     );
     return client.send<WorkoutListResponse, WorkoutListResponse>($request);
   }
 
   @override
   Future<Response<WorkoutResponse>> _workoutsPost({
+    String? authorization,
     required String? userId,
     required ChangeWorkoutRequest? body,
   }) {
     final Uri $url = Uri.parse('/workouts');
     final Map<String, dynamic> $params = <String, dynamic>{'userId': userId};
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
     final $body = body;
     final Request $request = Request(
       'POST',
@@ -126,18 +166,25 @@ class _$TrainingApi extends TrainingApi {
       client.baseUrl,
       body: $body,
       parameters: $params,
+      headers: $headers,
     );
     return client.send<WorkoutResponse, WorkoutResponse>($request);
   }
 
   @override
-  Future<Response<List<WorkoutStepResponse>>> _workoutsWorkoutIdStepsGet(
-      {required int? workoutId}) {
+  Future<Response<List<WorkoutStepResponse>>> _workoutsWorkoutIdStepsGet({
+    String? authorization,
+    required int? workoutId,
+  }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}/steps');
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
+      headers: $headers,
     );
     return client
         .send<List<WorkoutStepResponse>, WorkoutStepResponse>($request);
@@ -145,28 +192,39 @@ class _$TrainingApi extends TrainingApi {
 
   @override
   Future<Response<WorkoutStepResponse>> _workoutsWorkoutIdStepsPost({
+    String? authorization,
     required int? workoutId,
     required ChangeWorkoutStepRequest? body,
   }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}/steps');
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
     final $body = body;
     final Request $request = Request(
       'POST',
       $url,
       client.baseUrl,
       body: $body,
+      headers: $headers,
     );
     return client.send<WorkoutStepResponse, WorkoutStepResponse>($request);
   }
 
   @override
-  Future<Response<WorkoutDetailsResponse>> _workoutsWorkoutIdDetailsGet(
-      {required int? workoutId}) {
+  Future<Response<WorkoutDetailsResponse>> _workoutsWorkoutIdDetailsGet({
+    String? authorization,
+    required int? workoutId,
+  }) {
     final Uri $url = Uri.parse('/workouts/${workoutId}/details');
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
+      headers: $headers,
     );
     return client
         .send<WorkoutDetailsResponse, WorkoutDetailsResponse>($request);

@@ -11,8 +11,14 @@ paths:
     get:
       tags:
         - workout-controller
+      summary: Gets a workout by it's id
       operationId: getWorkout
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
         - name: workoutId
           in: path
           required: true
@@ -26,11 +32,19 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutResponse'
+      security:
+        - token: []
     put:
       tags:
         - workout-controller
+      summary: Edits an existing workout
       operationId: editWorkout
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
         - name: workoutId
           in: path
           required: true
@@ -50,11 +64,19 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutResponse'
+      security:
+        - token: []
     delete:
       tags:
         - workout-controller
+      summary: Deletes the selected workout
       operationId: deleteWorkout
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
         - name: workoutId
           in: path
           required: true
@@ -64,12 +86,20 @@ paths:
       responses:
         '200':
           description: OK
+      security:
+        - token: []
   /workouts/{workoutId}/steps/{stepNumber}:
     get:
       tags:
         - workout-steps-controller
+      summary: Gets a step associated with the selected workout
       operationId: getStep
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
         - name: workoutId
           in: path
           required: true
@@ -89,11 +119,19 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutStepResponse'
+      security:
+        - token: []
     put:
       tags:
         - workout-steps-controller
+      summary: Edits an existing step
       operationId: editStep
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
         - name: workoutId
           in: path
           required: true
@@ -119,11 +157,19 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutStepResponse'
+      security:
+        - token: []
     delete:
       tags:
         - workout-steps-controller
+      summary: Deletes a step from a workout
       operationId: deleteStep
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
         - name: workoutId
           in: path
           required: true
@@ -139,11 +185,20 @@ paths:
       responses:
         '200':
           description: OK
+      security:
+        - token: []
   /workouts:
     get:
       tags:
         - workout-list-controller
+      summary: List all existing workouts
       operationId: getAllWorkouts
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -151,11 +206,19 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutListResponse'
+      security:
+        - token: []
     post:
       tags:
         - workout-controller
+      summary: Creates a new workout
       operationId: createWorkout
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
         - name: userId
           in: query
           required: true
@@ -174,12 +237,20 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutResponse'
+      security:
+        - token: []
   /workouts/{workoutId}/steps:
     get:
       tags:
         - workout-steps-controller
+      summary: List all steps for a workout
       operationId: getAllSteps
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
         - name: workoutId
           in: path
           required: true
@@ -195,11 +266,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/WorkoutStepResponse'
+      security:
+        - token: []
     post:
       tags:
         - workout-steps-controller
+      summary: Creates a new step under the workout
       operationId: addStep
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
         - name: workoutId
           in: path
           required: true
@@ -219,12 +298,20 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutStepResponse'
+      security:
+        - token: []
   /workouts/{workoutId}/details:
     get:
       tags:
         - workout-util-controller
+      summary: Get total steps and estimated time for a workout
       operationId: getGeneralDetails
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
         - name: workoutId
           in: path
           required: true
@@ -238,6 +325,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/WorkoutDetailsResponse'
+      security:
+        - token: []
 components:
   schemas:
     ChangeWorkoutRequest:
