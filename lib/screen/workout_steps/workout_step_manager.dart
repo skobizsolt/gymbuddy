@@ -45,7 +45,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
   @override
   initState() {
     super.initState();
-    _step.estimatedTime = currentEstimatedTime;
+    _step.estimatedTime = currentEstimatedTime ?? 0;
   }
 
   _saveForm() async {

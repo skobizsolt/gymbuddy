@@ -10,6 +10,11 @@ class GlobalValues {
   // Main navigation key
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+  // Device screen size
+  static Size getScreenSize(BuildContext context) {
+    return MediaQuery.of(context).size;
+  }
+
   // Current route
   static const SERVER_URL = ANDROID_EMULATOR_URL;
 

@@ -13,10 +13,9 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
 
   final _workoutMapper = WorkoutModelMapper();
   final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
-  var _jwt = UserService.firebaseUserJwtToken;
 
   Future<List<WorkoutStep>> getSteps(int workoutId) async {
-    final token = await _jwt;
+    final token = await UserService.firebaseUserJwtToken;
     var response = await _api.workoutsWorkoutIdStepsGet(
       authorization: token,
       workoutId: workoutId,
@@ -43,7 +42,7 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
       return;
     }
 
-    final token = await _jwt;
+    final token = await UserService.firebaseUserJwtToken;
     var response = await _api.workoutsWorkoutIdStepsPost(
       authorization: token,
       workoutId: workoutId,
@@ -64,7 +63,7 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
       return;
     }
 
-    final token = await _jwt;
+    final token = await UserService.firebaseUserJwtToken;
     var response = await _api.workoutsWorkoutIdStepsStepNumberPut(
       authorization: token,
       workoutId: workoutId,
@@ -80,7 +79,7 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
 
   Future<void> deleteStep(
       BuildContext context, int workoutId, int stepNumber) async {
-    final token = await _jwt;
+    final token = await UserService.firebaseUserJwtToken;
     final response = await _api.workoutsWorkoutIdStepsStepNumberDelete(
       authorization: token,
       workoutId: workoutId,

@@ -9,6 +9,7 @@ import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
+import 'package:gymbuddy/screen/workout_runner/intro_screen.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
@@ -348,7 +349,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () => _launchWorkout(context),
                     icon: const Icon(Icons.play_arrow),
                     label: const Text('Launch'),
                   ),
@@ -406,5 +407,11 @@ class WorkoutDetailsScreen extends ConsumerWidget {
       subtitle: const Text("Are you sure? This operation cannot be undone!"),
       onTap: () => deleteWorkout(context, ref, workout),
     );
+  }
+
+  _launchWorkout(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => WorkoutRunnerIntroScreen(workoutId: workoutId),
+    ));
   }
 }
