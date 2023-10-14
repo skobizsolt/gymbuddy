@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/data/workout_data.dart';
-import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/screen/workout/search_workouts_screen.dart';
+import 'package:gymbuddy/service/home/home_service.dart';
+
+enum HomeOptions { search, popular, newTraining, myTrainings, recentlyLaunched }
 
 class HomeOption extends StatelessWidget {
   const HomeOption({
@@ -15,25 +15,20 @@ class HomeOption extends StatelessWidget {
   final String optionName;
   final IconData icon;
 
-  void searchWorkouts(BuildContext context, List<Workout> workouts) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SearchWorkoutsSceen(
-          workouts: workouts,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
         onTap: () {
-          if (id == 0) {
-            searchWorkouts(context, workoutData);
+          if (id == HomeOptions.search.index) {
+            HomeService.searchWorkouts(context);
+          }
+          if (id == HomeOptions.myTrainings.index) {
+            HomeService.showMyTrainings(context);
+          }
+          if (id == HomeOptions.newTraining.index) {
+            HomeService.addNewTraining(context);
           }
         },
         child: Card(

@@ -29,9 +29,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        KeyboardService().unFocusKeyboard(context);
-      },
+      onTap: KeyboardService.closeKeyboard,
       child: Scaffold(
         body: Center(
           child: Padding(

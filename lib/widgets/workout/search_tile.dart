@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/screen/workout/workouts_screen.dart';
+import 'package:gymbuddy/screen/workout/displays/workout_by_category.dart';
+import 'package:gymbuddy/service/util/format_utils.dart';
 
 class WorkoutSearchTile extends StatelessWidget {
   const WorkoutSearchTile({
@@ -12,15 +13,15 @@ class WorkoutSearchTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String title =
-        '${workoutCategory.name[0].toUpperCase() + workoutCategory.name.substring(1)} ${workoutCategoryIcon[workoutCategory]}';
+        '${FormatUtils.toCapitalized(workoutCategory.name)} ${workoutCategoryIcon[workoutCategory]}';
 
     void onTap() {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => WorkoutsScreen(
-          title: 'Category - $title',
-          selectedCategory: workoutCategory,
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) =>
+              WorkoutByCategoryScreen(category: workoutCategory),
         ),
-      ));
+      );
     }
 
     return Padding(

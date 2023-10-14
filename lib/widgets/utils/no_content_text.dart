@@ -16,10 +16,13 @@ class NoContentText extends StatelessWidget {
       if (details == null) {
         return const SizedBox();
       }
-      return Text(details!,
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
-              ));
+      return Text(
+        details!,
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onBackground,
+            ),
+        textAlign: TextAlign.center,
+      );
     }
 
     return Center(
@@ -31,6 +34,7 @@ class NoContentText extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                   color: Theme.of(context).colorScheme.onBackground,
                 ),
+            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           renderDetails()

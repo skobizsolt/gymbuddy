@@ -3,33 +3,23 @@ import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/components/inputs/custom_searchbar.dart';
 import 'package:gymbuddy/widgets/workout/search_tile.dart';
 
-class SearchWorkoutsSceen extends StatelessWidget {
-  const SearchWorkoutsSceen({super.key, required this.workouts});
-
-  final List<Workout> workouts;
+class SearchWorkoutsScreen extends StatelessWidget {
+  const SearchWorkoutsScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
+      appBar: AppBar(
+        foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+        backgroundColor: Colors.transparent,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Back button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  BackButton(
-                    style: ButtonStyle(
-                      iconColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
               const SizedBox(
                 height: 40,
               ),

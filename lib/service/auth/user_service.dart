@@ -5,19 +5,24 @@ import 'package:gymbuddy/models/auth/change_password_dto.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 
 class UserService {
+  static Future<String?> get firebaseUserJwtToken async {
+    var token = await FirebaseAuth.instance.currentUser!.getIdToken();
+    return "Bearer ${token}";
+  }
+
   passwordReset(final BuildContext context, final String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       Navigator.pop(context);
-      showSucessSnackBar(context, 'Password reset email sent!');
+      showSuccessSnackBar(context, 'Password reset email sent!');
     } on FirebaseAuthException catch (e) {
-      KeyboardService().closeKeyboard();
+      KeyboardService.closeKeyboard();
       showErrorSnackBar(context, e.message.toString());
     }
   }
 
   void changePassword(BuildContext context, ChangePasswordDto passwords) async {
-    KeyboardService().closeKeyboard();
+    KeyboardService.closeKeyboard();
     if (!_isValidPasswords(context, passwords)) {
       return;
     }
@@ -58,7 +63,7 @@ class UserService {
     return await currentUser
         .updatePassword(passwords.newPassword)
         .then((value) {
-      showSucessSnackBar(context, 'Password changed successfully!');
+      showSuccessSnackBar(context, 'Password changed successfully!');
       Navigator.of(context).pop();
     }).catchError((error) {
       showErrorSnackBar(context, 'Password change failed!');

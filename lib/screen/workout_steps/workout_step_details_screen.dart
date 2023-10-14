@@ -3,31 +3,38 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
-class WorkoutStepDetailsScreen extends StatelessWidget {
-  const WorkoutStepDetailsScreen({super.key, required this.step});
+class WorkoutStepDetailsScreen extends StatefulWidget {
+  const WorkoutStepDetailsScreen({
+    super.key,
+    required this.step,
+    required this.workoutId,
+    required this.placeInList,
+  });
 
   final WorkoutStep step;
+  final int workoutId;
+  final int placeInList;
+
+  @override
+  State<WorkoutStepDetailsScreen> createState() =>
+      _WorkoutStepDetailsScreenState();
+}
+
+class _WorkoutStepDetailsScreenState extends State<WorkoutStepDetailsScreen> {
+  late WorkoutStep stepData;
+
+  @override
+  void initState() {
+    super.initState();
+    stepData = widget.step;
+  }
 
   @override
   Widget build(BuildContext context) {
     final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
-
-    // Renders app bar buttons
-    Widget renderAppBarButtons() {
-      // Delete Button
-      return Visibility(
-        visible: true,
-        child: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.delete,
-            color: onPrimaryContainer,
-          ),
-        ),
-      );
-    }
 
     // Renders the Workouts name
     Widget renderTitle() {
@@ -35,7 +42,7 @@ class WorkoutStepDetailsScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              step.stepName,
+              stepData.stepName,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color: onPrimaryContainer,
                     fontSize: 32,
@@ -84,7 +91,9 @@ class WorkoutStepDetailsScreen extends StatelessWidget {
               Expanded(
                 child: InformationTag(
                   child: Text(
-                    step.details,
+                    stepData.details.isEmpty
+                        ? "No description added for this step."
+                        : stepData.details,
                     style: const TextStyle(
                       fontSize: 15,
                       fontStyle: FontStyle.italic,
@@ -105,9 +114,6 @@ class WorkoutStepDetailsScreen extends StatelessWidget {
     //Renders all steps belongs with this workout
 
     return DribbleLayout(
-      actions: [
-        renderAppBarButtons(),
-      ],
       headerContent: Column(
         children: [
           // Title
@@ -115,29 +121,24 @@ class WorkoutStepDetailsScreen extends StatelessWidget {
 
           // Step number
           renderDetail(
-            title: '${step.stepNumber}. step',
+            title: '${widget.placeInList}. step',
             icon: Icons.grid_3x3_outlined,
           ),
           // Step type
           renderDetail(
-              title: step.workoutType.name[0].toUpperCase() +
-                  step.workoutType.name.substring(1),
+              title: FormatUtils.toCapitalized(
+                  '${stepData.workoutType.name} based step'),
               icon: Icons.star_border_purple500_outlined),
+
+          // Time to complete
+          renderDetail(
+            title: FormatUtils.toTimeString(
+                Duration(seconds: stepData.estimatedTime)),
+            icon: Icons.access_time_rounded,
+          ),
 
           const SizedBox(
             height: 8,
-          ),
-
-          // Edit step button
-          Visibility(
-            visible: true,
-            child: ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.edit),
-              label: const Text('Edit step'),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: onPrimaryContainer, elevation: 0),
-            ),
           ),
         ],
       ),

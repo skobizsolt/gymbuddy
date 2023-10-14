@@ -39,7 +39,7 @@ class _ChangeProfileContentState
         .whenComplete(
       () {
         Navigator.of(context).pop();
-        showSucessSnackBar(context, 'Your data has updated!');
+        showSuccessSnackBar(context, 'Your data has updated!');
       },
     );
   }
@@ -106,7 +106,7 @@ class _ChangeProfileContentState
 
     return Scaffold(
       body: GestureDetector(
-        onTap: () => KeyboardService().unFocusKeyboard(context),
+        onTap: KeyboardService.closeKeyboard,
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
@@ -141,7 +141,7 @@ class _ChangeProfileContentState
                           ),
                           IconButton.filled(
                             onPressed: () {
-                              KeyboardService().unFocusKeyboard(context);
+                              KeyboardService.unFocusKeyboard(context);
                               _showModalSheet(context, _localphoto);
                             },
                             icon: Icon(

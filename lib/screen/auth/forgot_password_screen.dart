@@ -28,7 +28,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => KeyboardService().unFocusKeyboard(context),
+      onTap: KeyboardService.closeKeyboard,
       child: Scaffold(
         body: Center(
           child: Form(

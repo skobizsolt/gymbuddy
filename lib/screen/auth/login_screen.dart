@@ -53,7 +53,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => KeyboardService().unFocusKeyboard(context),
+      onTap: KeyboardService.closeKeyboard,
       child: Scaffold(
         body: SingleChildScrollView(
           child: SafeArea(

@@ -1,37 +1,126 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbuddy/components/custom_modals.dart';
+import 'package:gymbuddy/components/custom_snackbars.dart';
+import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/workout.dart';
+import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/providers/workout_provider.dart';
+import 'package:gymbuddy/screen/workout/workout_manager.dart';
+import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
+import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 import 'package:ionicons/ionicons.dart';
 
-class WorkoutDetails extends StatelessWidget {
-  const WorkoutDetails({super.key, required this.workout});
+class WorkoutDetailsScreen extends ConsumerWidget {
+  WorkoutDetailsScreen({super.key, required this.workoutId});
 
-  final Workout workout;
+  final int workoutId;
+
+  bool isResourceOwnedByTheUser(Workout workout) {
+    return workout.userId == FirebaseAuth.instance.currentUser!.uid;
+  }
+
+  String calculateEstimatedTime(List<WorkoutStep> steps) {
+    final duration = Duration(
+        seconds: steps
+            .map((step) => step.estimatedTime)
+            .toList()
+            .fold(0, (previousValue, element) => previousValue + element));
+    return FormatUtils.toTimeString(duration);
+  }
+
+  editWorkout(final BuildContext context, Workout workout) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => WorkoutManager(
+          type: CrudType.edit,
+          workout: workout,
+        ),
+      ),
+    );
+  }
+
+  deleteWorkout(BuildContext context, WidgetRef ref, Workout workout) async {
+    Navigator.of(context).pop();
+    try {
+      await ref
+          .read(workoutStateProvider.notifier)
+          .deleteWorkout(workout.workoutId)
+          .then((value) {
+        ref.invalidate(workoutStateProvider);
+        showSuccessSnackBar(context, "Workout deleted successfully!");
+        Navigator.of(context).pop();
+      });
+    } on Exception {
+      showErrorSnackBar(
+          context, "Failed to delete this workout, please try again later!");
+    }
+  }
+
+  addStep({
+    required BuildContext context,
+    required CrudType type,
+  }) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            WorkoutStepManager(workoutId: workoutId, type: type),
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
     final primaryColor = Theme.of(context).colorScheme.primary;
     final backgroundColor = Theme.of(context).colorScheme.background;
 
-    // Renders app bar buttons
-    Widget renderAppBarButtons() {
-      // Delete Button
-      return Visibility(
-        visible: true,
-        child: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.delete,
-            color: onPrimaryContainer,
-          ),
+    var workoutRef = ref.watch(workoutByIdProvider(workoutId));
+    var stepsRef = ref.watch(workoutStepProvider(workoutId));
+
+    if ((workoutRef.isLoading && stepsRef.isLoading) ||
+        workoutRef.hasError ||
+        stepsRef.hasError ||
+        !workoutRef.hasValue ||
+        workoutRef.value == null) {
+      return Scaffold(
+        backgroundColor: primaryColor,
+        body: Center(
+          child: CircularProgressIndicator(color: onPrimaryContainer),
         ),
       );
     }
 
+    Workout workout = workoutRef.value!;
+    final steps = stepsRef.value ?? [];
+    final isSelfRecorce = isResourceOwnedByTheUser(workout);
+    final estimatedTime = calculateEstimatedTime(steps);
+
+    // Renders app bar buttons
+    Widget _renderAppBarButtons(int totalSteps) {
+      // Delete Button
+      return isSelfRecorce
+          ? IconButton(
+              onPressed: () => _showDeletionModal(
+                context: context,
+                ref: ref,
+                workout: workout,
+                totalSteps: totalSteps,
+              ),
+              icon: Icon(
+                Icons.delete,
+                color: onPrimaryContainer,
+              ),
+            )
+          : const SizedBox();
+    }
+
     // Renders the Workouts name
-    Widget renderTitle() {
+    Widget _renderTitle() {
       return Row(
         children: [
           Expanded(
@@ -49,7 +138,7 @@ class WorkoutDetails extends StatelessWidget {
     }
 
     // Renders the total workout time and steps
-    Widget renderDetail({
+    Widget _renderDetail({
       required final String title,
       required final IconData icon,
     }) {
@@ -77,11 +166,11 @@ class WorkoutDetails extends StatelessWidget {
     }
 
     // Renders the type and difficulty and other future tags
-    Widget renderTags() {
+    Widget _renderTags() {
       var tags = [
         InformationTag(
           child: Text(
-            '${workoutCategoryIcon[workout.category]} ${workout.category.name[0].toUpperCase() + workout.category.name.substring(1)}',
+            '${workoutCategoryIcon[workout.category]} ${FormatUtils.toCapitalized(workout.category.name)}',
             style: TextStyle(color: primaryColor, fontSize: 14),
           ),
         ),
@@ -94,8 +183,7 @@ class WorkoutDetails extends StatelessWidget {
                 width: 5,
               ),
               Text(
-                workout.difficulty.name[0].toUpperCase() +
-                    workout.difficulty.name.substring(1),
+                FormatUtils.toCapitalized(workout.difficulty.name),
                 style: const TextStyle(fontSize: 14),
               ),
             ],
@@ -107,7 +195,7 @@ class WorkoutDetails extends StatelessWidget {
         height: 40,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
+          shrinkWrap: isSelfRecorce,
           itemCount: tags.length,
           itemBuilder: (context, index) {
             return Padding(
@@ -120,8 +208,8 @@ class WorkoutDetails extends StatelessWidget {
     }
 
     // Renders the deatils if added
-    Widget renderDescription() {
-      if (workout.description == null) {
+    Widget _renderDescription() {
+      if (workout.description == null || workout.description!.isEmpty) {
         return const SizedBox();
       }
       return Column(
@@ -149,42 +237,40 @@ class WorkoutDetails extends StatelessWidget {
       );
     }
 
-    //Renders all steps belongs with this workout
-
     return DribbleLayout(
       actions: [
-        renderAppBarButtons(),
+        // Delete button
+        _renderAppBarButtons(steps.length),
       ],
       headerContent: Column(
         children: [
           // Title
-          renderTitle(),
+          _renderTitle(),
 
           // Time to complete
-          renderDetail(
-            title: '${workout.estimatedTimeInMinutes} mins',
+          _renderDetail(
+            title: estimatedTime,
             icon: Icons.access_time_rounded,
           ),
 
           // Steps
-          renderDetail(
-              title: '${workout.steps} Steps', icon: Ionicons.footsteps),
+          _renderDetail(
+              title: '${steps.length} Steps', icon: Ionicons.footsteps),
 
           const SizedBox(
             height: 8,
           ),
 
           // Edit workout button
-          Visibility(
-            visible: true,
-            child: ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.edit),
-              label: const Text('Edit workout'),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: onPrimaryContainer, elevation: 0),
-            ),
-          ),
+          isSelfRecorce
+              ? ElevatedButton.icon(
+                  onPressed: () => editWorkout(context, workout),
+                  icon: const Icon(Icons.edit),
+                  label: const Text('Edit workout'),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: onPrimaryContainer, elevation: 0),
+                )
+              : const SizedBox(),
         ],
       ),
       body: SingleChildScrollView(
@@ -192,13 +278,13 @@ class WorkoutDetails extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Tags
-            renderTags(),
+            _renderTags(),
             const SizedBox(
               height: 20,
             ),
 
             // Description
-            renderDescription(),
+            _renderDescription(),
 
             // Steps
             Row(
@@ -211,36 +297,44 @@ class WorkoutDetails extends StatelessWidget {
                     fontSize: 20,
                   ),
                 ),
-                Visibility(
-                  visible: true,
-                  child: InkWell(
-                    onTap: () {},
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4.0),
-                        color: Theme.of(context).primaryColorLight,
-                        child: Row(
-                          children: [
-                            const Text('Add new'),
-                            Icon(
-                              Ionicons.add,
-                              size: 24,
-                              color: primaryColor,
+
+                // Add new step
+                isSelfRecorce
+                    ? InkWell(
+                        onTap: () =>
+                            addStep(context: context, type: CrudType.add),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4.0),
+                            color: Theme.of(context).primaryColorLight,
+                            child: Row(
+                              children: [
+                                const Text('Add new'),
+                                Icon(
+                                  Ionicons.add,
+                                  size: 24,
+                                  color: primaryColor,
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                ),
+                      )
+                    : const SizedBox(),
               ],
             ),
             const SizedBox(
               height: 15,
             ),
-            StepsPanelList(workoutId: workout.workoutId),
+
+            // Renders all steps belongs with this workout
+            StepsPanelList(
+              workoutId: workout.workoutId,
+              isAuthEnabled: true,
+              isOwnResource: isSelfRecorce,
+            ),
           ],
         ),
       ),
@@ -264,6 +358,53 @@ class WorkoutDetails extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  _showDeletionModal(
+      {required BuildContext context,
+      required Workout workout,
+      required int totalSteps,
+      required WidgetRef ref}) {
+    showConfirmDelete(
+      context,
+      title: RichText(
+        // Controls visual overflow
+        overflow: TextOverflow.clip,
+
+        // Whether the text should break at soft line breaks
+        softWrap: true,
+
+        // The number of font pixels for each logical pixel
+        textScaleFactor: 1,
+        text: TextSpan(
+          style: Theme.of(context).textTheme.bodyLarge,
+          children: <TextSpan>[
+            const TextSpan(
+                text: 'Attention!\n',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                )),
+            const TextSpan(text: 'Workout '),
+            TextSpan(
+                text: '"${workout.title}"',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                )),
+            const TextSpan(text: ' with '),
+            TextSpan(
+                text: '$totalSteps steps',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer)),
+            const TextSpan(text: ' is about to be deleted.'),
+          ],
+        ),
+      ),
+      subtitle: const Text("Are you sure? This operation cannot be undone!"),
+      onTap: () => deleteWorkout(context, ref, workout),
     );
   }
 }

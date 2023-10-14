@@ -79,7 +79,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => KeyboardService().unFocusKeyboard(context),
+      onTap: KeyboardService.closeKeyboard,
       child: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(

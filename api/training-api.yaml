@@ -1,0 +1,436 @@
+openapi: 3.0.1
+info:
+  title: Training API
+  description: GymBuddy training backend API
+  version: '1.0'
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /workouts/{workoutId}:
+    get:
+      tags:
+        - workout-controller
+      summary: Gets a workout by it's id
+      operationId: getWorkout
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutResponse'
+      security:
+        - token: []
+    put:
+      tags:
+        - workout-controller
+      summary: Edits an existing workout
+      operationId: editWorkout
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeWorkoutRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutResponse'
+      security:
+        - token: []
+    delete:
+      tags:
+        - workout-controller
+      summary: Deletes the selected workout
+      operationId: deleteWorkout
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+      security:
+        - token: []
+  /workouts/{workoutId}/steps/{stepNumber}:
+    get:
+      tags:
+        - workout-steps-controller
+      summary: Gets a step associated with the selected workout
+      operationId: getStep
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: stepNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutStepResponse'
+      security:
+        - token: []
+    put:
+      tags:
+        - workout-steps-controller
+      summary: Edits an existing step
+      operationId: editStep
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: stepNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeWorkoutStepRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutStepResponse'
+      security:
+        - token: []
+    delete:
+      tags:
+        - workout-steps-controller
+      summary: Deletes a step from a workout
+      operationId: deleteStep
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: stepNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+      security:
+        - token: []
+  /workouts:
+    get:
+      tags:
+        - workout-list-controller
+      summary: List all existing workouts
+      operationId: getAllWorkouts
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutListResponse'
+      security:
+        - token: []
+    post:
+      tags:
+        - workout-controller
+      summary: Creates a new workout
+      operationId: createWorkout
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeWorkoutRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutResponse'
+      security:
+        - token: []
+  /workouts/{workoutId}/steps:
+    get:
+      tags:
+        - workout-steps-controller
+      summary: List all steps for a workout
+      operationId: getAllSteps
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutStepResponse'
+      security:
+        - token: []
+    post:
+      tags:
+        - workout-steps-controller
+      summary: Creates a new step under the workout
+      operationId: addStep
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeWorkoutStepRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutStepResponse'
+      security:
+        - token: []
+  /workouts/{workoutId}/details:
+    get:
+      tags:
+        - workout-util-controller
+      summary: Get total steps and estimated time for a workout
+      operationId: getGeneralDetails
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: workoutId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WorkoutDetailsResponse'
+      security:
+        - token: []
+components:
+  schemas:
+    ChangeWorkoutRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum:
+            - ENDURANCE
+            - STRENGTH
+            - BALANCE
+            - FLEXIBILITY
+        difficulty:
+          type: string
+          enum:
+            - EASY
+            - INTERMEDIATE
+            - HARD
+    WorkoutResponse:
+      type: object
+      properties:
+        workoutId:
+          type: integer
+          format: int32
+        userId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        registeredOn:
+          type: string
+          format: date-time
+        lastModified:
+          type: string
+          format: date-time
+        category:
+          type: string
+          enum:
+            - ENDURANCE
+            - STRENGTH
+            - BALANCE
+            - FLEXIBILITY
+        difficulty:
+          type: string
+          enum:
+            - EASY
+            - INTERMEDIATE
+            - HARD
+    ChangeWorkoutStepRequest:
+      type: object
+      properties:
+        stepName:
+          type: string
+        details:
+          type: string
+        workoutType:
+          type: string
+          enum:
+            - INTERVAL
+            - REP
+        estimatedTime:
+          type: integer
+          format: int32
+    WorkoutStepResponse:
+      type: object
+      properties:
+        stepNumber:
+          type: integer
+          format: int32
+        stepName:
+          type: string
+        details:
+          type: string
+        workoutType:
+          type: string
+          enum:
+            - INTERVAL
+            - REP
+        estimatedTime:
+          type: integer
+          format: int32
+    WorkoutListResponse:
+      type: object
+      properties:
+        workouts:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkoutResponse'
+    WorkoutDetailsResponse:
+      type: object
+      properties:
+        estimatedTimeInMinutes:
+          type: integer
+          format: int64
+        totalSteps:
+          type: integer
+          format: int64
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

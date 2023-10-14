@@ -1,35 +1,65 @@
-// ignore_for_file: constant_identifier_names
-
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:gymbuddy/widgets/utils/themed_icon.dart';
 
-enum WorkoutDifficulty { easy, intermediate, hard }
-
-enum WorkoutCategory { endurance, strength, balance, flexibility }
-
 class Workout {
-  const Workout(
-      {required this.workoutId,
-      required this.userId,
-      required this.title,
-      this.description,
-      required this.category,
-      required this.registeredOn,
-      required this.lastModified,
-      required this.difficulty,
-      required this.steps,
-      required this.estimatedTimeInMinutes});
+  const Workout({
+    required this.workoutId,
+    required this.userId,
+    required this.title,
+    this.description,
+    required this.category,
+    required this.registeredOn,
+    required this.lastModified,
+    required this.difficulty,
+  });
 
   final int workoutId;
-  final int userId;
+  final String userId;
   final String title;
   final String? description;
   final WorkoutCategory category;
   final DateTime registeredOn;
   final DateTime lastModified;
   final WorkoutDifficulty difficulty;
-  final int steps;
-  final int estimatedTimeInMinutes;
+
+  Map<String, dynamic> toChangeWorkoutDto() {
+    return <String, dynamic>{
+      'workoutId': workoutId,
+      'userId': userId,
+      'title': title,
+      'description': description,
+      'category': category.name,
+      'difficulty': difficulty.name,
+    };
+  }
+
+  @override
+  bool operator ==(covariant Workout other) {
+    if (identical(this, other)) return true;
+
+    return other.workoutId == workoutId &&
+        other.userId == userId &&
+        other.title == title &&
+        other.description == description &&
+        other.category == category &&
+        other.registeredOn == registeredOn &&
+        other.lastModified == lastModified &&
+        other.difficulty == difficulty;
+  }
+
+  @override
+  int get hashCode {
+    return workoutId.hashCode ^
+        userId.hashCode ^
+        title.hashCode ^
+        description.hashCode ^
+        category.hashCode ^
+        registeredOn.hashCode ^
+        lastModified.hashCode ^
+        difficulty.hashCode;
+  }
 }
 
 Map<WorkoutDifficulty, Row> get workoutDifficultyRating {
@@ -52,3 +82,7 @@ Map<WorkoutCategory, String> get workoutCategoryIcon {
     WorkoutCategory.balance: '🧘‍♀️',
   };
 }
+
+enum WorkoutDifficulty { easy, intermediate, hard }
+
+enum WorkoutCategory { endurance, strength, balance, flexibility }
