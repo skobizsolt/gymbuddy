@@ -191,7 +191,7 @@ ThemeData kDarkTheme(BuildContext context) {
           color: colorScheme.primary,
         ),
       ),
-      tabBarTheme: TabBarTheme().copyWith(
+      tabBarTheme: const TabBarTheme().copyWith(
         dividerColor: Colors.transparent,
       ));
 }

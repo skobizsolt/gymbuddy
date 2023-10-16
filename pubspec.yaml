@@ -50,6 +50,7 @@ dependencies:
   chopper: ^6.1.1
   json_annotation: ^4.8.0
   duration_picker: ^1.1.1
+  stop_watch_timer: ^3.0.2
 
 dev_dependencies:
   flutter_test:
