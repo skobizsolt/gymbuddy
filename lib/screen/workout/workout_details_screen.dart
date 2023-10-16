@@ -339,26 +339,28 @@ class WorkoutDetailsScreen extends ConsumerWidget {
           ],
         ),
       ),
-      footing: Container(
-        color: backgroundColor,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () => _launchWorkout(context),
-                    icon: const Icon(Icons.play_arrow),
-                    label: const Text('Launch'),
-                  ),
+      footing: steps.isEmpty
+          ? const SizedBox()
+          : Container(
+              color: backgroundColor,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () => _launchWorkout(context),
+                          icon: const Icon(Icons.play_arrow),
+                          label: const Text('Launch'),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
+              ),
+            ),
     );
   }
 

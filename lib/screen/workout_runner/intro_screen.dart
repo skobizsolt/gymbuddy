@@ -5,13 +5,25 @@ import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/training_api.models.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
+import 'package:gymbuddy/screen/workout_runner/runner_screen.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
+import 'package:gymbuddy/widgets/utils/big_elevatedButton.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
 class WorkoutRunnerIntroScreen extends ConsumerWidget {
   const WorkoutRunnerIntroScreen({super.key, required this.workoutId});
 
   final int workoutId;
+
+  _openSimulation(BuildContext context, WidgetRef ref) {
+    final stepsRef = ref.read(workoutStepProvider(workoutId));
+    Navigator.pop(context);
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => WorkoutRunnerScreen(
+        steps: stepsRef.value!,
+      ),
+    ));
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,8 +56,7 @@ class WorkoutRunnerIntroScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildButton(
-                    context: context,
+                  BigElevatedIconButton(
                     text: "Let's work out!",
                     icon: Padding(
                       padding: const EdgeInsets.only(right: 4.0),
@@ -54,14 +65,9 @@ class WorkoutRunnerIntroScreen extends ConsumerWidget {
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
-                    onPressed: () =>
-                        showErrorSnackBar(context, "Not implemented yet 😞"),
+                    onPressed: () => _openSimulation(context, ref),
                   ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  _buildButton(
-                      context: context,
+                  BigElevatedIconButton(
                       icon: const Icon(Icons.arrow_back),
                       text: "Go back",
                       onPressed: () => Navigator.pop(context)),
@@ -202,27 +208,6 @@ class WorkoutRunnerIntroScreen extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-
-  _buildButton({
-    required BuildContext context,
-    required String text,
-    required Widget icon,
-    void Function()? onPressed,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-          icon: icon,
-          onPressed: onPressed,
-          label: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          )),
     );
   }
 

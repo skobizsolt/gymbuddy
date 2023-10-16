@@ -91,7 +91,7 @@ class _StepsPanelListState extends ConsumerState<StepsPanelList> {
           Expanded(
             child: InformationTag(
               child: Text(
-                'No steps added yet',
+                'No steps added yet. Add a new one to run this training!',
                 style: TextStyle(
                   fontStyle: FontStyle.italic,
                 ),

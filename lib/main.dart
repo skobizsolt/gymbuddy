@@ -52,143 +52,146 @@ ThemeData kDarkTheme(BuildContext context) {
   );
 
   return ThemeData(
-    useMaterial3: true,
-    primaryColor: discordGray,
-    primaryColorDark: discordBlack,
-    primaryColorLight: discordLightGray,
+      useMaterial3: true,
+      primaryColor: discordGray,
+      primaryColorDark: discordBlack,
+      primaryColorLight: discordLightGray,
 
-    // Color palette
-    colorScheme: colorScheme,
-    appBarTheme: AppBarTheme.of(context).copyWith(
-      backgroundColor: discordBlack,
-      foregroundColor: colorScheme.primary,
-    ),
+      // Color palette
+      colorScheme: colorScheme,
+      appBarTheme: AppBarTheme.of(context).copyWith(
+        backgroundColor: discordBlack,
+        foregroundColor: colorScheme.primary,
+      ),
 
-    // Bottom nav bar theme
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: discordBlack,
-      selectedItemColor: colorScheme.primary,
-      unselectedItemColor: discordWhite,
-      type: BottomNavigationBarType.fixed,
-    ),
+      // Bottom nav bar theme
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: discordBlack,
+        selectedItemColor: colorScheme.primary,
+        unselectedItemColor: discordWhite,
+        type: BottomNavigationBarType.fixed,
+      ),
 
-    // Card theme
-    cardTheme: CardTheme.of(context).copyWith(
-      color: discordLightGray,
-      surfaceTintColor: discordLightGray,
-      elevation: 10,
-    ),
+      // Card theme
+      cardTheme: CardTheme.of(context).copyWith(
+        color: discordLightGray,
+        surfaceTintColor: discordLightGray,
+        elevation: 10,
+      ),
 
-    // Text themes
-    textTheme: GoogleFonts.latoTextTheme().copyWith(
-      titleLarge: const TextStyle().copyWith(
-        color: colorScheme.primary,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
+      // Text themes
+      textTheme: GoogleFonts.latoTextTheme().copyWith(
+        titleLarge: const TextStyle().copyWith(
+          color: colorScheme.primary,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+        titleMedium: const TextStyle().copyWith(
+          color: colorScheme.primary,
+          fontSize: 15,
+        ),
+        titleSmall: const TextStyle().copyWith(
+          color: discordWhite,
+          fontSize: 13,
+        ),
+        bodyLarge: const TextStyle().copyWith(
+          color: colorScheme.primary,
+        ),
+        bodyMedium: const TextStyle().copyWith(
+          color: colorScheme.primary,
+        ),
+        bodySmall: const TextStyle().copyWith(
+          color: colorScheme.primary,
+        ),
+        displayLarge: const TextStyle().copyWith(
+          color: colorScheme.primary,
+        ),
+        displayMedium: const TextStyle().copyWith(
+          color: colorScheme.primary,
+        ),
+        displaySmall: const TextStyle().copyWith(
+          color: colorScheme.primary,
+        ),
       ),
-      titleMedium: const TextStyle().copyWith(
-        color: colorScheme.primary,
-        fontSize: 15,
-      ),
-      titleSmall: const TextStyle().copyWith(
-        color: discordWhite,
-        fontSize: 13,
-      ),
-      bodyLarge: const TextStyle().copyWith(
-        color: colorScheme.primary,
-      ),
-      bodyMedium: const TextStyle().copyWith(
-        color: colorScheme.primary,
-      ),
-      bodySmall: const TextStyle().copyWith(
-        color: colorScheme.primary,
-      ),
-      displayLarge: const TextStyle().copyWith(
-        color: colorScheme.primary,
-      ),
-      displayMedium: const TextStyle().copyWith(
-        color: colorScheme.primary,
-      ),
-      displaySmall: const TextStyle().copyWith(
-        color: colorScheme.primary,
-      ),
-    ),
 
-    // Dialog theme
-    dialogTheme: DialogTheme.of(context).copyWith(
-      titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: colorScheme.primary,
-          ),
-      contentTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: colorScheme.primary,
-          ),
-      surfaceTintColor: discordGray,
-    ),
-
-    // Elevated button theme
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: discordLightGray,
-        textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-      ),
-    ),
-
-    // Filled button
-    filledButtonTheme: FilledButtonThemeData(
-      style: const ButtonStyle().copyWith(
-        backgroundColor: const MaterialStatePropertyAll(discordBlack),
-        foregroundColor: MaterialStatePropertyAll(colorScheme.primary),
-        elevation: const MaterialStatePropertyAll(8),
-      ),
-    ),
-
-    floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
-      backgroundColor: Theme.of(context).primaryColorDark,
-      foregroundColor: orange,
-      extendedTextStyle: const TextStyle().copyWith(
-        color: Colors.transparent,
-        fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
-      ),
-    ),
-
-    // List tile theme
-    listTileTheme: ListTileThemeData(
-        titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+      // Dialog theme
+      dialogTheme: DialogTheme.of(context).copyWith(
+        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
               color: colorScheme.primary,
-              fontWeight: FontWeight.bold,
             ),
-        subtitleTextStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-              color: discordWhite,
+        contentTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+              color: colorScheme.primary,
             ),
-        iconColor: colorScheme.primary),
+        surfaceTintColor: discordGray,
+      ),
 
-    // Search bar theme
-    searchBarTheme: SearchBarThemeData(
-      textStyle: MaterialStatePropertyAll(
-        const TextStyle().copyWith(color: colorScheme.primary),
+      // Elevated button theme
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          elevation: 10,
+          backgroundColor: discordLightGray,
+          surfaceTintColor: discordBlack,
+          textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
       ),
-      surfaceTintColor: const MaterialStatePropertyAll(discordBlack),
-    ),
 
-    // Bottom sheet theme
-    bottomSheetTheme: const BottomSheetThemeData().copyWith(
-      backgroundColor: colorScheme.background,
-      shape: Border.all(
-        style: BorderStyle.none,
+      // Filled button
+      filledButtonTheme: FilledButtonThemeData(
+        style: const ButtonStyle().copyWith(
+          backgroundColor: const MaterialStatePropertyAll(discordBlack),
+          foregroundColor: MaterialStatePropertyAll(colorScheme.primary),
+          elevation: const MaterialStatePropertyAll(8),
+        ),
       ),
-      elevation: 0,
-    ),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
+        backgroundColor: Theme.of(context).primaryColorDark,
+        foregroundColor: orange,
+        extendedTextStyle: const TextStyle().copyWith(
+          color: Colors.transparent,
+          fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
+        ),
+      ),
 
-    // Text input decoration
-    inputDecorationTheme: const InputDecorationTheme().copyWith(
-      hintStyle: const TextStyle().copyWith(
-        color: colorScheme.primary,
+      // List tile theme
+      listTileTheme: ListTileThemeData(
+          titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+          subtitleTextStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                color: discordWhite,
+              ),
+          iconColor: colorScheme.primary),
+
+      // Search bar theme
+      searchBarTheme: SearchBarThemeData(
+        textStyle: MaterialStatePropertyAll(
+          const TextStyle().copyWith(color: colorScheme.primary),
+        ),
+        surfaceTintColor: const MaterialStatePropertyAll(discordBlack),
       ),
-      labelStyle: const TextStyle().copyWith(
-        color: colorScheme.primary,
+
+      // Bottom sheet theme
+      bottomSheetTheme: const BottomSheetThemeData().copyWith(
+        backgroundColor: colorScheme.background,
+        shape: Border.all(
+          style: BorderStyle.none,
+        ),
+        elevation: 0,
       ),
-    ),
-  );
+
+      // Text input decoration
+      inputDecorationTheme: const InputDecorationTheme().copyWith(
+        hintStyle: const TextStyle().copyWith(
+          color: colorScheme.primary,
+        ),
+        labelStyle: const TextStyle().copyWith(
+          color: colorScheme.primary,
+        ),
+      ),
+      tabBarTheme: TabBarTheme().copyWith(
+        dividerColor: Colors.transparent,
+      ));
 }

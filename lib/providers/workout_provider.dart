@@ -59,5 +59,6 @@ var workoutStepProvider =
 var workoutGeneralDetailsProvider =
     StreamProvider.family<WorkoutDetailsResponse, int>((ref, workoutId) {
   ref.watch(workoutStepStateProvider);
+  ref.watch(workoutStepProvider(workoutId));
   return WorkoutService().getGeneralStepDetails(workoutId);
 });
