@@ -105,16 +105,19 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     Widget _renderAppBarButtons(int totalSteps) {
       // Delete Button
       return isSelfRecorce
-          ? IconButton(
-              onPressed: () => _showDeletionModal(
-                context: context,
-                ref: ref,
-                workout: workout,
-                totalSteps: totalSteps,
-              ),
-              icon: Icon(
-                Icons.delete,
-                color: onPrimaryContainer,
+          ? Padding(
+              padding: const EdgeInsets.only(right: 4.0),
+              child: IconButton(
+                onPressed: () => _showDeletionModal(
+                  context: context,
+                  ref: ref,
+                  workout: workout,
+                  totalSteps: totalSteps,
+                ),
+                icon: Icon(
+                  Icons.delete,
+                  color: onPrimaryContainer,
+                ),
               ),
             )
           : const SizedBox();

@@ -71,6 +71,7 @@ class _WorkoutRunnerScreenState extends State<WorkoutRunnerScreen> {
     var _currentStep = widget.steps[_index];
     final _isLastStep = _index == widget.steps.length - 1;
     return DribbleLayout(
+      addAppBar: false,
       headerContent: _buildHeader(),
       body: Column(
         children: [
