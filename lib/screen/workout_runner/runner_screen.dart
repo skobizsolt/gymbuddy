@@ -3,14 +3,17 @@ import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/components/stopwatch.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/screen/workout_runner/summary_screen.dart';
 import 'package:gymbuddy/widgets/utils/big_elevatedButton.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class WorkoutRunnerScreen extends StatefulWidget {
   final List<WorkoutStep> steps;
+  final int workoutId;
 
-  const WorkoutRunnerScreen({super.key, required this.steps});
+  const WorkoutRunnerScreen(
+      {super.key, required this.steps, required this.workoutId});
 
   @override
   State<WorkoutRunnerScreen> createState() => _WorkoutRunnerScreenState();
@@ -43,6 +46,13 @@ class _WorkoutRunnerScreenState extends State<WorkoutRunnerScreen> {
   void _finishTraining() {
     _stepWatchTimer.onStopTimer();
     _totalWatchTimer.onStopTimer();
+    Navigator.pop(context);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              WorkoutSimulationSummaryScreen(workoutId: widget.workoutId),
+        ));
   }
 
   void _stopTraining() {

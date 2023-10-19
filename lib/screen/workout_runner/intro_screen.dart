@@ -20,6 +20,7 @@ class WorkoutRunnerIntroScreen extends ConsumerWidget {
     Navigator.pop(context);
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => WorkoutRunnerScreen(
+        workoutId: workoutId,
         steps: stepsRef.value!,
       ),
     ));
@@ -29,7 +30,13 @@ class WorkoutRunnerIntroScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final workoutRef = ref.read(workoutByIdProvider(workoutId));
     final generalDetailsRef =
-        ref.read(workoutGeneralDetailsProvider(workoutId));
+        ref.watch(workoutGeneralDetailsProvider(workoutId));
+
+    if (workoutRef.isLoading || generalDetailsRef.isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     if (!(workoutRef.hasValue || generalDetailsRef.hasValue)) {
       Navigator.pop(context);
       showErrorSnackBar(context, "You can't launch this workout this time! 🙁");
