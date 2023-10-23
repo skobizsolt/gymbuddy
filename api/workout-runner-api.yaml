@@ -7,40 +7,34 @@ servers:
   - url: http://localhost:8080
     description: Generated server url
 paths:
-  /workout/runner:
-    get:
+  /workout-runner/new-session:
+    post:
       tags:
-        - runner-controller
-      operationId: getRecords
+        - session-controller
+      operationId: startSession
       parameters:
         - name: Authorization
           in: header
           required: true
           schema:
             type: string
-        - name: workoutId
-          in: query
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: sessionId
-          in: query
-          required: true
-          schema:
-            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostSessionDetailsDto'
+        required: true
       responses:
         '200':
           description: OK
           content:
             '*/*':
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/StepRecordResponse'
+                $ref: '#/components/schemas/SessionStartedResponse'
+  /workout-runner/add:
     post:
       tags:
-        - runner-controller
+        - record-controller
       operationId: recordStep
       parameters:
         - name: Authorization
@@ -57,8 +51,46 @@ paths:
       responses:
         '200':
           description: OK
+  /workout-runner/records:
+    get:
+      tags:
+        - record-controller
+      operationId: getRecords
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: sessionId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StepRecordResponse'
 components:
   schemas:
+    PostSessionDetailsDto:
+      type: object
+      properties:
+        workoutId:
+          type: integer
+          format: int64
+        userId:
+          type: string
+    SessionStartedResponse:
+      type: object
+      properties:
+        sessionId:
+          type: string
     PostRecordDto:
       type: object
       properties:

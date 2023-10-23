@@ -1,40 +1,78 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/training_api.models.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
+import 'package:gymbuddy/models/workout/create_session.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
+import 'package:gymbuddy/providers/workout_runner_provider.dart';
 import 'package:gymbuddy/screen/workout_runner/runner_screen.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/big_elevatedButton.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
+import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 
-class WorkoutRunnerIntroScreen extends ConsumerWidget {
+class WorkoutRunnerIntroScreen extends ConsumerStatefulWidget {
   const WorkoutRunnerIntroScreen({super.key, required this.workoutId});
 
   final int workoutId;
 
-  _openSimulation(BuildContext context, WidgetRef ref) {
-    final stepsRef = ref.read(workoutStepProvider(workoutId));
-    Navigator.pop(context);
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => WorkoutRunnerScreen(
-        workoutId: workoutId,
-        steps: stepsRef.value!,
-      ),
-    ));
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _WorkoutReunnerIntroScreenState();
+}
+
+class _WorkoutReunnerIntroScreenState
+    extends ConsumerState<WorkoutRunnerIntroScreen> {
+  var _isStarted = false;
+
+  _openSimulation(BuildContext context) async {
+    setState(() {
+      _isStarted = true;
+    });
+    final stepsRef = ref.read(workoutStepProvider(widget.workoutId));
+    await ref
+        .read(workoutRunnerStateProvider.notifier)
+        .getSessionId(
+          CreateWorkoutSessionRequest(
+            workoutId: widget.workoutId,
+            userId: FirebaseAuth.instance.currentUser!.uid,
+          ),
+        )
+        .then(
+      (value) {
+        Navigator.pop(context);
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => WorkoutRunnerScreen(
+              workoutId: widget.workoutId,
+              steps: stepsRef.value!,
+              sessionId: value,
+            ),
+          ),
+        );
+      },
+    ).onError(
+      (error, stackTrace) => setState(() {
+        _isStarted = false;
+      }),
+    );
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final workoutRef = ref.read(workoutByIdProvider(workoutId));
+  Widget build(BuildContext context) {
+    final workoutRef = ref.read(workoutByIdProvider(widget.workoutId));
     final generalDetailsRef =
-        ref.watch(workoutGeneralDetailsProvider(workoutId));
+        ref.watch(workoutGeneralDetailsProvider(widget.workoutId));
 
     if (workoutRef.isLoading || generalDetailsRef.isLoading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(
+            child: WaitingSpinner(
+          title: "Fetching data...",
+        )),
       );
     }
     if (!(workoutRef.hasValue || generalDetailsRef.hasValue)) {
@@ -60,26 +98,30 @@ class WorkoutRunnerIntroScreen extends ConsumerWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  BigElevatedIconButton(
-                    text: "Let's work out!",
-                    icon: Padding(
-                      padding: const EdgeInsets.only(right: 4.0),
-                      child: Text(
-                        '😍',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
+              child: _isStarted
+                  ? const WaitingSpinner(
+                      title: "Starting new workout...",
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        BigElevatedIconButton(
+                          text: "Let's work out!",
+                          icon: Padding(
+                            padding: const EdgeInsets.only(right: 4.0),
+                            child: Text(
+                              '😍',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                          ),
+                          onPressed: () => _openSimulation(context),
+                        ),
+                        BigElevatedIconButton(
+                            icon: const Icon(Icons.arrow_back),
+                            text: "Go back",
+                            onPressed: () => Navigator.pop(context)),
+                      ],
                     ),
-                    onPressed: () => _openSimulation(context, ref),
-                  ),
-                  BigElevatedIconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      text: "Go back",
-                      onPressed: () => Navigator.pop(context)),
-                ],
-              ),
             ),
           ],
         ),

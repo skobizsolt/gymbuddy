@@ -1,36 +1,47 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
+import 'package:gymbuddy/models/workout/step_record.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
+import 'package:gymbuddy/providers/workout_runner_provider.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/big_elevatedButton.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
+import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class WorkoutSimulationSummaryScreen extends ConsumerWidget {
   final int workoutId;
+  final String sessionId;
 
-  const WorkoutSimulationSummaryScreen({super.key, required this.workoutId});
+  const WorkoutSimulationSummaryScreen({
+    super.key,
+    required this.workoutId,
+    required this.sessionId,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final workoutRef = ref.read(workoutByIdProvider(workoutId));
     final stepsRef = ref.read(workoutStepProvider(workoutId));
+    final resultsRef = ref.watch(runnerRecordsBySessionProvider(sessionId));
 
     if (workoutRef.isLoading || stepsRef.isLoading) {
       return const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(),
+          child: WaitingSpinner(title: "Loading your achievements... ⭐"),
         ),
       );
     }
 
     final workoutData = workoutRef.value!;
     final stepsData = stepsRef.value!;
+    final List<StepRecord> summaryData =
+        resultsRef.hasError || !resultsRef.hasValue ? [] : resultsRef.value!;
 
     return Scaffold(
-      // backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
@@ -42,7 +53,7 @@ class WorkoutSimulationSummaryScreen extends ConsumerWidget {
         child: Column(
           children: [
             Expanded(
-              child: _buildTimeline(stepsData),
+              child: _buildTimeline(stepsData, summaryData),
             ),
             BigElevatedIconButton(
                 icon: const Icon(Icons.arrow_back),
@@ -88,74 +99,100 @@ class WorkoutSimulationSummaryScreen extends ConsumerWidget {
     );
   }
 
-  _buildTimeline(List<WorkoutStep> stepsData) {
+  _buildTimeline(List<WorkoutStep> stepsData, List<StepRecord> summaryData) {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: stepsData.length,
-      itemBuilder: (context, index) => TimelineTile(
-        isFirst: index == 0,
-        isLast: index == stepsData.length - 1,
-        indicatorStyle:
-            IndicatorStyle(color: Theme.of(context).colorScheme.primary),
-        beforeLineStyle:
-            LineStyle(color: Theme.of(context).colorScheme.primary),
-        endChild: Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 16.0),
-          child: GestureDetector(
-            onTap: () {},
-            child: InformationTag(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildInformationEntry(
-                    context,
-                    title: "Step",
-                    entry: stepsData[index].stepName,
-                    style: Theme.of(context).textTheme.titleLarge,
-                    padding: 0,
-                  ),
-                  _buildInformationEntry(
-                    context,
-                    title: "Completed at",
-                    entry: "",
-                  ),
-                  _buildInformationEntry(
-                    context,
-                    title: "Expected time to complete",
-                    entry: "${FormatUtils.toTimeString(
-                      new Duration(
-                        seconds: stepsData[index].estimatedTime,
-                      ),
-                    )}",
-                  ),
-                  _buildInformationEntry(
-                    context,
-                    title: "Time to complete",
-                    entry: "",
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Tap for details",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                                  fontStyle: FontStyle.italic,
-                                  color: Theme.of(context).colorScheme.primary),
-                        ),
-                      ],
+      itemBuilder: (context, index) {
+        final StepRecord? stepResult = summaryData.firstWhereOrNull(
+          (element) => element.stepId == stepsData[index].stepId,
+        );
+        final bool hasData = stepResult != null;
+
+        return TimelineTile(
+          isFirst: index == 0,
+          isLast: index == stepsData.length - 1,
+          indicatorStyle: IndicatorStyle(
+            color: hasData ? Colors.green : Theme.of(context).primaryColorLight,
+          ),
+          beforeLineStyle: LineStyle(
+            color: hasData ? Colors.green : Theme.of(context).primaryColorLight,
+          ),
+          endChild: Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 16.0),
+            child: GestureDetector(
+              onTap: hasData ? () {} : () {},
+              child: InformationTag(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildInformationEntry(
+                      context,
+                      title: "Step",
+                      entry: stepsData[index].stepName,
+                      style: Theme.of(context).textTheme.titleLarge,
+                      padding: 0,
                     ),
-                  )
-                ],
+                    hasData
+                        ? _buildInformationEntry(
+                            context,
+                            title: "Completed at",
+                            entry:
+                                "${FormatUtils.formatDateTime(stepResult.completedAt)}",
+                          )
+                        : const SizedBox(),
+                    _buildInformationEntry(
+                      context,
+                      title: "Expected time to complete",
+                      entry: "${FormatUtils.toTimeString(
+                        new Duration(
+                          seconds: stepsData[index].estimatedTime,
+                        ),
+                      )}",
+                    ),
+                    hasData
+                        ? _buildInformationEntry(
+                            context,
+                            title: "You completed this step in",
+                            entry:
+                                "${FormatUtils.toTimeString(stepResult.duration!)}",
+                          )
+                        : const SizedBox(),
+                    !hasData
+                        ? _buildInformationEntry(
+                            context,
+                            title: "Status",
+                            entry: "Not completed",
+                          )
+                        : const SizedBox(),
+                    hasData
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "Tap for details",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                          fontStyle: FontStyle.italic,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                ),
+                              ],
+                            ),
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

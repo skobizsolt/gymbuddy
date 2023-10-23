@@ -17,35 +17,32 @@ class _$WorkoutRunnerApi extends WorkoutRunnerApi {
   final definitionType = WorkoutRunnerApi;
 
   @override
-  Future<Response<List<StepRecordResponse>>> _workoutRunnerGet({
+  Future<Response<SessionStartedResponse>> _workoutRunnerNewSessionPost({
     String? authorization,
-    required int? workoutId,
-    required String? sessionId,
+    required PostSessionDetailsDto? body,
   }) {
-    final Uri $url = Uri.parse('/workout/runner');
-    final Map<String, dynamic> $params = <String, dynamic>{
-      'workoutId': workoutId,
-      'sessionId': sessionId,
-    };
+    final Uri $url = Uri.parse('/workout-runner/new-session');
     final Map<String, String> $headers = {
       if (authorization != null) 'Authorization': authorization,
     };
+    final $body = body;
     final Request $request = Request(
-      'GET',
+      'POST',
       $url,
       client.baseUrl,
-      parameters: $params,
+      body: $body,
       headers: $headers,
     );
-    return client.send<List<StepRecordResponse>, StepRecordResponse>($request);
+    return client
+        .send<SessionStartedResponse, SessionStartedResponse>($request);
   }
 
   @override
-  Future<Response<dynamic>> _workoutRunnerPost({
+  Future<Response<dynamic>> _workoutRunnerAddPost({
     String? authorization,
     required PostRecordDto? body,
   }) {
-    final Uri $url = Uri.parse('/workout/runner');
+    final Uri $url = Uri.parse('/workout-runner/add');
     final Map<String, String> $headers = {
       if (authorization != null) 'Authorization': authorization,
     };
@@ -58,5 +55,27 @@ class _$WorkoutRunnerApi extends WorkoutRunnerApi {
       headers: $headers,
     );
     return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<List<StepRecordResponse>>> _workoutRunnerRecordsGet({
+    String? authorization,
+    required String? sessionId,
+  }) {
+    final Uri $url = Uri.parse('/workout-runner/records');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'sessionId': sessionId
+    };
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+      headers: $headers,
+    );
+    return client.send<List<StepRecordResponse>, StepRecordResponse>($request);
   }
 }

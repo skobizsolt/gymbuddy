@@ -7,6 +7,104 @@ import 'dart:convert';
 part 'workout_runner_api.models.swagger.g.dart';
 
 @JsonSerializable(explicitToJson: true)
+class PostSessionDetailsDto {
+  const PostSessionDetailsDto({
+    this.workoutId,
+    this.userId,
+  });
+
+  factory PostSessionDetailsDto.fromJson(Map<String, dynamic> json) =>
+      _$PostSessionDetailsDtoFromJson(json);
+
+  static const toJsonFactory = _$PostSessionDetailsDtoToJson;
+  Map<String, dynamic> toJson() => _$PostSessionDetailsDtoToJson(this);
+
+  @JsonKey(name: 'workoutId')
+  final int? workoutId;
+  @JsonKey(name: 'userId')
+  final String? userId;
+  static const fromJsonFactory = _$PostSessionDetailsDtoFromJson;
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is PostSessionDetailsDto &&
+            (identical(other.workoutId, workoutId) ||
+                const DeepCollectionEquality()
+                    .equals(other.workoutId, workoutId)) &&
+            (identical(other.userId, userId) ||
+                const DeepCollectionEquality().equals(other.userId, userId)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(workoutId) ^
+      const DeepCollectionEquality().hash(userId) ^
+      runtimeType.hashCode;
+}
+
+extension $PostSessionDetailsDtoExtension on PostSessionDetailsDto {
+  PostSessionDetailsDto copyWith({int? workoutId, String? userId}) {
+    return PostSessionDetailsDto(
+        workoutId: workoutId ?? this.workoutId, userId: userId ?? this.userId);
+  }
+
+  PostSessionDetailsDto copyWithWrapped(
+      {Wrapped<int?>? workoutId, Wrapped<String?>? userId}) {
+    return PostSessionDetailsDto(
+        workoutId: (workoutId != null ? workoutId.value : this.workoutId),
+        userId: (userId != null ? userId.value : this.userId));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class SessionStartedResponse {
+  const SessionStartedResponse({
+    this.sessionId,
+  });
+
+  factory SessionStartedResponse.fromJson(Map<String, dynamic> json) =>
+      _$SessionStartedResponseFromJson(json);
+
+  static const toJsonFactory = _$SessionStartedResponseToJson;
+  Map<String, dynamic> toJson() => _$SessionStartedResponseToJson(this);
+
+  @JsonKey(name: 'sessionId')
+  final String? sessionId;
+  static const fromJsonFactory = _$SessionStartedResponseFromJson;
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is SessionStartedResponse &&
+            (identical(other.sessionId, sessionId) ||
+                const DeepCollectionEquality()
+                    .equals(other.sessionId, sessionId)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(sessionId) ^ runtimeType.hashCode;
+}
+
+extension $SessionStartedResponseExtension on SessionStartedResponse {
+  SessionStartedResponse copyWith({String? sessionId}) {
+    return SessionStartedResponse(sessionId: sessionId ?? this.sessionId);
+  }
+
+  SessionStartedResponse copyWithWrapped({Wrapped<String?>? sessionId}) {
+    return SessionStartedResponse(
+        sessionId: (sessionId != null ? sessionId.value : this.sessionId));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
 class PostRecordDto {
   const PostRecordDto({
     this.workoutId,

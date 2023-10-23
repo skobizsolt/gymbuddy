@@ -46,52 +46,71 @@ abstract class WorkoutRunnerApi extends ChopperService {
 
   ///
   ///@param Authorization
-  ///@param workoutId
-  ///@param sessionId
-  Future<chopper.Response<List<StepRecordResponse>>> workoutRunnerGet({
+  Future<chopper.Response<SessionStartedResponse>> workoutRunnerNewSessionPost({
     String? authorization,
-    required int? workoutId,
-    required String? sessionId,
+    required PostSessionDetailsDto? body,
   }) {
     generatedMapping.putIfAbsent(
-        StepRecordResponse, () => StepRecordResponse.fromJsonFactory);
+        SessionStartedResponse, () => SessionStartedResponse.fromJsonFactory);
 
-    return _workoutRunnerGet(
-        authorization: authorization?.toString(),
-        workoutId: workoutId,
-        sessionId: sessionId);
-  }
-
-  ///
-  ///@param Authorization
-  ///@param workoutId
-  ///@param sessionId
-  @Get(path: '/workout/runner')
-  Future<chopper.Response<List<StepRecordResponse>>> _workoutRunnerGet({
-    @Header('Authorization') String? authorization,
-    @Query('workoutId') required int? workoutId,
-    @Query('sessionId') required String? sessionId,
-  });
-
-  ///
-  ///@param Authorization
-  Future<chopper.Response> workoutRunnerPost({
-    String? authorization,
-    required PostRecordDto? body,
-  }) {
-    return _workoutRunnerPost(
+    return _workoutRunnerNewSessionPost(
         authorization: authorization?.toString(), body: body);
   }
 
   ///
   ///@param Authorization
   @Post(
-    path: '/workout/runner',
+    path: '/workout-runner/new-session',
     optionalBody: true,
   )
-  Future<chopper.Response> _workoutRunnerPost({
+  Future<chopper.Response<SessionStartedResponse>>
+      _workoutRunnerNewSessionPost({
+    @Header('Authorization') String? authorization,
+    @Body() required PostSessionDetailsDto? body,
+  });
+
+  ///
+  ///@param Authorization
+  Future<chopper.Response> workoutRunnerAddPost({
+    String? authorization,
+    required PostRecordDto? body,
+  }) {
+    return _workoutRunnerAddPost(
+        authorization: authorization?.toString(), body: body);
+  }
+
+  ///
+  ///@param Authorization
+  @Post(
+    path: '/workout-runner/add',
+    optionalBody: true,
+  )
+  Future<chopper.Response> _workoutRunnerAddPost({
     @Header('Authorization') String? authorization,
     @Body() required PostRecordDto? body,
+  });
+
+  ///
+  ///@param Authorization
+  ///@param sessionId
+  Future<chopper.Response<List<StepRecordResponse>>> workoutRunnerRecordsGet({
+    String? authorization,
+    required String? sessionId,
+  }) {
+    generatedMapping.putIfAbsent(
+        StepRecordResponse, () => StepRecordResponse.fromJsonFactory);
+
+    return _workoutRunnerRecordsGet(
+        authorization: authorization?.toString(), sessionId: sessionId);
+  }
+
+  ///
+  ///@param Authorization
+  ///@param sessionId
+  @Get(path: '/workout-runner/records')
+  Future<chopper.Response<List<StepRecordResponse>>> _workoutRunnerRecordsGet({
+    @Header('Authorization') String? authorization,
+    @Query('sessionId') required String? sessionId,
   });
 }
 

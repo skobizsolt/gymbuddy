@@ -5,6 +5,7 @@ import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
+import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 import 'package:gymbuddy/widgets/workout/workout_card.dart';
 
 class WorkoutsScreen extends StatelessWidget {
@@ -46,7 +47,9 @@ class WorkoutsScreen extends StatelessWidget {
     // Fetching data
     if (workoutsRef.isLoading) {
       return const Center(
-        child: CircularProgressIndicator(),
+        child: WaitingSpinner(
+          title: "Fetching data...",
+        ),
       );
     }
 

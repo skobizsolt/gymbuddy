@@ -1,32 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/components/stopwatch.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
+import 'package:gymbuddy/models/workout/create_step_record.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/providers/workout_runner_provider.dart';
 import 'package:gymbuddy/screen/workout_runner/summary_screen.dart';
 import 'package:gymbuddy/widgets/utils/big_elevatedButton.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
+import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
-class WorkoutRunnerScreen extends StatefulWidget {
+class WorkoutRunnerScreen extends ConsumerStatefulWidget {
   final List<WorkoutStep> steps;
   final int workoutId;
+  final String sessionId;
 
-  const WorkoutRunnerScreen(
-      {super.key, required this.steps, required this.workoutId});
+  const WorkoutRunnerScreen({
+    super.key,
+    required this.steps,
+    required this.workoutId,
+    required this.sessionId,
+  });
 
   @override
-  State<WorkoutRunnerScreen> createState() => _WorkoutRunnerScreenState();
+  ConsumerState<WorkoutRunnerScreen> createState() =>
+      _WorkoutRunnerScreenState();
 }
 
-class _WorkoutRunnerScreenState extends State<WorkoutRunnerScreen> {
+class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
   var _index = 0;
   final _stepWatchTimer = StopWatchTimer(mode: StopWatchMode.countUp);
   final _totalWatchTimer = StopWatchTimer(mode: StopWatchMode.countUp);
+  late bool _isSaving;
 
   @override
   void initState() {
     super.initState();
+    _isSaving = false;
   }
 
   @override
@@ -36,22 +48,46 @@ class _WorkoutRunnerScreenState extends State<WorkoutRunnerScreen> {
     await _totalWatchTimer.dispose();
   }
 
-  _showNextStep() {
+  _showNextStep(WorkoutStep currentStep) {
     _stepWatchTimer.onResetTimer();
+    _addNewRecord(currentStep);
     setState(() {
       _index++;
     });
   }
 
-  void _finishTraining() {
+  _addNewRecord(WorkoutStep currentStep) async {
+    final newRecord = CreateStepRecord(
+      workoutId: widget.workoutId,
+      stepId: currentStep.stepId,
+      sessionId: widget.sessionId,
+      duration: Duration(milliseconds: _stepWatchTimer.rawTime.value).inSeconds,
+    );
+    try {
+      await ref
+          .read(workoutRunnerStateProvider.notifier)
+          .addNewRecord(newRecord);
+    } on Exception {
+      showErrorSnackBar(
+          context, "We could not save step: ${currentStep.stepName}");
+    }
+  }
+
+  Future<void> _finishTraining(WorkoutStep currentStep) async {
     _stepWatchTimer.onStopTimer();
     _totalWatchTimer.onStopTimer();
+    await _addNewRecord(currentStep);
+    setState(() {
+      _isSaving = true;
+    });
     Navigator.pop(context);
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              WorkoutSimulationSummaryScreen(workoutId: widget.workoutId),
+          builder: (context) => WorkoutSimulationSummaryScreen(
+            workoutId: widget.workoutId,
+            sessionId: widget.sessionId,
+          ),
         ));
   }
 
@@ -81,7 +117,7 @@ class _WorkoutRunnerScreenState extends State<WorkoutRunnerScreen> {
           ),
           _buildTabBarView(_currentStep),
           _buildTotalTime(),
-          _buildButtons(_isLastStep),
+          _buildButtons(_isLastStep, _currentStep),
         ],
       ),
     );
@@ -169,29 +205,36 @@ class _WorkoutRunnerScreenState extends State<WorkoutRunnerScreen> {
     );
   }
 
-  _buildButtons(bool isLastStep) {
+  _buildButtons(bool isLastStep, WorkoutStep currentStep) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        children: [
-          isLastStep
-              ? BigElevatedIconButton(
-                  onPressed: _finishTraining,
-                  text: "Finish training",
-                  icon: const Text('🏁'),
-                )
-              : BigElevatedIconButton(
-                  onPressed: _showNextStep,
-                  text: "Next step",
-                  icon: const Icon(Icons.navigate_next),
+      child: !_isSaving
+          ? Column(
+              children: [
+                isLastStep
+                    ? BigElevatedIconButton(
+                        onPressed: () => _finishTraining(currentStep),
+                        text: "Finish training",
+                        icon: const Text('🏁'),
+                      )
+                    : BigElevatedIconButton(
+                        onPressed: () => _showNextStep(currentStep),
+                        text: "Next step",
+                        icon: const Icon(Icons.navigate_next),
+                      ),
+                BigElevatedIconButton(
+                  onPressed: _stopTraining,
+                  text: "Stop",
+                  icon: const Icon(Icons.stop),
                 ),
-          BigElevatedIconButton(
-            onPressed: _stopTraining,
-            text: "Stop",
-            icon: const Icon(Icons.stop),
-          ),
-        ],
-      ),
+              ],
+            )
+          : const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              child: WaitingSpinner(
+                title: "Fetching your results, stand by! 😎",
+              ),
+            ),
     );
   }
 

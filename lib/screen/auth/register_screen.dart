@@ -12,6 +12,7 @@ import 'package:gymbuddy/service/profile/profile_data_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/widgets/utils/brand_icon.dart';
 import 'package:gymbuddy/widgets/utils/custom_text_button.dart';
+import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 import 'package:gymbuddy/widgets/utils/wide_button.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -162,7 +163,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                         // Register a new user
                         _isAuthenticating
-                            ? const CircularProgressIndicator()
+                            ? const WaitingSpinner(title: "Signing in...")
                             : WideButton(
                                 text: 'Register now!',
                                 onPressed: submitForm,

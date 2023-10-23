@@ -13,6 +13,7 @@ import 'package:gymbuddy/screen/workout_runner/intro_screen.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
+import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -91,7 +92,8 @@ class WorkoutDetailsScreen extends ConsumerWidget {
       return Scaffold(
         backgroundColor: primaryColor,
         body: Center(
-          child: CircularProgressIndicator(color: onPrimaryContainer),
+          child: WaitingSpinner(
+              title: "Fetching data...", color: onPrimaryContainer),
         ),
       );
     }

@@ -6,6 +6,32 @@ part of 'workout_runner_api.models.swagger.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+PostSessionDetailsDto _$PostSessionDetailsDtoFromJson(
+        Map<String, dynamic> json) =>
+    PostSessionDetailsDto(
+      workoutId: json['workoutId'] as int?,
+      userId: json['userId'] as String?,
+    );
+
+Map<String, dynamic> _$PostSessionDetailsDtoToJson(
+        PostSessionDetailsDto instance) =>
+    <String, dynamic>{
+      'workoutId': instance.workoutId,
+      'userId': instance.userId,
+    };
+
+SessionStartedResponse _$SessionStartedResponseFromJson(
+        Map<String, dynamic> json) =>
+    SessionStartedResponse(
+      sessionId: json['sessionId'] as String?,
+    );
+
+Map<String, dynamic> _$SessionStartedResponseToJson(
+        SessionStartedResponse instance) =>
+    <String, dynamic>{
+      'sessionId': instance.sessionId,
+    };
+
 PostRecordDto _$PostRecordDtoFromJson(Map<String, dynamic> json) =>
     PostRecordDto(
       workoutId: json['workoutId'] as int?,
