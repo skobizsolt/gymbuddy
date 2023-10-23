@@ -29,7 +29,8 @@ class WorkoutModelMapper {
 
   WorkoutStep toWorkoutStep(WorkoutStepResponse step) {
     return WorkoutStep(
-        stepNumber: step.stepNumber!,
+        stepId: step.stepId!,
+        stepPosition: step.stepPosition!,
         stepName: step.stepName!,
         details: step.details!,
         workoutType: WorkoutType.values.byName(step.workoutType!.name),

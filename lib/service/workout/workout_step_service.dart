@@ -56,7 +56,7 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
 
   Future<void> editStep({
     required int workoutId,
-    required int stepNumber,
+    required int stepPosition,
     required ChangeWorkoutStepDto? editedStep,
   }) async {
     if (editedStep == null) {
@@ -64,10 +64,10 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
     }
 
     final token = await UserService.firebaseUserJwtToken;
-    var response = await _api.workoutsWorkoutIdStepsStepNumberPut(
+    var response = await _api.workoutsWorkoutIdStepsStepIdPut(
       authorization: token,
       workoutId: workoutId,
-      stepNumber: stepNumber,
+      stepId: stepPosition,
       body: ChangeWorkoutStepRequest.fromJson(editedStep.toMap()),
     );
 
@@ -78,23 +78,23 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
   }
 
   Future<void> deleteStep(
-      BuildContext context, int workoutId, int stepNumber) async {
+      BuildContext context, int workoutId, int stepPosition) async {
     final token = await UserService.firebaseUserJwtToken;
-    final response = await _api.workoutsWorkoutIdStepsStepNumberDelete(
+    final response = await _api.workoutsWorkoutIdStepsStepIdDelete(
       authorization: token,
       workoutId: workoutId,
-      stepNumber: stepNumber,
+      stepId: stepPosition,
     );
 
     ResponseValidator.validateResponse(response);
 
-    state = [...state.where((element) => element.stepNumber != stepNumber)];
+    state = [...state.where((element) => element.stepPosition != stepPosition)];
   }
 
   List<WorkoutStep> _editWorkoutStepState(WorkoutStep mappedEditedStep) {
     return state
         .map(
-          (e) => e.stepNumber == mappedEditedStep.stepNumber
+          (e) => e.stepPosition == mappedEditedStep.stepPosition
               ? mappedEditedStep
               : e,
         )

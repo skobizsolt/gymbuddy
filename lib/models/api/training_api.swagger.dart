@@ -122,95 +122,95 @@ abstract class TrainingApi extends ChopperService {
   ///Gets a step associated with the selected workout
   ///@param Authorization
   ///@param workoutId
-  ///@param stepNumber
+  ///@param stepId
   Future<chopper.Response<WorkoutStepResponse>>
-      workoutsWorkoutIdStepsStepNumberGet({
+      workoutsWorkoutIdStepsStepIdGet({
     String? authorization,
     required int? workoutId,
-    required int? stepNumber,
+    required int? stepId,
   }) {
     generatedMapping.putIfAbsent(
         WorkoutStepResponse, () => WorkoutStepResponse.fromJsonFactory);
 
-    return _workoutsWorkoutIdStepsStepNumberGet(
+    return _workoutsWorkoutIdStepsStepIdGet(
         authorization: authorization?.toString(),
         workoutId: workoutId,
-        stepNumber: stepNumber);
+        stepId: stepId);
   }
 
   ///Gets a step associated with the selected workout
   ///@param Authorization
   ///@param workoutId
-  ///@param stepNumber
-  @Get(path: '/workouts/{workoutId}/steps/{stepNumber}')
+  ///@param stepId
+  @Get(path: '/workouts/{workoutId}/steps/{stepId}')
   Future<chopper.Response<WorkoutStepResponse>>
-      _workoutsWorkoutIdStepsStepNumberGet({
+      _workoutsWorkoutIdStepsStepIdGet({
     @Header('Authorization') String? authorization,
     @Path('workoutId') required int? workoutId,
-    @Path('stepNumber') required int? stepNumber,
+    @Path('stepId') required int? stepId,
   });
 
   ///Edits an existing step
   ///@param Authorization
   ///@param workoutId
-  ///@param stepNumber
+  ///@param stepId
   Future<chopper.Response<WorkoutStepResponse>>
-      workoutsWorkoutIdStepsStepNumberPut({
+      workoutsWorkoutIdStepsStepIdPut({
     String? authorization,
     required int? workoutId,
-    required int? stepNumber,
+    required int? stepId,
     required ChangeWorkoutStepRequest? body,
   }) {
     generatedMapping.putIfAbsent(
         WorkoutStepResponse, () => WorkoutStepResponse.fromJsonFactory);
 
-    return _workoutsWorkoutIdStepsStepNumberPut(
+    return _workoutsWorkoutIdStepsStepIdPut(
         authorization: authorization?.toString(),
         workoutId: workoutId,
-        stepNumber: stepNumber,
+        stepId: stepId,
         body: body);
   }
 
   ///Edits an existing step
   ///@param Authorization
   ///@param workoutId
-  ///@param stepNumber
+  ///@param stepId
   @Put(
-    path: '/workouts/{workoutId}/steps/{stepNumber}',
+    path: '/workouts/{workoutId}/steps/{stepId}',
     optionalBody: true,
   )
   Future<chopper.Response<WorkoutStepResponse>>
-      _workoutsWorkoutIdStepsStepNumberPut({
+      _workoutsWorkoutIdStepsStepIdPut({
     @Header('Authorization') String? authorization,
     @Path('workoutId') required int? workoutId,
-    @Path('stepNumber') required int? stepNumber,
+    @Path('stepId') required int? stepId,
     @Body() required ChangeWorkoutStepRequest? body,
   });
 
   ///Deletes a step from a workout
   ///@param Authorization
   ///@param workoutId
-  ///@param stepNumber
-  Future<chopper.Response> workoutsWorkoutIdStepsStepNumberDelete({
+  ///@param stepId
+  Future<chopper.Response> workoutsWorkoutIdStepsStepIdDelete({
     String? authorization,
     required int? workoutId,
-    required int? stepNumber,
+    required int? stepId,
   }) {
-    return _workoutsWorkoutIdStepsStepNumberDelete(
+    return _workoutsWorkoutIdStepsStepIdDelete(
         authorization: authorization?.toString(),
         workoutId: workoutId,
-        stepNumber: stepNumber);
+        stepId: stepId);
   }
 
   ///Deletes a step from a workout
   ///@param Authorization
   ///@param workoutId
-  ///@param stepNumber
-  @Delete(path: '/workouts/{workoutId}/steps/{stepNumber}')
-  Future<chopper.Response> _workoutsWorkoutIdStepsStepNumberDelete({
+  ///@param stepId
+  @Delete(path: '/workouts/{workoutId}/steps/{stepId}')
+  Future<chopper.Response> _workoutsWorkoutIdStepsStepIdDelete({
     @Header('Authorization') String? authorization,
     @Path('workoutId') required int? workoutId,
-    @Path('stepNumber') required int? stepNumber,
+    @Path('stepId') required int? stepId,
   });
 
   ///List all existing workouts

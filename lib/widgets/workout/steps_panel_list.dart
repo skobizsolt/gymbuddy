@@ -50,7 +50,7 @@ class _StepsPanelListState extends ConsumerState<StepsPanelList> {
           workoutId: widget.workoutId,
           type: CrudType.edit,
           workoutStep: step,
-          stepNumber: step.stepNumber,
+          stepPosition: step.stepPosition,
         ),
       ),
     );
@@ -62,7 +62,7 @@ class _StepsPanelListState extends ConsumerState<StepsPanelList> {
     try {
       await ref
           .read(workoutStepStateProvider.notifier)
-          .deleteStep(context, widget.workoutId, deletedStep.stepNumber)
+          .deleteStep(context, widget.workoutId, deletedStep.stepPosition)
           .then((value) => showSuccessSnackBar(context,
               'Workout step "${deletedStep.stepName}" has been deleted successfully!'));
     } on Exception {
@@ -81,7 +81,7 @@ class _StepsPanelListState extends ConsumerState<StepsPanelList> {
 
     List<WorkoutStep> workoutSteps = stepsRef.value!;
     workoutSteps.sort(
-      (a, b) => a.stepNumber.compareTo(b.stepNumber),
+      (a, b) => a.stepPosition.compareTo(b.stepPosition),
     );
     // Notify the user if no steps added yet
     if (workoutSteps.isEmpty) {

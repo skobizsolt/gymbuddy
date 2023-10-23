@@ -321,7 +321,8 @@ extension $ChangeWorkoutStepRequestExtension on ChangeWorkoutStepRequest {
 @JsonSerializable(explicitToJson: true)
 class WorkoutStepResponse {
   const WorkoutStepResponse({
-    this.stepNumber,
+    this.stepId,
+    this.stepPosition,
     this.stepName,
     this.details,
     this.workoutType,
@@ -334,8 +335,10 @@ class WorkoutStepResponse {
   static const toJsonFactory = _$WorkoutStepResponseToJson;
   Map<String, dynamic> toJson() => _$WorkoutStepResponseToJson(this);
 
-  @JsonKey(name: 'stepNumber')
-  final int? stepNumber;
+  @JsonKey(name: 'stepId')
+  final int? stepId;
+  @JsonKey(name: 'stepPosition')
+  final int? stepPosition;
   @JsonKey(name: 'stepName')
   final String? stepName;
   @JsonKey(name: 'details')
@@ -354,9 +357,11 @@ class WorkoutStepResponse {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is WorkoutStepResponse &&
-            (identical(other.stepNumber, stepNumber) ||
+            (identical(other.stepId, stepId) ||
+                const DeepCollectionEquality().equals(other.stepId, stepId)) &&
+            (identical(other.stepPosition, stepPosition) ||
                 const DeepCollectionEquality()
-                    .equals(other.stepNumber, stepNumber)) &&
+                    .equals(other.stepPosition, stepPosition)) &&
             (identical(other.stepName, stepName) ||
                 const DeepCollectionEquality()
                     .equals(other.stepName, stepName)) &&
@@ -376,7 +381,8 @@ class WorkoutStepResponse {
 
   @override
   int get hashCode =>
-      const DeepCollectionEquality().hash(stepNumber) ^
+      const DeepCollectionEquality().hash(stepId) ^
+      const DeepCollectionEquality().hash(stepPosition) ^
       const DeepCollectionEquality().hash(stepName) ^
       const DeepCollectionEquality().hash(details) ^
       const DeepCollectionEquality().hash(workoutType) ^
@@ -386,13 +392,15 @@ class WorkoutStepResponse {
 
 extension $WorkoutStepResponseExtension on WorkoutStepResponse {
   WorkoutStepResponse copyWith(
-      {int? stepNumber,
+      {int? stepId,
+      int? stepPosition,
       String? stepName,
       String? details,
       enums.WorkoutStepResponseWorkoutType? workoutType,
       int? estimatedTime}) {
     return WorkoutStepResponse(
-        stepNumber: stepNumber ?? this.stepNumber,
+        stepId: stepId ?? this.stepId,
+        stepPosition: stepPosition ?? this.stepPosition,
         stepName: stepName ?? this.stepName,
         details: details ?? this.details,
         workoutType: workoutType ?? this.workoutType,
@@ -400,13 +408,16 @@ extension $WorkoutStepResponseExtension on WorkoutStepResponse {
   }
 
   WorkoutStepResponse copyWithWrapped(
-      {Wrapped<int?>? stepNumber,
+      {Wrapped<int?>? stepId,
+      Wrapped<int?>? stepPosition,
       Wrapped<String?>? stepName,
       Wrapped<String?>? details,
       Wrapped<enums.WorkoutStepResponseWorkoutType?>? workoutType,
       Wrapped<int?>? estimatedTime}) {
     return WorkoutStepResponse(
-        stepNumber: (stepNumber != null ? stepNumber.value : this.stepNumber),
+        stepId: (stepId != null ? stepId.value : this.stepId),
+        stepPosition:
+            (stepPosition != null ? stepPosition.value : this.stepPosition),
         stepName: (stepName != null ? stepName.value : this.stepName),
         details: (details != null ? details.value : this.details),
         workoutType:
