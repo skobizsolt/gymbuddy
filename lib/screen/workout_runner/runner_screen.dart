@@ -86,9 +86,14 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
     });
 
     // Finish session
-    await ref
-        .read(workoutRunnerStateProvider.notifier)
-        .finishTraining(widget.sessionId);
+    try {
+      await ref
+          .read(workoutRunnerStateProvider.notifier)
+          .finishTraining(widget.sessionId);
+    } on Exception {
+      showErrorSnackBar(context,
+          "We could not save everything about this session. Sorry for your inconvinience!");
+    }
 
     // Switch screen to summary screen
     Navigator.pop(context);
