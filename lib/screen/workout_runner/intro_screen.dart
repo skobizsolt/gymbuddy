@@ -32,32 +32,31 @@ class _WorkoutReunnerIntroScreenState
     setState(() {
       _isStarted = true;
     });
-    final stepsRef = ref.read(workoutStepProvider(widget.workoutId));
-    await ref
-        .read(workoutRunnerStateProvider.notifier)
-        .getSessionId(
-          CreateWorkoutSessionRequest(
-            workoutId: widget.workoutId,
-            userId: FirebaseAuth.instance.currentUser!.uid,
-          ),
-        )
-        .then(
-      (value) {
-        Navigator.pop(context);
-        return Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => WorkoutRunnerScreen(
-              workoutId: widget.workoutId,
-              steps: stepsRef.value!,
-              sessionId: value,
-            ),
-          ),
-        );
-      },
-    ).onError(
-      (error, stackTrace) => setState(() {
-        _isStarted = false;
-      }),
+    final stepsRef = ref.watch(workoutStepProvider(widget.workoutId));
+    late String sessionId;
+    try {
+      sessionId =
+          await ref.read(workoutRunnerStateProvider.notifier).getSessionId(
+                CreateWorkoutSessionRequest(
+                  workoutId: widget.workoutId,
+                  userId: FirebaseAuth.instance.currentUser!.uid,
+                ),
+              );
+    } on Exception {
+      Navigator.pop(context);
+      showErrorSnackBar(context,
+          "Sorry, you can't start a new session. Please try again later.");
+      return;
+    }
+    Navigator.pop(context);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => WorkoutRunnerScreen(
+          workoutId: widget.workoutId,
+          steps: stepsRef.value!,
+          sessionId: sessionId,
+        ),
+      ),
     );
   }
 

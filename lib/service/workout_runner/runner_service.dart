@@ -53,4 +53,15 @@ class WorkoutRunnerService extends StateNotifier<List<StepRecord>> {
 
     return response.body!.sessionId!;
   }
+
+  Future<void> finishTraining(final String sessionId) async {
+    var token = await UserService.firebaseUserJwtToken;
+
+    var response = await _api.workoutRunnerFinishPut(
+      authorization: token,
+      sessionId: sessionId,
+    );
+
+    ResponseValidator.validateResponse(response);
+  }
 }

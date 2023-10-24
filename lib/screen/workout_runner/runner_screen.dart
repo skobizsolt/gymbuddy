@@ -48,6 +48,7 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
     await _totalWatchTimer.dispose();
   }
 
+  // Reset step timer and show next step
   _showNextStep(WorkoutStep currentStep) {
     _stepWatchTimer.onResetTimer();
     _addNewRecord(currentStep);
@@ -74,12 +75,22 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
   }
 
   Future<void> _finishTraining(WorkoutStep currentStep) async {
+    // Stopping session counters
     _stepWatchTimer.onStopTimer();
     _totalWatchTimer.onStopTimer();
+
+    // Add last record and set saving state
     await _addNewRecord(currentStep);
     setState(() {
       _isSaving = true;
     });
+
+    // Finish session
+    await ref
+        .read(workoutRunnerStateProvider.notifier)
+        .finishTraining(widget.sessionId);
+
+    // Switch screen to summary screen
     Navigator.pop(context);
     Navigator.push(
         context,
@@ -92,10 +103,30 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
   }
 
   void _stopTraining() {
-    _stepWatchTimer.onStopTimer();
-    _totalWatchTimer.clearPresetTime();
-    showSuccessSnackBar(context, "Training stopped!");
-    Navigator.pop(context);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: const Text(
+          "Are you sure you want to stop this training?",
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actions: [
+          BackButton(color: Theme.of(context).colorScheme.primary),
+          ElevatedButton.icon(
+            onPressed: () {
+              _stepWatchTimer.onStopTimer();
+              _totalWatchTimer.clearPresetTime();
+              showSuccessSnackBar(context, "Training stopped!");
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.stop),
+            label: const Text("Stop"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -224,7 +255,7 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
                       ),
                 BigElevatedIconButton(
                   onPressed: _stopTraining,
-                  text: "Stop",
+                  text: "Abandon training",
                   icon: const Icon(Icons.stop),
                 ),
               ],

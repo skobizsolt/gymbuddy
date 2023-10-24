@@ -17,6 +17,28 @@ class _$WorkoutRunnerApi extends WorkoutRunnerApi {
   final definitionType = WorkoutRunnerApi;
 
   @override
+  Future<Response<dynamic>> _workoutRunnerFinishPut({
+    String? authorization,
+    required String? sessionId,
+  }) {
+    final Uri $url = Uri.parse('/workout-runner/finish');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'sessionId': sessionId
+    };
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
+    final Request $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+      headers: $headers,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<SessionStartedResponse>> _workoutRunnerNewSessionPost({
     String? authorization,
     required PostSessionDetailsDto? body,

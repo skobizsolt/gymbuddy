@@ -46,6 +46,29 @@ abstract class WorkoutRunnerApi extends ChopperService {
 
   ///
   ///@param Authorization
+  ///@param sessionId
+  Future<chopper.Response> workoutRunnerFinishPut({
+    String? authorization,
+    required String? sessionId,
+  }) {
+    return _workoutRunnerFinishPut(
+        authorization: authorization?.toString(), sessionId: sessionId);
+  }
+
+  ///
+  ///@param Authorization
+  ///@param sessionId
+  @Put(
+    path: '/workout-runner/finish',
+    optionalBody: true,
+  )
+  Future<chopper.Response> _workoutRunnerFinishPut({
+    @Header('Authorization') String? authorization,
+    @Query('sessionId') required String? sessionId,
+  });
+
+  ///
+  ///@param Authorization
   Future<chopper.Response<SessionStartedResponse>> workoutRunnerNewSessionPost({
     String? authorization,
     required PostSessionDetailsDto? body,
