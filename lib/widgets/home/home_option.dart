@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/service/home/home_service.dart';
 
-enum HomeOptions { search, popular, newTraining, myTrainings, recentlyLaunched }
+enum HomeOptions { search, popular, newTraining, myTrainings, recentHistory }
 
 class HomeOption extends StatelessWidget {
   const HomeOption({
@@ -21,14 +21,20 @@ class HomeOption extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
         onTap: () {
-          if (id == HomeOptions.search.index) {
-            HomeService.searchWorkouts(context);
-          }
-          if (id == HomeOptions.myTrainings.index) {
-            HomeService.showMyTrainings(context);
-          }
-          if (id == HomeOptions.newTraining.index) {
-            HomeService.addNewTraining(context);
+          switch (HomeOptions.values[id]) {
+            case HomeOptions.search:
+              HomeService.searchWorkouts(context);
+              break;
+            case HomeOptions.myTrainings:
+              HomeService.showMyTrainings(context);
+              break;
+            case HomeOptions.newTraining:
+              HomeService.addNewTraining(context);
+              break;
+            case HomeOptions.recentHistory:
+              HomeService.showRecentHistory(context);
+            default:
+              break;
           }
         },
         child: Card(

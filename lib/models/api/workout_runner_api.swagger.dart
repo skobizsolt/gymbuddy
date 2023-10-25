@@ -135,6 +135,31 @@ abstract class WorkoutRunnerApi extends ChopperService {
     @Header('Authorization') String? authorization,
     @Query('sessionId') required String? sessionId,
   });
+
+  ///
+  ///@param Authorization
+  ///@param userId
+  Future<chopper.Response<List<SessionActivityResponse>>>
+      workoutRunnerActivityGet({
+    String? authorization,
+    required String? userId,
+  }) {
+    generatedMapping.putIfAbsent(
+        SessionActivityResponse, () => SessionActivityResponse.fromJsonFactory);
+
+    return _workoutRunnerActivityGet(
+        authorization: authorization?.toString(), userId: userId);
+  }
+
+  ///
+  ///@param Authorization
+  ///@param userId
+  @Get(path: '/workout-runner/activity')
+  Future<chopper.Response<List<SessionActivityResponse>>>
+      _workoutRunnerActivityGet({
+    @Header('Authorization') String? authorization,
+    @Query('userId') required String? userId,
+  });
 }
 
 typedef $JsonFactory<T> = T Function(Map<String, dynamic> json);

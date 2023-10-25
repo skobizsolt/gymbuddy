@@ -89,7 +89,8 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
     try {
       await ref
           .read(workoutRunnerStateProvider.notifier)
-          .finishTraining(widget.sessionId);
+          .finishTraining(widget.sessionId)
+          .then((value) => ref.invalidate(activityByUserProvider));
     } on Exception {
       showErrorSnackBar(context,
           "We could not save everything about this session. Sorry for your inconvinience!");
@@ -103,6 +104,7 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
           builder: (context) => WorkoutSimulationSummaryScreen(
             workoutId: widget.workoutId,
             sessionId: widget.sessionId,
+            newResult: true,
           ),
         ));
   }
@@ -122,6 +124,7 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
             onPressed: () {
               _stepWatchTimer.onStopTimer();
               _totalWatchTimer.clearPresetTime();
+              ref.invalidate(activityByUserProvider);
               showSuccessSnackBar(context, "Training stopped!");
               Navigator.pop(context);
               Navigator.pop(context);

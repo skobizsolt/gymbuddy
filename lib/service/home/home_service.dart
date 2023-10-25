@@ -7,6 +7,7 @@ import 'package:gymbuddy/models/home/home_dto.dart';
 import 'package:gymbuddy/screen/workout/displays/workout_by_user.dart';
 import 'package:gymbuddy/screen/workout/search_workouts_screen.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
+import 'package:gymbuddy/screen/workout_runner/recent_history.dart';
 
 class HomeService {
   Future<HomeDto> get homeData async {
@@ -50,5 +51,11 @@ class HomeService {
         builder: (context) => const WorkoutsByUser(),
       ),
     );
+  }
+
+  static void showRecentHistory(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const RecentWorkoutHistoryScreen(),
+    ));
   }
 }

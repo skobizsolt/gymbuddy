@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
-import 'package:gymbuddy/models/workout/step_record.dart';
+import 'package:gymbuddy/models/step_record.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/providers/workout_runner_provider.dart';
@@ -15,18 +15,20 @@ import 'package:timeline_tile/timeline_tile.dart';
 class WorkoutSimulationSummaryScreen extends ConsumerWidget {
   final int workoutId;
   final String sessionId;
+  final bool newResult;
 
   const WorkoutSimulationSummaryScreen({
     super.key,
     required this.workoutId,
     required this.sessionId,
+    this.newResult = false,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final workoutRef = ref.read(workoutByIdProvider(workoutId));
     final stepsRef = ref.read(workoutStepProvider(workoutId));
-    final resultsRef = ref.watch(runnerRecordsBySessionProvider(sessionId));
+    final resultsRef = ref.watch(recordsBySessionProvider(sessionId));
 
     if (workoutRef.isLoading || stepsRef.isLoading) {
       return const Scaffold(
@@ -60,8 +62,10 @@ class WorkoutSimulationSummaryScreen extends ConsumerWidget {
                 text: "Go back",
                 onPressed: () {
                   Navigator.pop(context);
-                  showSuccessSnackBar(context,
-                      "Congratulations! You have completed: ${workoutData.title}");
+                  if (newResult) {
+                    showSuccessSnackBar(context,
+                        "Congratulations! You have completed: ${workoutData.title}");
+                  }
                 }),
           ],
         ),

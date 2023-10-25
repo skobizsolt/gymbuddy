@@ -100,4 +100,25 @@ class _$WorkoutRunnerApi extends WorkoutRunnerApi {
     );
     return client.send<List<StepRecordResponse>, StepRecordResponse>($request);
   }
+
+  @override
+  Future<Response<List<SessionActivityResponse>>> _workoutRunnerActivityGet({
+    String? authorization,
+    required String? userId,
+  }) {
+    final Uri $url = Uri.parse('/workout-runner/activity');
+    final Map<String, dynamic> $params = <String, dynamic>{'userId': userId};
+    final Map<String, String> $headers = {
+      if (authorization != null) 'Authorization': authorization,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+      headers: $headers,
+    );
+    return client
+        .send<List<SessionActivityResponse>, SessionActivityResponse>($request);
+  }
 }

@@ -249,6 +249,161 @@ extension $StepRecordResponseExtension on StepRecordResponse {
   }
 }
 
+@JsonSerializable(explicitToJson: true)
+class SessionActivityResponse {
+  const SessionActivityResponse({
+    this.sessionId,
+    this.workoutId,
+    this.workoutName,
+    this.difficulty,
+    this.category,
+    this.startedAt,
+    this.completedAt,
+    this.completionStatus,
+    this.timeToComplete,
+    this.completedInSeconds,
+  });
+
+  factory SessionActivityResponse.fromJson(Map<String, dynamic> json) =>
+      _$SessionActivityResponseFromJson(json);
+
+  static const toJsonFactory = _$SessionActivityResponseToJson;
+  Map<String, dynamic> toJson() => _$SessionActivityResponseToJson(this);
+
+  @JsonKey(name: 'sessionId')
+  final String? sessionId;
+  @JsonKey(name: 'workoutId')
+  final int? workoutId;
+  @JsonKey(name: 'workoutName')
+  final String? workoutName;
+  @JsonKey(name: 'difficulty')
+  final String? difficulty;
+  @JsonKey(name: 'category')
+  final String? category;
+  @JsonKey(name: 'startedAt')
+  final DateTime? startedAt;
+  @JsonKey(name: 'completedAt')
+  final DateTime? completedAt;
+  @JsonKey(name: 'completionStatus')
+  final String? completionStatus;
+  @JsonKey(name: 'timeToComplete')
+  final double? timeToComplete;
+  @JsonKey(name: 'completedInSeconds')
+  final double? completedInSeconds;
+  static const fromJsonFactory = _$SessionActivityResponseFromJson;
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is SessionActivityResponse &&
+            (identical(other.sessionId, sessionId) ||
+                const DeepCollectionEquality()
+                    .equals(other.sessionId, sessionId)) &&
+            (identical(other.workoutId, workoutId) ||
+                const DeepCollectionEquality()
+                    .equals(other.workoutId, workoutId)) &&
+            (identical(other.workoutName, workoutName) ||
+                const DeepCollectionEquality()
+                    .equals(other.workoutName, workoutName)) &&
+            (identical(other.difficulty, difficulty) ||
+                const DeepCollectionEquality()
+                    .equals(other.difficulty, difficulty)) &&
+            (identical(other.category, category) ||
+                const DeepCollectionEquality()
+                    .equals(other.category, category)) &&
+            (identical(other.startedAt, startedAt) ||
+                const DeepCollectionEquality()
+                    .equals(other.startedAt, startedAt)) &&
+            (identical(other.completedAt, completedAt) ||
+                const DeepCollectionEquality()
+                    .equals(other.completedAt, completedAt)) &&
+            (identical(other.completionStatus, completionStatus) ||
+                const DeepCollectionEquality()
+                    .equals(other.completionStatus, completionStatus)) &&
+            (identical(other.timeToComplete, timeToComplete) ||
+                const DeepCollectionEquality()
+                    .equals(other.timeToComplete, timeToComplete)) &&
+            (identical(other.completedInSeconds, completedInSeconds) ||
+                const DeepCollectionEquality()
+                    .equals(other.completedInSeconds, completedInSeconds)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(sessionId) ^
+      const DeepCollectionEquality().hash(workoutId) ^
+      const DeepCollectionEquality().hash(workoutName) ^
+      const DeepCollectionEquality().hash(difficulty) ^
+      const DeepCollectionEquality().hash(category) ^
+      const DeepCollectionEquality().hash(startedAt) ^
+      const DeepCollectionEquality().hash(completedAt) ^
+      const DeepCollectionEquality().hash(completionStatus) ^
+      const DeepCollectionEquality().hash(timeToComplete) ^
+      const DeepCollectionEquality().hash(completedInSeconds) ^
+      runtimeType.hashCode;
+}
+
+extension $SessionActivityResponseExtension on SessionActivityResponse {
+  SessionActivityResponse copyWith(
+      {String? sessionId,
+      int? workoutId,
+      String? workoutName,
+      String? difficulty,
+      String? category,
+      DateTime? startedAt,
+      DateTime? completedAt,
+      String? completionStatus,
+      double? timeToComplete,
+      double? completedInSeconds}) {
+    return SessionActivityResponse(
+        sessionId: sessionId ?? this.sessionId,
+        workoutId: workoutId ?? this.workoutId,
+        workoutName: workoutName ?? this.workoutName,
+        difficulty: difficulty ?? this.difficulty,
+        category: category ?? this.category,
+        startedAt: startedAt ?? this.startedAt,
+        completedAt: completedAt ?? this.completedAt,
+        completionStatus: completionStatus ?? this.completionStatus,
+        timeToComplete: timeToComplete ?? this.timeToComplete,
+        completedInSeconds: completedInSeconds ?? this.completedInSeconds);
+  }
+
+  SessionActivityResponse copyWithWrapped(
+      {Wrapped<String?>? sessionId,
+      Wrapped<int?>? workoutId,
+      Wrapped<String?>? workoutName,
+      Wrapped<String?>? difficulty,
+      Wrapped<String?>? category,
+      Wrapped<DateTime?>? startedAt,
+      Wrapped<DateTime?>? completedAt,
+      Wrapped<String?>? completionStatus,
+      Wrapped<double?>? timeToComplete,
+      Wrapped<double?>? completedInSeconds}) {
+    return SessionActivityResponse(
+        sessionId: (sessionId != null ? sessionId.value : this.sessionId),
+        workoutId: (workoutId != null ? workoutId.value : this.workoutId),
+        workoutName:
+            (workoutName != null ? workoutName.value : this.workoutName),
+        difficulty: (difficulty != null ? difficulty.value : this.difficulty),
+        category: (category != null ? category.value : this.category),
+        startedAt: (startedAt != null ? startedAt.value : this.startedAt),
+        completedAt:
+            (completedAt != null ? completedAt.value : this.completedAt),
+        completionStatus: (completionStatus != null
+            ? completionStatus.value
+            : this.completionStatus),
+        timeToComplete: (timeToComplete != null
+            ? timeToComplete.value
+            : this.timeToComplete),
+        completedInSeconds: (completedInSeconds != null
+            ? completedInSeconds.value
+            : this.completedInSeconds));
+  }
+}
+
 // ignore: unused_element
 String? _dateToJson(DateTime? date) {
   if (date == null) {

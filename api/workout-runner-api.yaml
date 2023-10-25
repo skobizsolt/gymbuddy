@@ -95,6 +95,31 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/StepRecordResponse'
+  /workout-runner/activity:
+    get:
+      tags:
+        - record-controller
+      operationId: getRecentActivity
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SessionActivityResponse'
 components:
   schemas:
     PostSessionDetailsDto:
@@ -133,6 +158,32 @@ components:
           type: string
           format: date-time
         duration:
+          type: number
+    SessionActivityResponse:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        workoutId:
+          type: integer
+          format: int64
+        workoutName:
+          type: string
+        difficulty:
+          type: string
+        category:
+          type: string
+        startedAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+        completionStatus:
+          type: string
+        timeToComplete:
+          type: number
+        completedInSeconds:
           type: number
   securitySchemes:
     token:

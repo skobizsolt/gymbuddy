@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/api/workout_runner_api.swagger.dart';
+import 'package:gymbuddy/models/session_activity.dart';
 import 'package:gymbuddy/models/workout/create_session.dart';
 import 'package:gymbuddy/models/workout/create_step_record.dart';
-import 'package:gymbuddy/models/workout/step_record.dart';
+import 'package:gymbuddy/models/step_record.dart';
 import 'package:gymbuddy/service/auth/user_service.dart';
 import 'package:gymbuddy/service/mapper/workout_record_mapper.dart';
 import 'package:gymbuddy/service/util/response_validator.dart';
@@ -14,6 +16,20 @@ class WorkoutRunnerService extends StateNotifier<List<StepRecord>> {
   final _api = WorkoutRunnerApi.create(
     baseUrl: Uri.http(GlobalValues.SERVER_URL),
   );
+
+  Future<List<SessionActivity>> getRecentActivity() async {
+    var token = await UserService.firebaseUserJwtToken;
+
+    var response = await _api.workoutRunnerActivityGet(
+      authorization: token,
+      userId: FirebaseAuth.instance.currentUser!.uid,
+    );
+    ResponseValidator.validateResponse(response);
+
+    final records = WorkoutRecordMapper.toSessionActivityList(response.body!);
+
+    return records;
+  }
 
   Future<List<StepRecord>> getRecordsBySessionId(final String sessionId) async {
     var token = await UserService.firebaseUserJwtToken;
