@@ -5,6 +5,7 @@ import 'package:gymbuddy/providers/user_provider.dart';
 import 'package:gymbuddy/widgets/home/home_option.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
+import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
   HomeScreen({super.key});
@@ -66,23 +67,11 @@ class HomeScreen extends ConsumerWidget {
 
     // If userdata is loading
     if (homeData.isLoading) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                    height: 25,
-                    width: 25,
-                    child: const CircularProgressIndicator()),
-                const SizedBox(
-                  width: 15,
-                ),
-                const Text('Fetching data...')
-              ],
-            )
+            WaitingSpinner(title: 'Fetching data...'),
           ],
         ),
       );

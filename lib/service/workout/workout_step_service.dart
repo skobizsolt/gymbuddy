@@ -13,10 +13,9 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
 
   final _workoutMapper = WorkoutModelMapper();
   final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
-  var _jwt = UserService.firebaseUserJwtToken;
 
   Future<List<WorkoutStep>> getSteps(int workoutId) async {
-    final token = await _jwt;
+    final token = await UserService.firebaseUserJwtToken;
     var response = await _api.workoutsWorkoutIdStepsGet(
       authorization: token,
       workoutId: workoutId,
@@ -43,7 +42,7 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
       return;
     }
 
-    final token = await _jwt;
+    final token = await UserService.firebaseUserJwtToken;
     var response = await _api.workoutsWorkoutIdStepsPost(
       authorization: token,
       workoutId: workoutId,
@@ -57,18 +56,18 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
 
   Future<void> editStep({
     required int workoutId,
-    required int stepNumber,
+    required int stepPosition,
     required ChangeWorkoutStepDto? editedStep,
   }) async {
     if (editedStep == null) {
       return;
     }
 
-    final token = await _jwt;
-    var response = await _api.workoutsWorkoutIdStepsStepNumberPut(
+    final token = await UserService.firebaseUserJwtToken;
+    var response = await _api.workoutsWorkoutIdStepsStepIdPut(
       authorization: token,
       workoutId: workoutId,
-      stepNumber: stepNumber,
+      stepId: stepPosition,
       body: ChangeWorkoutStepRequest.fromJson(editedStep.toMap()),
     );
 
@@ -79,23 +78,23 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
   }
 
   Future<void> deleteStep(
-      BuildContext context, int workoutId, int stepNumber) async {
-    final token = await _jwt;
-    final response = await _api.workoutsWorkoutIdStepsStepNumberDelete(
+      BuildContext context, int workoutId, int stepPosition) async {
+    final token = await UserService.firebaseUserJwtToken;
+    final response = await _api.workoutsWorkoutIdStepsStepIdDelete(
       authorization: token,
       workoutId: workoutId,
-      stepNumber: stepNumber,
+      stepId: stepPosition,
     );
 
     ResponseValidator.validateResponse(response);
 
-    state = [...state.where((element) => element.stepNumber != stepNumber)];
+    state = [...state.where((element) => element.stepPosition != stepPosition)];
   }
 
   List<WorkoutStep> _editWorkoutStepState(WorkoutStep mappedEditedStep) {
     return state
         .map(
-          (e) => e.stepNumber == mappedEditedStep.stepNumber
+          (e) => e.stepPosition == mappedEditedStep.stepPosition
               ? mappedEditedStep
               : e,
         )

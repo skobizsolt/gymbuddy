@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class FormatUtils {
   static const String HOUR_TAG = 'hours';
   static const String MINUTE_TAG = 'mins';
@@ -20,5 +22,12 @@ class FormatUtils {
       return '${timeBlocks[2]} $SECOND_TAG';
     }
     return '${duration.inSeconds} $SECOND_TAG';
+  }
+
+  static formatDateTime(DateTime? dateTime) {
+    if (dateTime == null) {
+      return "";
+    }
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
   }
 }

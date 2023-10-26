@@ -14,9 +14,13 @@ class CustomSearchBar extends StatelessWidget {
     return SizedBox(
       height: height,
       child: SearchBar(
-        padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(
-          horizontal: 16,
-        )),
+        padding: const MaterialStatePropertyAll(
+          EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
+        ),
+        shape: MaterialStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
         leading: Icon(
           Icons.search,
           color: Theme.of(context).colorScheme.primary,

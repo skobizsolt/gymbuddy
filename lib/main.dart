@@ -128,7 +128,9 @@ ThemeData kDarkTheme(BuildContext context) {
     // Elevated button theme
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
+        elevation: 10,
         backgroundColor: discordLightGray,
+        surfaceTintColor: discordBlack,
         textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -143,7 +145,6 @@ ThemeData kDarkTheme(BuildContext context) {
         elevation: const MaterialStatePropertyAll(8),
       ),
     ),
-
     floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
       backgroundColor: Theme.of(context).primaryColorDark,
       foregroundColor: orange,
@@ -189,6 +190,9 @@ ThemeData kDarkTheme(BuildContext context) {
       labelStyle: const TextStyle().copyWith(
         color: colorScheme.primary,
       ),
+    ),
+    tabBarTheme: const TabBarTheme().copyWith(
+      dividerColor: Colors.transparent,
     ),
   );
 }

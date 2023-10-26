@@ -1,0 +1,192 @@
+openapi: 3.0.1
+info:
+  title: Workout-runner API
+  description: GymBuddy workout runner backend API
+  version: '1.0'
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /workout-runner/finish:
+    put:
+      tags:
+        - session-controller
+      operationId: finishTraining
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: sessionId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /workout-runner/new-session:
+    post:
+      tags:
+        - session-controller
+      operationId: startSession
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostSessionDetailsDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SessionStartedResponse'
+  /workout-runner/add:
+    post:
+      tags:
+        - record-controller
+      operationId: recordStep
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostRecordDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+  /workout-runner/records:
+    get:
+      tags:
+        - record-controller
+      operationId: getRecords
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: sessionId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StepRecordResponse'
+  /workout-runner/activity:
+    get:
+      tags:
+        - record-controller
+      operationId: getRecentActivity
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SessionActivityResponse'
+components:
+  schemas:
+    PostSessionDetailsDto:
+      type: object
+      properties:
+        workoutId:
+          type: integer
+          format: int64
+        userId:
+          type: string
+    SessionStartedResponse:
+      type: object
+      properties:
+        sessionId:
+          type: string
+    PostRecordDto:
+      type: object
+      properties:
+        workoutId:
+          type: integer
+          format: int64
+        stepId:
+          type: integer
+          format: int64
+        sessionId:
+          type: string
+        duration:
+          type: number
+    StepRecordResponse:
+      type: object
+      properties:
+        stepId:
+          type: integer
+          format: int64
+        completedAt:
+          type: string
+          format: date-time
+        duration:
+          type: number
+    SessionActivityResponse:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        workoutId:
+          type: integer
+          format: int64
+        workoutName:
+          type: string
+        difficulty:
+          type: string
+        category:
+          type: string
+        startedAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+        completionStatus:
+          type: string
+        timeToComplete:
+          type: number
+        completedInSeconds:
+          type: number
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

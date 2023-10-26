@@ -9,9 +9,11 @@ import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
+import 'package:gymbuddy/screen/workout_runner/intro_screen.dart';
 import 'package:gymbuddy/screen/workout_steps/workout_step_manager.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
+import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -90,7 +92,8 @@ class WorkoutDetailsScreen extends ConsumerWidget {
       return Scaffold(
         backgroundColor: primaryColor,
         body: Center(
-          child: CircularProgressIndicator(color: onPrimaryContainer),
+          child: WaitingSpinner(
+              title: "Fetching data...", color: onPrimaryContainer),
         ),
       );
     }
@@ -104,16 +107,19 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     Widget _renderAppBarButtons(int totalSteps) {
       // Delete Button
       return isSelfRecorce
-          ? IconButton(
-              onPressed: () => _showDeletionModal(
-                context: context,
-                ref: ref,
-                workout: workout,
-                totalSteps: totalSteps,
-              ),
-              icon: Icon(
-                Icons.delete,
-                color: onPrimaryContainer,
+          ? Padding(
+              padding: const EdgeInsets.only(right: 4.0),
+              child: IconButton(
+                onPressed: () => _showDeletionModal(
+                  context: context,
+                  ref: ref,
+                  workout: workout,
+                  totalSteps: totalSteps,
+                ),
+                icon: Icon(
+                  Icons.delete,
+                  color: onPrimaryContainer,
+                ),
               ),
             )
           : const SizedBox();
@@ -338,26 +344,28 @@ class WorkoutDetailsScreen extends ConsumerWidget {
           ],
         ),
       ),
-      footing: Container(
-        color: backgroundColor,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.play_arrow),
-                    label: const Text('Launch'),
-                  ),
+      footing: steps.isEmpty
+          ? const SizedBox()
+          : Container(
+              color: backgroundColor,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () => _launchWorkout(context),
+                          icon: const Icon(Icons.play_arrow),
+                          label: const Text('Launch'),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
+              ),
+            ),
     );
   }
 
@@ -406,5 +414,11 @@ class WorkoutDetailsScreen extends ConsumerWidget {
       subtitle: const Text("Are you sure? This operation cannot be undone!"),
       onTap: () => deleteWorkout(context, ref, workout),
     );
+  }
+
+  _launchWorkout(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => WorkoutRunnerIntroScreen(workoutId: workoutId),
+    ));
   }
 }

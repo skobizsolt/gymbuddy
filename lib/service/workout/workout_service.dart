@@ -13,14 +13,13 @@ class WorkoutService extends StateNotifier<List<Workout>> {
 
   final _workoutMapper = WorkoutModelMapper();
   final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
-  var _jwt = UserService.firebaseUserJwtToken;
 
   Future<List<Workout>> getWorkouts() async {
     if (state.isNotEmpty) {
       return state;
     }
 
-    final token = await _jwt;
+    final token = await UserService.firebaseUserJwtToken;
 
     final response = await _api.workoutsGet(
       authorization: token,
@@ -40,7 +39,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
 
   Future<WorkoutResponse> createWorkout(ChangeWorkoutDto workout) async {
     var request = ChangeWorkoutRequest.fromJson(workout.toAddWorkoutMap());
-    final token = await _jwt;
+    final token = await UserService.firebaseUserJwtToken;
     var response = await _api.workoutsPost(
       authorization: token,
       userId: FirebaseAuth.instance.currentUser!.uid,
@@ -57,7 +56,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
 
   Stream<WorkoutDetailsResponse> getGeneralStepDetails(
       final int workoutId) async* {
-    final token = await _jwt;
+    final token = await UserService.firebaseUserJwtToken;
     var response = await _api.workoutsWorkoutIdDetailsGet(
       authorization: token,
       workoutId: workoutId,
@@ -69,7 +68,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
     final int workoutId,
     final ChangeWorkoutDto workout,
   ) async {
-    final token = await _jwt;
+    final token = await UserService.firebaseUserJwtToken;
     var response = await _api.workoutsWorkoutIdPut(
       authorization: token,
       workoutId: workoutId,
@@ -88,7 +87,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
   }
 
   Future<void> deleteWorkout(int workoutId) async {
-    final token = await _jwt;
+    final token = await UserService.firebaseUserJwtToken;
     final response = await _api.workoutsWorkoutIdDelete(
       authorization: token,
       workoutId: workoutId,

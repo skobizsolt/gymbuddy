@@ -88,7 +88,7 @@ paths:
           description: OK
       security:
         - token: []
-  /workouts/{workoutId}/steps/{stepNumber}:
+  /workouts/{workoutId}/steps/{stepId}:
     get:
       tags:
         - workout-steps-controller
@@ -106,7 +106,7 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: stepNumber
+        - name: stepId
           in: path
           required: true
           schema:
@@ -138,7 +138,7 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: stepNumber
+        - name: stepId
           in: path
           required: true
           schema:
@@ -176,7 +176,7 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: stepNumber
+        - name: stepId
           in: path
           required: true
           schema:
@@ -398,7 +398,10 @@ components:
     WorkoutStepResponse:
       type: object
       properties:
-        stepNumber:
+        stepId:
+          type: integer
+          format: int64
+        stepPosition:
           type: integer
           format: int32
         stepName:

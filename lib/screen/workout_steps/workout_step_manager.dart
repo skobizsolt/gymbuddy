@@ -20,12 +20,12 @@ class WorkoutStepManager extends ConsumerStatefulWidget {
       required this.type,
       required this.workoutId,
       this.workoutStep,
-      this.stepNumber});
+      this.stepPosition});
 
   final CrudType type;
   final int workoutId;
   final WorkoutStep? workoutStep;
-  final int? stepNumber;
+  final int? stepPosition;
 
   @override
   ConsumerState<WorkoutStepManager> createState() => _WorkoutManagerState();
@@ -45,7 +45,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
   @override
   initState() {
     super.initState();
-    _step.estimatedTime = currentEstimatedTime;
+    _step.estimatedTime = currentEstimatedTime ?? 0;
   }
 
   _saveForm() async {
@@ -75,7 +75,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
               .read(workoutStepStateProvider.notifier)
               .editStep(
                   workoutId: widget.workoutId,
-                  stepNumber: widget.stepNumber!,
+                  stepPosition: widget.stepPosition!,
                   editedStep: _step)
               .then((value) =>
                   showSuccessSnackBar(context, "Step edited successfully!"));

@@ -74,12 +74,12 @@ class _$TrainingApi extends TrainingApi {
   }
 
   @override
-  Future<Response<WorkoutStepResponse>> _workoutsWorkoutIdStepsStepNumberGet({
+  Future<Response<WorkoutStepResponse>> _workoutsWorkoutIdStepsStepIdGet({
     String? authorization,
     required int? workoutId,
-    required int? stepNumber,
+    required int? stepId,
   }) {
-    final Uri $url = Uri.parse('/workouts/${workoutId}/steps/${stepNumber}');
+    final Uri $url = Uri.parse('/workouts/${workoutId}/steps/${stepId}');
     final Map<String, String> $headers = {
       if (authorization != null) 'Authorization': authorization,
     };
@@ -93,13 +93,13 @@ class _$TrainingApi extends TrainingApi {
   }
 
   @override
-  Future<Response<WorkoutStepResponse>> _workoutsWorkoutIdStepsStepNumberPut({
+  Future<Response<WorkoutStepResponse>> _workoutsWorkoutIdStepsStepIdPut({
     String? authorization,
     required int? workoutId,
-    required int? stepNumber,
+    required int? stepId,
     required ChangeWorkoutStepRequest? body,
   }) {
-    final Uri $url = Uri.parse('/workouts/${workoutId}/steps/${stepNumber}');
+    final Uri $url = Uri.parse('/workouts/${workoutId}/steps/${stepId}');
     final Map<String, String> $headers = {
       if (authorization != null) 'Authorization': authorization,
     };
@@ -115,12 +115,12 @@ class _$TrainingApi extends TrainingApi {
   }
 
   @override
-  Future<Response<dynamic>> _workoutsWorkoutIdStepsStepNumberDelete({
+  Future<Response<dynamic>> _workoutsWorkoutIdStepsStepIdDelete({
     String? authorization,
     required int? workoutId,
-    required int? stepNumber,
+    required int? stepId,
   }) {
-    final Uri $url = Uri.parse('/workouts/${workoutId}/steps/${stepNumber}');
+    final Uri $url = Uri.parse('/workouts/${workoutId}/steps/${stepId}');
     final Map<String, String> $headers = {
       if (authorization != null) 'Authorization': authorization,
     };

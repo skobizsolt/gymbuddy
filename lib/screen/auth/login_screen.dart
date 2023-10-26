@@ -8,6 +8,7 @@ import 'package:gymbuddy/screen/auth/forgot_password_screen.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/widgets/utils/brand_icon.dart';
 import 'package:gymbuddy/widgets/utils/custom_text_button.dart';
+import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 import 'package:gymbuddy/widgets/utils/wide_button.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -120,7 +121,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                         // Log in the user
                         _isAuthenticating
-                            ? const CircularProgressIndicator()
+                            ? const WaitingSpinner(title: "Logging in...")
                             : WideButton(
                                 text: 'Login',
                                 onPressed: () => submitForm(ref),

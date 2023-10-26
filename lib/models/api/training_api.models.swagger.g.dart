@@ -75,7 +75,8 @@ Map<String, dynamic> _$ChangeWorkoutStepRequestToJson(
 
 WorkoutStepResponse _$WorkoutStepResponseFromJson(Map<String, dynamic> json) =>
     WorkoutStepResponse(
-      stepNumber: json['stepNumber'] as int?,
+      stepId: json['stepId'] as int?,
+      stepPosition: json['stepPosition'] as int?,
       stepName: json['stepName'] as String?,
       details: json['details'] as String?,
       workoutType:
@@ -86,7 +87,8 @@ WorkoutStepResponse _$WorkoutStepResponseFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$WorkoutStepResponseToJson(
         WorkoutStepResponse instance) =>
     <String, dynamic>{
-      'stepNumber': instance.stepNumber,
+      'stepId': instance.stepId,
+      'stepPosition': instance.stepPosition,
       'stepName': instance.stepName,
       'details': instance.details,
       'workoutType': workoutStepResponseWorkoutTypeToJson(instance.workoutType),

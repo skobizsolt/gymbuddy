@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbuddy/components/inputs/custom_searchbar.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
+import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 import 'package:gymbuddy/widgets/workout/workout_card.dart';
 
 class WorkoutsScreen extends StatelessWidget {
@@ -17,6 +19,7 @@ class WorkoutsScreen extends StatelessWidget {
   Widget _renderWorkouts({required List<Workout> workoutList}) {
     return ListView.builder(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: workoutList.length,
       itemBuilder: (context, index) {
         return WorkoutCard(workoutId: workoutList[index].workoutId);
@@ -44,7 +47,9 @@ class WorkoutsScreen extends StatelessWidget {
     // Fetching data
     if (workoutsRef.isLoading) {
       return const Center(
-        child: CircularProgressIndicator(),
+        child: WaitingSpinner(
+          title: "Fetching data...",
+        ),
       );
     }
 
@@ -89,8 +94,15 @@ class WorkoutsScreen extends StatelessWidget {
         : Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              // Search Bar
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: CustomSearchBar(
+                  color: Theme.of(context).primaryColorLight,
+                ),
+              ),
               const SizedBox(
-                height: 20,
+                height: 24,
               ),
               _renderWorkouts(workoutList: workoutsRef.value!),
             ],
