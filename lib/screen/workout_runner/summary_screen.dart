@@ -26,8 +26,8 @@ class WorkoutSimulationSummaryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final workoutRef = ref.read(workoutByIdProvider(workoutId));
-    final stepsRef = ref.read(workoutStepProvider(workoutId));
+    final workoutRef = ref.watch(workoutByIdProvider(workoutId));
+    final stepsRef = ref.watch(workoutStepProvider(workoutId));
     final resultsRef = ref.watch(recordsBySessionProvider(sessionId));
 
     if (workoutRef.isLoading || stepsRef.isLoading) {

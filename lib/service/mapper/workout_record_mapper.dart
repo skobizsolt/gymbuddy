@@ -32,6 +32,7 @@ class WorkoutRecordMapper {
           WorkoutDifficulty.values.byName(entry.difficulty!.toLowerCase()),
       category: WorkoutCategory.values.byName(entry.category!.toLowerCase()),
       startedAt: entry.startedAt!,
+      completedAt: entry.completedAt,
       completionStatus:
           CompletionStatus.values.byName(entry.completionStatus!.toLowerCase()),
       timeToComplete: Duration(seconds: entry.timeToComplete!.toInt()),
