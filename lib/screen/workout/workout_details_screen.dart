@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/custom_modals.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
+import 'package:gymbuddy/components/like_counter.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/workout.dart';
@@ -106,23 +107,33 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     // Renders app bar buttons
     Widget _renderAppBarButtons(int totalSteps) {
       // Delete Button
-      return isSelfRecorce
-          ? Padding(
-              padding: const EdgeInsets.only(right: 4.0),
-              child: IconButton(
-                onPressed: () => _showDeletionModal(
-                  context: context,
-                  ref: ref,
-                  workout: workout,
-                  totalSteps: totalSteps,
-                ),
-                icon: Icon(
-                  Icons.delete,
-                  color: onPrimaryContainer,
-                ),
+      return Padding(
+        padding: const EdgeInsets.only(right: 4.0),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: LikeCounter(
+                workoutId: workoutId,
               ),
-            )
-          : const SizedBox();
+            ),
+            isSelfRecorce
+                ? IconButton(
+                    onPressed: () => _showDeletionModal(
+                      context: context,
+                      ref: ref,
+                      workout: workout,
+                      totalSteps: totalSteps,
+                    ),
+                    icon: Icon(
+                      Icons.delete,
+                      color: onPrimaryContainer,
+                    ),
+                  )
+                : const SizedBox(),
+          ],
+        ),
+      );
     }
 
     // Renders the Workouts name
