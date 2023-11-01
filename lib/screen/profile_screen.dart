@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/providers/auth_provider.dart';
 import 'package:gymbuddy/screen/profile/change_password_screen.dart';
+import 'package:gymbuddy/screen/workout/displays/workout_by_saved.dart';
 import 'package:gymbuddy/widgets/profile/option_card.dart';
 import 'package:gymbuddy/widgets/profile/profile_card.dart';
 
@@ -23,9 +24,14 @@ class ProfileScreen extends ConsumerWidget {
 
           // render each option
           // Saved workouts
-          const OptionCard(
+          OptionCard(
             title: 'Saved Workouts',
             icon: Icons.favorite_outline_rounded,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const WorkoutBySavedScreen(),
+              ),
+            ),
           ),
 
           // Change password
