@@ -7,12 +7,14 @@ import 'package:gymbuddy/models/workout/change_workout.dart';
 import 'package:gymbuddy/service/auth/user_service.dart';
 import 'package:gymbuddy/service/mapper/workout_mapper.dart';
 import 'package:gymbuddy/service/util/response_validator.dart';
+import 'package:gymbuddy/service/workout/workout_interaction_service.dart';
 
 class WorkoutService extends StateNotifier<List<Workout>> {
   WorkoutService() : super([]);
 
   final _workoutMapper = WorkoutModelMapper();
   final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
+  final _interactionService = WorkoutInteractionService();
 
   Future<List<Workout>> getWorkouts() async {
     if (state.isNotEmpty) {
@@ -50,6 +52,8 @@ class WorkoutService extends StateNotifier<List<Workout>> {
 
     final newWorkout = _workoutMapper.toWorkout(response.body!);
     state = [...state, newWorkout];
+
+    await _interactionService.createLikesDocument(newWorkout.workoutId);
 
     return response.body!;
   }
@@ -96,5 +100,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
     ResponseValidator.validateResponse(response);
 
     state = [...state.where((element) => element.workoutId != workoutId)];
+
+    _interactionService.deleteLikesDocument(workoutId);
   }
 }

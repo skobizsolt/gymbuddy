@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbuddy/global/firebase_constants.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/home/home_dto.dart';
+import 'package:gymbuddy/screen/workout/displays/workout_by_interaction.dart';
 import 'package:gymbuddy/screen/workout/displays/workout_by_user.dart';
 import 'package:gymbuddy/screen/workout/search_workouts_screen.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
@@ -56,6 +57,14 @@ class HomeService {
   static void showRecentHistory(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const RecentWorkoutHistoryScreen(),
+    ));
+  }
+
+  static void showPopularWorkouts(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const WorkoutByInteractionScreen(
+        interaction: WorkoutInteraction.popular,
+      ),
     ));
   }
 }

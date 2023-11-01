@@ -33,6 +33,10 @@ class HomeOption extends StatelessWidget {
               break;
             case HomeOptions.recentHistory:
               HomeService.showRecentHistory(context);
+              break;
+            case HomeOptions.popular:
+              HomeService.showPopularWorkouts(context);
+              break;
             default:
               break;
           }

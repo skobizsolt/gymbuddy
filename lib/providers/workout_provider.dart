@@ -20,7 +20,7 @@ var workoutsByCategoryProvider =
     var workouts = ref.watch(workoutsProvider).value;
     return workouts == null
         ? []
-        : workouts.where((element) => element.category == category).toList();
+        : workouts.where((id) => id.category == category).toList();
   },
 );
 
@@ -30,8 +30,7 @@ var workoutsByUserProvider = FutureProvider<List<Workout>?>(
     return workouts == null
         ? []
         : workouts
-            .where((element) =>
-                element.userId == FirebaseAuth.instance.currentUser!.uid)
+            .where((id) => id.userId == FirebaseAuth.instance.currentUser!.uid)
             .toList();
   },
 );
@@ -41,8 +40,7 @@ var workoutByIdProvider = FutureProvider.family<Workout?, int>(
     var workouts = ref.watch(workoutsProvider).value;
     return workouts == null
         ? null
-        : workouts.firstWhere((element) => element.workoutId == workoutId,
-            orElse: null);
+        : workouts.firstWhere((id) => id.workoutId == workoutId, orElse: null);
   },
 );
 
@@ -61,4 +59,17 @@ var workoutGeneralDetailsProvider =
   ref.watch(workoutStepStateProvider);
   ref.watch(workoutStepProvider(workoutId));
   return WorkoutService().getGeneralStepDetails(workoutId);
+});
+
+var filterWorkoutsByIdsProvider =
+    FutureProvider.family<List<Workout>, List<int>>((ref, ids) {
+  var workouts = ref.watch(workoutsProvider).value ?? [];
+  if (workouts.isEmpty) {
+    return [];
+  }
+  List<Workout> likedByUser = [];
+  ids.forEach((id) {
+    likedByUser.add(workouts.firstWhere((workout) => workout.workoutId == id));
+  });
+  return likedByUser;
 });
