@@ -61,7 +61,7 @@ var workoutGeneralDetailsProvider =
   return WorkoutService().getGeneralStepDetails(workoutId);
 });
 
-var userFavouriteProvider =
+var filterWorkoutsByIdsProvider =
     FutureProvider.family<List<Workout>, List<int>>((ref, ids) {
   var workouts = ref.watch(workoutsProvider).value ?? [];
   if (workouts.isEmpty) {
