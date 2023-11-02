@@ -92,34 +92,35 @@ class _MultiMediaFormState extends State<MultiMediaForm> {
   _renderImages() {
     return images
         .map(
-          (e) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              width: double.infinity,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(24)),
-                child: Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    Image.file(
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      File(e.path),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: IconButton.filled(
-                          color: Theme.of(context).colorScheme.errorContainer,
-                          style: const ButtonStyle().copyWith(
-                              backgroundColor: MaterialStatePropertyAll(
-                                  Theme.of(context)
-                                      .colorScheme
-                                      .onErrorContainer)),
-                          onPressed: () => _removeImage(e),
-                          icon: const Icon(Icons.delete)),
-                    )
-                  ],
+          (e) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Stack(
+              alignment: Alignment.topRight,
+              children: [
+                SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(24)),
+                      child: Image.file(
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        File(e.path),
+                      ),
+                    )),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: IconButton.filled(
+                      color: Theme.of(context).colorScheme.errorContainer,
+                      style: const ButtonStyle().copyWith(
+                          backgroundColor: MaterialStatePropertyAll(
+                              Theme.of(context).colorScheme.onErrorContainer)),
+                      onPressed: () => _removeImage(e),
+                      icon: const Icon(Icons.delete)),
                 ),
-              )),
+              ],
+            ),
+          ),
         )
         .toList();
   }
