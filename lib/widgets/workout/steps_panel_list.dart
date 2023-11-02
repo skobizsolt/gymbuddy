@@ -26,6 +26,8 @@ class StepsPanelList extends ConsumerStatefulWidget {
 }
 
 class _StepsPanelListState extends ConsumerState<StepsPanelList> {
+  final images = [];
+
   Future<void> openDetails(
       BuildContext context, WorkoutStep step, int placeInList) async {
     await Navigator.of(context).push(

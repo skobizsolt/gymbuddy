@@ -34,12 +34,12 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
     return workoutSteps;
   }
 
-  Future<void> createStep(
+  Future<int?> createStep(
     int workoutId,
     ChangeWorkoutStepDto? newStep,
   ) async {
     if (newStep == null) {
-      return;
+      return null;
     }
 
     final token = await UserService.firebaseUserJwtToken;
@@ -52,6 +52,7 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
     ResponseValidator.validateResponse(response);
 
     state = [...state, _workoutMapper.toWorkoutStep(response.body!)];
+    return response.body!.stepId;
   }
 
   Future<void> editStep({

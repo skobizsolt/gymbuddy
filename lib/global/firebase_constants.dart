@@ -1,5 +1,6 @@
 // Firebase storage
 const FIREBASE_STORAGE_USER_IMAGES = 'user_images';
+const FIREBASE_STORAGE_WORKOUT_IMAGES = "user_workouts";
 
 // Firestore collections
 const FIRESTORE_USER_COLLECTION = 'users';

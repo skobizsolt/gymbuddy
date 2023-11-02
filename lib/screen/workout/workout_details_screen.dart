@@ -70,8 +70,11 @@ class WorkoutDetailsScreen extends ConsumerWidget {
   }) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) =>
-            WorkoutStepManager(workoutId: workoutId, type: type),
+        builder: (context) => WorkoutStepManager(
+          workoutId: workoutId,
+          type: type,
+          images: [],
+        ),
       ),
     );
   }

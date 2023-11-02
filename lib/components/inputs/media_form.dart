@@ -2,19 +2,23 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/components/crud/form_category.dart';
-import 'package:gymbuddy/widgets/utils/carousel_with_indicator.dart';
+import 'package:gymbuddy/models/workout_image.dart';
+import 'package:gymbuddy/widgets/carousel/carousel_image.dart';
+import 'package:gymbuddy/widgets/carousel/carousel_with_indicator.dart';
 import 'package:image_picker/image_picker.dart';
 
-class MultiMediaForm extends StatefulWidget {
-  const MultiMediaForm({super.key});
+class WorkoutMediaForm extends StatefulWidget {
+  final List<WorkoutImage> images;
+  const WorkoutMediaForm({
+    super.key,
+    required this.images,
+  });
 
   @override
-  State<MultiMediaForm> createState() => _MultiMediaFormState();
+  State<WorkoutMediaForm> createState() => _WorkoutMediaFormState();
 }
 
-class _MultiMediaFormState extends State<MultiMediaForm> {
-  List<File> images = [];
-
+class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
   @override
   Widget build(BuildContext context) {
     return FormCategory(
@@ -52,37 +56,14 @@ class _MultiMediaFormState extends State<MultiMediaForm> {
 
     setState(() {
       resultList.forEach((element) {
-        images.add(File(element.path));
+        widget.images.add(WorkoutImage(file: File(element.path)));
       });
     });
   }
 
   _buildImages() {
-    return images.isEmpty
+    return widget.images.isEmpty
         ? const SizedBox()
-        // : GridView.count(
-        //     physics: const NeverScrollableScrollPhysics(),
-        //     shrinkWrap: true,
-        //     crossAxisCount: 2,
-        //     children: images
-        //         .map((e) => Container(
-        //               width: double.infinity,
-        //               child: Image.file(
-        //                 File(e.path),
-        //               ),
-        //             ))
-        //         .toList(),
-        //   );
-        //       : Column(
-        //           children: images
-        //               .map((e) => Container(
-        //                     width: double.infinity,
-        //                     child: Image.file(
-        //                       File(e.path),
-        //                     ),
-        //                   ))
-        //               .toList(),
-        //         );
         : Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: CarouselWithIndicator(images: _renderImages()),
@@ -90,24 +71,18 @@ class _MultiMediaFormState extends State<MultiMediaForm> {
   }
 
   _renderImages() {
-    return images
+    return widget.images
         .map(
           (e) => Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Stack(
               alignment: Alignment.topRight,
               children: [
-                SizedBox(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(24)),
-                      child: Image.file(
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        File(e.path),
-                      ),
-                    )),
+                CarouselImage(
+                  image: e.file,
+                ),
+
+                // Delete icon on top of image
                 Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: IconButton.filled(
@@ -125,9 +100,9 @@ class _MultiMediaFormState extends State<MultiMediaForm> {
         .toList();
   }
 
-  _removeImage(File element) {
+  _removeImage(WorkoutImage element) {
     setState(() {
-      images.remove(element);
+      widget.images.remove(element);
     });
   }
 }

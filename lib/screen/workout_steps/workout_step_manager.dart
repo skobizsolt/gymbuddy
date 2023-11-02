@@ -9,33 +9,40 @@ import 'package:gymbuddy/components/inputs/multiline_text_form_field.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/models/workout/change_workout_step.dart';
+import 'package:gymbuddy/models/workout_image.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
+import 'package:gymbuddy/service/workout/workout_step_media_service.dart';
 import 'package:gymbuddy/widgets/utils/save_icon.dart';
 
 class WorkoutStepManager extends ConsumerStatefulWidget {
-  WorkoutStepManager(
-      {super.key,
-      required this.type,
-      required this.workoutId,
-      this.workoutStep,
-      this.stepPosition});
+  WorkoutStepManager({
+    super.key,
+    required this.type,
+    required this.workoutId,
+    this.workoutStep,
+    this.stepPosition,
+    this.images,
+  });
 
   final CrudType type;
   final int workoutId;
   final WorkoutStep? workoutStep;
   final int? stepPosition;
+  final List<WorkoutImage>? images;
 
   @override
   ConsumerState<WorkoutStepManager> createState() => _WorkoutManagerState();
 }
 
 class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
+  final _mediaService = WorkoutStepMediaService();
   final ChangeWorkoutStepDto _step = ChangeWorkoutStepDto();
   final _formKey = GlobalKey<FormState>();
   bool _isSaving = false;
+  late final List<WorkoutImage> localImages;
 
   int? get currentEstimatedTime {
     return CrudType.edit == widget.type
@@ -47,6 +54,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
   initState() {
     super.initState();
     _step.estimatedTime = currentEstimatedTime ?? 0;
+    localImages = widget.images ?? [];
   }
 
   _saveForm() async {
@@ -91,6 +99,10 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
           await ref
               .read(workoutStepStateProvider.notifier)
               .createStep(widget.workoutId, _step)
+              .then((value) => value != null
+                  ? _mediaService.saveImages(
+                      localImages, widget.workoutId, value)
+                  : null)
               .then((value) => showSuccessSnackBar(context, "New step added!"));
           Navigator.of(context).pop();
         } on Exception {
@@ -162,7 +174,9 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
                   ),
 
                   // Add media
-                  const MultiMediaForm()
+                  WorkoutMediaForm(
+                    images: localImages,
+                  )
                 ],
               ),
             ),
