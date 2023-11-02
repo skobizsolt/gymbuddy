@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/crud/form_category.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/components/inputs/default_text_form_field.dart';
+import 'package:gymbuddy/components/inputs/media_form.dart';
 import 'package:gymbuddy/components/inputs/multiline_text_form_field.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
@@ -161,30 +162,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
                   ),
 
                   // Add media
-                  FormCategory(
-                    title: "Pictures, illustrations",
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: const Icon(Icons.add),
-                              label: Text(
-                                "Add media",
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              style: const ButtonStyle().copyWith(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Theme.of(context).primaryColorDark),
-                                  surfaceTintColor: MaterialStatePropertyAll(
-                                      Theme.of(context).primaryColorDark)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  const MultiMediaForm()
                 ],
               ),
             ),
