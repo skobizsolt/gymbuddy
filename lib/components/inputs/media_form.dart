@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/components/crud/form_category.dart';
+import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/widgets/carousel/carousel_image.dart';
 import 'package:gymbuddy/widgets/carousel/carousel_with_indicator.dart';
 import 'package:image_picker/image_picker.dart';
@@ -65,7 +66,9 @@ class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
         ? const SizedBox()
         : Padding(
             padding: const EdgeInsets.only(top: 16.0),
-            child: CarouselWithIndicator(images: _renderImages()),
+            child: CarouselWithIndicator(
+                height: GlobalValues.getScreenSize(context).height * 0.33,
+                images: _renderImages()),
           );
   }
 

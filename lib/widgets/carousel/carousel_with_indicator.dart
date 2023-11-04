@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/global/global_variables.dart';
 
 class CarouselWithIndicator extends StatefulWidget {
   final List<Widget> images;
-  const CarouselWithIndicator({super.key, required this.images});
+  final double? height;
+  const CarouselWithIndicator({super.key, required this.images, this.height});
 
   @override
   State<CarouselWithIndicator> createState() => _CarouselWithIndicatorState();
@@ -22,7 +22,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
           items: widget.images,
           carouselController: _controller,
           options: CarouselOptions(
-              height: GlobalValues.getScreenSize(context).height * 0.33,
+              height: widget.height,
               aspectRatio: 2.0,
               onPageChanged: (index, reason) {
                 setState(() {

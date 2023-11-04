@@ -10,6 +10,7 @@ import 'package:gymbuddy/screen/workout_runner/summary_screen.dart';
 import 'package:gymbuddy/widgets/utils/big_elevatedButton.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
+import 'package:gymbuddy/widgets/workout/workout_image_gallery.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class WorkoutRunnerScreen extends ConsumerStatefulWidget {
@@ -215,7 +216,10 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
                 child: TabBarView(
                   children: [
                     _buildStepInformation(currentStep),
-                    const SizedBox(),
+                    WorkoutImageGallery(
+                      workoutId: widget.workoutId,
+                      stepId: currentStep.stepId,
+                    ),
                   ],
                 ),
               ),

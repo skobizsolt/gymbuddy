@@ -1,17 +1,10 @@
-// ignore_for_file: unnecessary_null_comparison
-
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
-import 'package:gymbuddy/models/workout/workout_ids.dart';
 import 'package:gymbuddy/models/workout_step.dart';
-import 'package:gymbuddy/providers/workout_media_provider.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
-import 'package:gymbuddy/widgets/carousel/carousel_image.dart';
-import 'package:gymbuddy/widgets/carousel/carousel_with_indicator.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
+import 'package:gymbuddy/widgets/workout/workout_image_gallery.dart';
 
 class WorkoutStepDetailsScreen extends ConsumerWidget {
   const WorkoutStepDetailsScreen({
@@ -27,8 +20,6 @@ class WorkoutStepDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ids = WorkoutIds(workoutId: workoutId, stepId: step.stepId);
-    final mediaRef = ref.watch(workoutStepMediaProvider(ids));
     final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
 
     //Renders all steps belongs with this workout
@@ -69,21 +60,9 @@ class WorkoutStepDetailsScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            renderMedia(mediaRef),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Description',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                // Description
-                renderDescription(),
-              ],
-            ),
+            WorkoutImageGallery(
+                doAddHeader: true, workoutId: workoutId, stepId: step.stepId),
+            renderDescription(context),
           ],
         ),
       ),
@@ -138,50 +117,43 @@ class WorkoutStepDetailsScreen extends ConsumerWidget {
     );
   }
 
-  // Renders the media if added
-  Widget renderMedia(mediaRef) {
-    if (!mediaRef.hasValue) {
-      return const SizedBox();
-    }
-    var images = mediaRef.value!;
-
-    return images == null || images.isEmpty
-        ? const SizedBox()
-        : Column(children: [
-            const Text("Media"),
-            const SizedBox(
-              width: 8,
-            ),
-            CarouselWithIndicator(
-              images: images.map((e) => CarouselImage(file: File(e))).toList(),
-            )
-          ]);
-  }
-
   // Renders the details if added
-  Widget renderDescription() {
+  Widget renderDescription(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: InformationTag(
-                child: Text(
-                  step.details.isEmpty
-                      ? "No description added for this step."
-                      : step.details,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontStyle: FontStyle.italic,
-                  ),
-                  textAlign: TextAlign.justify,
-                ),
-              ),
-            ),
-          ],
+        Text(
+          'Description',
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
+        ),
+        // Description
+        Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: InformationTag(
+                    child: Text(
+                      step.details.isEmpty
+                          ? "No description added for this step."
+                          : step.details,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+          ],
         ),
       ],
     );

@@ -97,16 +97,15 @@ class WorkoutStepMediaService {
   }
 
   // FIREBASE FIRESTORE METHODS
-  Future<List<String>> getImageUrls(WorkoutIds ids) async {
-    var urlSnapshots = await FirebaseFirestore.instance
+  Stream<List<String>> getImageUrls(WorkoutIds ids) {
+    return FirebaseFirestore.instance
         .collection(FIRESTORE_WORKOUT_COLLECTION)
         .doc('${ids.workoutId}')
         .collection(FIRESTORE_WORKOUT_MEDIA_SUBCOLLECTION)
         .doc('${ids.stepId}')
-        .get();
-    var mappedUrls = List<String>.from(
-        urlSnapshots.data()![WorkoutStepMediaService.IMAGE_URLS]);
-    return mappedUrls;
+        .snapshots()
+        .map((event) => List<String>.from(
+            event.data()![WorkoutStepMediaService.IMAGE_URLS]));
   }
 
   _deleteImageUrlsFromFirestore(final int workoutId, final int stepId) async {
