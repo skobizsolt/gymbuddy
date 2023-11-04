@@ -64,7 +64,7 @@ class _StepsPanelListState extends ConsumerState<StepsPanelList> {
     try {
       await ref
           .read(workoutStepStateProvider.notifier)
-          .deleteStep(context, widget.workoutId, deletedStep.stepPosition)
+          .deleteStep(context, widget.workoutId, deletedStep.stepId)
           .then((value) => showSuccessSnackBar(context,
               'Workout step "${deletedStep.stepName}" has been deleted successfully!'));
     } on Exception {

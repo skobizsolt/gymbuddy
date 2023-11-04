@@ -7,12 +7,14 @@ import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/service/auth/user_service.dart';
 import 'package:gymbuddy/service/mapper/workout_mapper.dart';
 import 'package:gymbuddy/service/util/response_validator.dart';
+import 'package:gymbuddy/service/workout/workout_step_media_service.dart';
 
 class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
   WorkoutStepService() : super([]);
 
   final _workoutMapper = WorkoutModelMapper();
   final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
+  final _mediaService = WorkoutStepMediaService();
 
   Future<List<WorkoutStep>> getSteps(int workoutId) async {
     final token = await UserService.firebaseUserJwtToken;
@@ -79,17 +81,18 @@ class WorkoutStepService extends StateNotifier<List<WorkoutStep>> {
   }
 
   Future<void> deleteStep(
-      BuildContext context, int workoutId, int stepPosition) async {
+      BuildContext context, int workoutId, int stepId) async {
     final token = await UserService.firebaseUserJwtToken;
     final response = await _api.workoutsWorkoutIdStepsStepIdDelete(
       authorization: token,
       workoutId: workoutId,
-      stepId: stepPosition,
+      stepId: stepId,
     );
 
     ResponseValidator.validateResponse(response);
 
-    state = [...state.where((element) => element.stepPosition != stepPosition)];
+    state = [...state.where((element) => element.stepId != stepId)];
+    _mediaService.deleteImagesForStep(workoutId, stepId);
   }
 
   List<WorkoutStep> _editWorkoutStepState(WorkoutStep mappedEditedStep) {

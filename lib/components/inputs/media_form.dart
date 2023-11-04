@@ -2,16 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/components/crud/form_category.dart';
-import 'package:gymbuddy/models/workout_image.dart';
 import 'package:gymbuddy/widgets/carousel/carousel_image.dart';
 import 'package:gymbuddy/widgets/carousel/carousel_with_indicator.dart';
 import 'package:image_picker/image_picker.dart';
 
 class WorkoutMediaForm extends StatefulWidget {
-  final List<WorkoutImage> images;
+  final List<File> files;
   const WorkoutMediaForm({
     super.key,
-    required this.images,
+    required this.files,
   });
 
   @override
@@ -56,13 +55,13 @@ class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
 
     setState(() {
       resultList.forEach((element) {
-        widget.images.add(WorkoutImage(file: File(element.path)));
+        widget.files.add(File(element.path));
       });
     });
   }
 
   _buildImages() {
-    return widget.images.isEmpty
+    return widget.files.isEmpty
         ? const SizedBox()
         : Padding(
             padding: const EdgeInsets.only(top: 16.0),
@@ -71,15 +70,15 @@ class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
   }
 
   _renderImages() {
-    return widget.images
+    return widget.files
         .map(
-          (e) => Padding(
+          (file) => Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Stack(
               alignment: Alignment.topRight,
               children: [
                 CarouselImage(
-                  image: e.file,
+                  file: file,
                 ),
 
                 // Delete icon on top of image
@@ -90,7 +89,7 @@ class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
                       style: const ButtonStyle().copyWith(
                           backgroundColor: MaterialStatePropertyAll(
                               Theme.of(context).colorScheme.onErrorContainer)),
-                      onPressed: () => _removeImage(e),
+                      onPressed: () => _removeImage(file),
                       icon: const Icon(Icons.delete)),
                 ),
               ],
@@ -100,9 +99,9 @@ class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
         .toList();
   }
 
-  _removeImage(WorkoutImage element) {
+  _removeImage(File element) {
     setState(() {
-      widget.images.remove(element);
+      widget.files.remove(element);
     });
   }
 }

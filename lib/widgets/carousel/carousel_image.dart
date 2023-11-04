@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class CarouselImage extends StatelessWidget {
-  final File image;
-  const CarouselImage({super.key, required this.image});
+  final File file;
+  const CarouselImage({super.key, required this.file});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class CarouselImage extends StatelessWidget {
           child: Image.file(
             width: double.infinity,
             fit: BoxFit.cover,
-            File(image.path),
+            File(file.path),
           ),
         ));
   }

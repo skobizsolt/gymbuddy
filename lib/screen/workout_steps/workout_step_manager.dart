@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +11,6 @@ import 'package:gymbuddy/components/inputs/multiline_text_form_field.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/models/workout/change_workout_step.dart';
-import 'package:gymbuddy/models/workout_image.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
@@ -31,7 +32,7 @@ class WorkoutStepManager extends ConsumerStatefulWidget {
   final int workoutId;
   final WorkoutStep? workoutStep;
   final int? stepPosition;
-  final List<WorkoutImage>? images;
+  final List<File>? images;
 
   @override
   ConsumerState<WorkoutStepManager> createState() => _WorkoutManagerState();
@@ -42,7 +43,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
   final ChangeWorkoutStepDto _step = ChangeWorkoutStepDto();
   final _formKey = GlobalKey<FormState>();
   bool _isSaving = false;
-  late final List<WorkoutImage> localImages;
+  late final List<File> localImages;
 
   int? get currentEstimatedTime {
     return CrudType.edit == widget.type
@@ -79,39 +80,53 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
   Future<void> performOperation() async {
     switch (widget.type) {
       case CrudType.edit:
-        try {
-          await ref
-              .read(workoutStepStateProvider.notifier)
-              .editStep(
-                  workoutId: widget.workoutId,
-                  stepPosition: widget.stepPosition!,
-                  editedStep: _step)
-              .then((value) =>
-                  showSuccessSnackBar(context, "Step edited successfully!"));
-          Navigator.of(context).pop();
-        } on Exception {
-          showErrorSnackBar(
-              context, "Failed to save changes, please try again later!");
-        }
+        _editStep();
         break;
       case CrudType.add:
-        try {
-          await ref
-              .read(workoutStepStateProvider.notifier)
-              .createStep(widget.workoutId, _step)
-              .then((value) => value != null
-                  ? _mediaService.saveImages(
-                      localImages, widget.workoutId, value)
-                  : null)
-              .then((value) => showSuccessSnackBar(context, "New step added!"));
-          Navigator.of(context).pop();
-        } on Exception {
-          showErrorSnackBar(
-              context, "Failed to add this step, please try again later!");
-        }
+        _addStep();
         break;
       default:
         break;
+    }
+  }
+
+  _editStep() async {
+    try {
+      await ref
+          .read(workoutStepStateProvider.notifier)
+          .editStep(
+              workoutId: widget.workoutId,
+              stepPosition: widget.stepPosition!,
+              editedStep: _step)
+          .then((value) =>
+              showSuccessSnackBar(context, "Step edited successfully!"));
+      Navigator.of(context).pop();
+    } on Exception {
+      showErrorSnackBar(
+          context, "Failed to save changes, please try again later!");
+    }
+  }
+
+  _addStep() async {
+    int? newStepId = null;
+    try {
+      newStepId = await ref
+          .read(workoutStepStateProvider.notifier)
+          .createStep(widget.workoutId, _step);
+    } on Exception {
+      showErrorSnackBar(
+          context, "Failed to add this step, please try again later!");
+    }
+    showSuccessSnackBar(context, "New step added!");
+    Navigator.of(context).pop();
+    if (newStepId == null) {
+      return;
+    }
+    try {
+      _mediaService.saveImages(
+          images: localImages, workoutId: widget.workoutId, stepId: newStepId);
+    } on Exception {
+      showErrorSnackBar(context, "Failed to add media to this step!");
     }
   }
 
@@ -175,7 +190,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
 
                   // Add media
                   WorkoutMediaForm(
-                    images: localImages,
+                    files: localImages,
                   )
                 ],
               ),
@@ -262,6 +277,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
   }
 
   Future<void> _selectTime(BuildContext context) async {
+    KeyboardService.closeKeyboard();
     final pickedDuration = await showDurationPicker(
       context: context,
       initialTime: Duration(seconds: _step.estimatedTime ?? 30),

@@ -6,6 +6,7 @@ import 'package:gymbuddy/providers/workout_interaction_provider.dart';
 import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workout_details_screen.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
+import 'package:gymbuddy/service/workout/workout_interaction_service.dart';
 
 class WorkoutCard extends ConsumerWidget {
   const WorkoutCard({super.key, required this.workoutId});
@@ -34,7 +35,9 @@ class WorkoutCard extends ConsumerWidget {
 
     int likes = interactionsRef.value!.data() == null
         ? 0
-        : interactionsRef.value!.data()!["likes"].length;
+        : interactionsRef.value!
+            .data()![WorkoutInteractionService.LIKES_LIST]
+            .length;
 
     Widget workoutDetails(int? totalSteps) {
       return Expanded(
@@ -83,7 +86,7 @@ class WorkoutCard extends ConsumerWidget {
                   width: 4,
                 ),
                 Text(
-                  '$likes ${likes == 1 ? "Like" : "Likes"}',
+                  '$likes ${likes == 1 ? "Like" : WorkoutInteractionService.LIKES_LIST}',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ],
