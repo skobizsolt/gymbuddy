@@ -215,11 +215,8 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    _buildStepInformation(currentStep),
-                    WorkoutImageGallery(
-                      workoutId: widget.workoutId,
-                      stepId: currentStep.stepId,
-                    ),
+                    _buildStepInformation(currentStep.details),
+                    _buildMedia(currentStep.stepId),
                   ],
                 ),
               ),
@@ -228,9 +225,9 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
     );
   }
 
-  Widget _buildStepInformation(WorkoutStep currentStep) {
+  Widget _buildStepInformation(String details) {
     return InformationTag(
-      child: currentStep.details.isEmpty
+      child: details.isEmpty
           ? Center(
               child: Text(
                 "No instructions given.",
@@ -239,12 +236,20 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
               ),
             )
           : Text(
-              currentStep.details,
+              details,
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     letterSpacing: 1.5,
                   ),
               textAlign: TextAlign.justify,
             ),
+    );
+  }
+
+  _buildMedia(int stepId) {
+    return WorkoutImageGallery(
+      workoutId: widget.workoutId,
+      stepId: stepId,
+      enlargeCenterPage: true,
     );
   }
 

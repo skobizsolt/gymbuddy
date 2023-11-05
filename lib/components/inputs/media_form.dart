@@ -5,6 +5,7 @@ import 'package:gymbuddy/components/crud/form_category.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/widgets/carousel/carousel_image.dart';
 import 'package:gymbuddy/widgets/carousel/carousel_with_indicator.dart';
+import 'package:gymbuddy/widgets/carousel/custom_file_image.dart';
 import 'package:image_picker/image_picker.dart';
 
 class WorkoutMediaForm extends StatefulWidget {
@@ -81,7 +82,7 @@ class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
               alignment: Alignment.topRight,
               children: [
                 CarouselImage(
-                  file: file,
+                  image: CustomFileImage(file: file),
                 ),
 
                 // Delete icon on top of image

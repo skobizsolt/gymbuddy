@@ -30,7 +30,7 @@ class WorkoutSimulationSummaryScreen extends ConsumerWidget {
     final stepsRef = ref.watch(workoutStepProvider(workoutId));
     final resultsRef = ref.watch(recordsBySessionProvider(sessionId));
 
-    if (workoutRef.isLoading || stepsRef.isLoading) {
+    if (workoutRef.isLoading || stepsRef.isLoading || resultsRef.isLoading) {
       return const Scaffold(
         body: Center(
           child: WaitingSpinner(title: "Loading your achievements... ⭐"),

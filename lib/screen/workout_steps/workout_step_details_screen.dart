@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/models/workout_step.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
@@ -60,8 +61,7 @@ class WorkoutStepDetailsScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            WorkoutImageGallery(
-                doAddHeader: true, workoutId: workoutId, stepId: step.stepId),
+            renderGallery(context),
             renderDescription(context),
           ],
         ),
@@ -156,6 +156,17 @@ class WorkoutStepDetailsScreen extends ConsumerWidget {
           ],
         ),
       ],
+    );
+  }
+
+  renderGallery(BuildContext context) {
+    return WorkoutImageGallery(
+      doAddHeader: true,
+      workoutId: workoutId,
+      stepId: step.stepId,
+      autoPlay: true,
+      enlargeCenterPage: true,
+      height: GlobalValues.getScreenSize(context).height * 0.33,
     );
   }
 }

@@ -4,7 +4,15 @@ import 'package:flutter/material.dart';
 class CarouselWithIndicator extends StatefulWidget {
   final List<Widget> images;
   final double? height;
-  const CarouselWithIndicator({super.key, required this.images, this.height});
+  final bool autoPlay;
+  final bool enlargeCenterPage;
+  const CarouselWithIndicator({
+    super.key,
+    required this.images,
+    this.height,
+    this.autoPlay = false,
+    this.enlargeCenterPage = false,
+  });
 
   @override
   State<CarouselWithIndicator> createState() => _CarouselWithIndicatorState();
@@ -22,6 +30,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
           items: widget.images,
           carouselController: _controller,
           options: CarouselOptions(
+              enlargeCenterPage: widget.enlargeCenterPage,
+              autoPlay: widget.autoPlay,
               height: widget.height,
               aspectRatio: 2.0,
               onPageChanged: (index, reason) {
