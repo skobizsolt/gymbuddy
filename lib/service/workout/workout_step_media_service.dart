@@ -42,28 +42,26 @@ class WorkoutStepMediaService {
   Future<void> deleteImagesForStep(
       final int workoutId, final int stepId) async {
     var storageRef = _getStorageRef(workoutId, stepId);
-    await storageRef.listAll().then(
-          (results) => Future.wait(
-            results.items.map(
-              (item) => item.delete(),
+    try {
+      await storageRef.listAll().then(
+            (results) => Future.wait(
+              results.items.map(
+                (item) => item.delete(),
+              ),
             ),
-          ),
-        );
-    _deleteImageUrlsFromFirestore(workoutId, stepId);
+          );
+    } on Exception {
+      print("No workout image at Workout $workoutId step $stepId");
+    } finally {
+      _deleteImageUrlsFromFirestore(workoutId, stepId);
+    }
   }
 
-  Future<void> deleteImagesForWorkout(final int workoutId) async {
-    var storageRef = _storage
-        .ref()
-        .child(FIREBASE_STORAGE_WORKOUT_IMAGES)
-        .child('$workoutId');
-    await storageRef.listAll().then(
-          (results) => Future.wait(
-            results.items.map(
-              (item) => item.delete(),
-            ),
-          ),
-        );
+  Future<void> deleteImagesForWorkout(
+      final int workoutId, final List<int> stepIds) async {
+    stepIds.forEach((stepId) {
+      deleteImagesForStep(workoutId, stepId);
+    });
   }
 
   Future<String> saveImage({

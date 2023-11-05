@@ -47,12 +47,17 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     );
   }
 
-  deleteWorkout(BuildContext context, WidgetRef ref, Workout workout) async {
+  deleteWorkout(
+    BuildContext context,
+    WidgetRef ref,
+    Workout workout,
+    List<int> stepIds,
+  ) async {
     Navigator.of(context).pop();
     try {
       await ref
           .read(workoutStateProvider.notifier)
-          .deleteWorkout(workout.workoutId)
+          .deleteWorkout(workout.workoutId, stepIds)
           .then((value) {
         ref.invalidate(workoutStateProvider);
         showSuccessSnackBar(context, "Workout deleted successfully!");
@@ -127,6 +132,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
                       ref: ref,
                       workout: workout,
                       totalSteps: totalSteps,
+                      stepIds: steps.map((e) => e.stepId).toList(),
                     ),
                     icon: Icon(
                       Icons.delete,
@@ -383,11 +389,13 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     );
   }
 
-  _showDeletionModal(
-      {required BuildContext context,
-      required Workout workout,
-      required int totalSteps,
-      required WidgetRef ref}) {
+  _showDeletionModal({
+    required BuildContext context,
+    required Workout workout,
+    required int totalSteps,
+    required WidgetRef ref,
+    required List<int> stepIds,
+  }) {
     showConfirmDelete(
       context,
       title: RichText(
@@ -426,7 +434,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
         ),
       ),
       subtitle: const Text("Are you sure? This operation cannot be undone!"),
-      onTap: () => deleteWorkout(context, ref, workout),
+      onTap: () => deleteWorkout(context, ref, workout, stepIds),
     );
   }
 
