@@ -10,6 +10,7 @@ import 'package:gymbuddy/screen/workout_runner/summary_screen.dart';
 import 'package:gymbuddy/widgets/utils/big_elevatedButton.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
+import 'package:gymbuddy/widgets/workout/workout_image_gallery.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class WorkoutRunnerScreen extends ConsumerStatefulWidget {
@@ -214,8 +215,8 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    _buildStepInformation(currentStep),
-                    const SizedBox(),
+                    _buildStepInformation(currentStep.details),
+                    _buildMedia(currentStep.stepId),
                   ],
                 ),
               ),
@@ -224,9 +225,9 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
     );
   }
 
-  Widget _buildStepInformation(WorkoutStep currentStep) {
+  Widget _buildStepInformation(String details) {
     return InformationTag(
-      child: currentStep.details.isEmpty
+      child: details.isEmpty
           ? Center(
               child: Text(
                 "No instructions given.",
@@ -235,12 +236,20 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
               ),
             )
           : Text(
-              currentStep.details,
+              details,
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     letterSpacing: 1.5,
                   ),
               textAlign: TextAlign.justify,
             ),
+    );
+  }
+
+  _buildMedia(int stepId) {
+    return WorkoutImageGallery(
+      workoutId: widget.workoutId,
+      stepId: stepId,
+      enlargeCenterPage: true,
     );
   }
 

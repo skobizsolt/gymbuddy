@@ -28,7 +28,8 @@ class _LikeCounterState extends ConsumerState<LikeCounter> {
   }
 
   _loadData(Map<String, dynamic>? data) {
-    final likers = data == null ? [] : data["likes"];
+    final likers =
+        data == null ? [] : data[WorkoutInteractionService.LIKES_LIST];
 
     _likes = likers.length;
     _isLiked = likers.contains(FirebaseAuth.instance.currentUser!.uid);

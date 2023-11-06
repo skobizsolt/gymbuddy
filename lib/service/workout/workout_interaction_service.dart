@@ -3,13 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbuddy/global/firebase_constants.dart';
 
 class WorkoutInteractionService {
+  static const LIKES_LIST = "likes";
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
 
   createLikesDocument(final int workoutId) async {
     return await _getReference(workoutId).set(
       {
-        "likes": [],
+        LIKES_LIST: [],
       },
     );
   }
@@ -17,7 +18,7 @@ class WorkoutInteractionService {
   Future<void> likeWorkout(final int workoutId) async {
     return await _getReference(workoutId).update(
       {
-        "likes": FieldValue.arrayUnion([_auth.currentUser!.uid]),
+        LIKES_LIST: FieldValue.arrayUnion([_auth.currentUser!.uid]),
       },
     );
   }
@@ -25,7 +26,7 @@ class WorkoutInteractionService {
   unlikeWorkout(final int workoutId) async {
     return await _getReference(workoutId).update(
       {
-        "likes": FieldValue.arrayRemove([_auth.currentUser!.uid]),
+        LIKES_LIST: FieldValue.arrayRemove([_auth.currentUser!.uid]),
       },
     );
   }
@@ -36,7 +37,7 @@ class WorkoutInteractionService {
 
   DocumentReference<Map<String, dynamic>> _getReference(final int workoutId) {
     return _firestore
-        .collection(FIRESTORE_WORKOUT_LIKES_COLLECTION)
+        .collection(FIRESTORE_WORKOUT_COLLECTION)
         .doc('$workoutId');
   }
 }

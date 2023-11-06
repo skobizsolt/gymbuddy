@@ -8,6 +8,7 @@ import 'package:gymbuddy/service/auth/user_service.dart';
 import 'package:gymbuddy/service/mapper/workout_mapper.dart';
 import 'package:gymbuddy/service/util/response_validator.dart';
 import 'package:gymbuddy/service/workout/workout_interaction_service.dart';
+import 'package:gymbuddy/service/workout/workout_step_media_service.dart';
 
 class WorkoutService extends StateNotifier<List<Workout>> {
   WorkoutService() : super([]);
@@ -15,6 +16,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
   final _workoutMapper = WorkoutModelMapper();
   final _api = TrainingApi.create(baseUrl: Uri.http(GlobalValues.SERVER_URL));
   final _interactionService = WorkoutInteractionService();
+  final _mediaService = WorkoutStepMediaService();
 
   Future<List<Workout>> getWorkouts() async {
     if (state.isNotEmpty) {
@@ -90,7 +92,7 @@ class WorkoutService extends StateNotifier<List<Workout>> {
     state = updatedList;
   }
 
-  Future<void> deleteWorkout(int workoutId) async {
+  Future<void> deleteWorkout(int workoutId, List<int> stepIds) async {
     final token = await UserService.firebaseUserJwtToken;
     final response = await _api.workoutsWorkoutIdDelete(
       authorization: token,
@@ -102,5 +104,6 @@ class WorkoutService extends StateNotifier<List<Workout>> {
     state = [...state.where((element) => element.workoutId != workoutId)];
 
     _interactionService.deleteLikesDocument(workoutId);
+    _mediaService.deleteImagesForWorkout(workoutId, stepIds);
   }
 }

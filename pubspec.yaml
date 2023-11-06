@@ -53,6 +53,8 @@ dependencies:
   stop_watch_timer: ^3.0.2
   timeline_tile: ^2.0.0
   uuid: ^4.1.0
+  carousel_slider: ^4.2.1
+  easy_image_viewer: ^1.2.1
 
 dev_dependencies:
   flutter_test:

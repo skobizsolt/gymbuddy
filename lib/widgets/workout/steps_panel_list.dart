@@ -26,6 +26,8 @@ class StepsPanelList extends ConsumerStatefulWidget {
 }
 
 class _StepsPanelListState extends ConsumerState<StepsPanelList> {
+  final images = [];
+
   Future<void> openDetails(
       BuildContext context, WorkoutStep step, int placeInList) async {
     await Navigator.of(context).push(
@@ -62,7 +64,7 @@ class _StepsPanelListState extends ConsumerState<StepsPanelList> {
     try {
       await ref
           .read(workoutStepStateProvider.notifier)
-          .deleteStep(context, widget.workoutId, deletedStep.stepPosition)
+          .deleteStep(context, widget.workoutId, deletedStep.stepId)
           .then((value) => showSuccessSnackBar(context,
               'Workout step "${deletedStep.stepName}" has been deleted successfully!'));
     } on Exception {
