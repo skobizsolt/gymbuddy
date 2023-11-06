@@ -6,7 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/crud/form_category.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/components/inputs/default_text_form_field.dart';
-import 'package:gymbuddy/components/inputs/media_form.dart';
+import 'package:gymbuddy/components/inputs/media/media_form.dart';
+import 'package:gymbuddy/components/inputs/media/media_form_edit.dart';
 import 'package:gymbuddy/components/inputs/multiline_text_form_field.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
@@ -25,14 +26,12 @@ class WorkoutStepManager extends ConsumerStatefulWidget {
     required this.workoutId,
     this.workoutStep,
     this.stepPosition,
-    this.images,
   });
 
   final CrudType type;
   final int workoutId;
   final WorkoutStep? workoutStep;
   final int? stepPosition;
-  final List<File>? images;
 
   @override
   ConsumerState<WorkoutStepManager> createState() => _WorkoutManagerState();
@@ -43,7 +42,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
   final ChangeWorkoutStepDto _step = ChangeWorkoutStepDto();
   final _formKey = GlobalKey<FormState>();
   bool _isSaving = false;
-  late final List<File> localImages;
+  final List<File> localImages = [];
 
   int? get currentEstimatedTime {
     return CrudType.edit == widget.type
@@ -55,7 +54,6 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
   initState() {
     super.initState();
     _step.estimatedTime = currentEstimatedTime ?? 0;
-    localImages = widget.images ?? [];
   }
 
   _saveForm() async {
@@ -124,7 +122,11 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
     }
     try {
       _mediaService.saveImages(
-          images: localImages, workoutId: widget.workoutId, stepId: newStepId);
+        images: localImages,
+        workoutId: widget.workoutId,
+        stepId: newStepId,
+        crudType: CrudType.add,
+      );
     } on Exception {
       showErrorSnackBar(context, "Failed to add media to this step!");
     }
@@ -189,9 +191,13 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
                   ),
 
                   // Add media
-                  WorkoutMediaForm(
-                    files: localImages,
-                  )
+                  widget.type == CrudType.edit
+                      ? EditWorkoutMediaForm(
+                          workoutId: widget.workoutId,
+                          stepId: widget.workoutStep!.stepId)
+                      : WorkoutMediaForm(
+                          images: localImages,
+                        )
                 ],
               ),
             ),

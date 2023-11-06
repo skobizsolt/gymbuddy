@@ -18,25 +18,37 @@ class WorkoutStepMediaService {
     required final List<File> images,
     required final int workoutId,
     required final int stepId,
+    required final CrudType crudType,
   }) async {
     // If no data provided, a new document is created to add future steps
-    if (images.isEmpty) {
+    if (images.isEmpty && CrudType.add == crudType) {
       _getDatabaseRef(workoutId, stepId).set({IMAGE_URLS: []});
       return;
     }
     final List<String> imageUrls = [];
     await Future.wait(
       images.map(
-        (image) => saveImage(
-                image: image,
-                workoutId: workoutId,
-                stepId: stepId,
-                crudType: CrudType.add)
-            .then(imageUrls.add),
+        (image) => _saveImage(
+          image: image,
+          workoutId: workoutId,
+          stepId: stepId,
+        ).then(imageUrls.add),
       ),
     );
 
-    await _addImageUrlsToFirestore(imageUrls, workoutId, stepId);
+    await _addImageUrlsToFirestore(imageUrls, workoutId, stepId, crudType);
+  }
+
+  Future<String> _saveImage({
+    required final File image,
+    required final int workoutId,
+    required final int stepId,
+  }) async {
+    var storageRef =
+        _getStorageRef(workoutId, stepId).child('${const Uuid().v4()}.png');
+    await storageRef.putFile(image);
+    var url = await storageRef.getDownloadURL();
+    return url;
   }
 
   Future<void> deleteImagesForStep(
@@ -64,34 +76,15 @@ class WorkoutStepMediaService {
     });
   }
 
-  Future<String> saveImage({
-    required final File image,
-    required final int workoutId,
-    required final int stepId,
-    required final CrudType crudType,
-  }) async {
-    var storageRef =
-        _getStorageRef(workoutId, stepId).child('${const Uuid().v4()}.png');
-    await storageRef.putFile(image);
-    var url = await storageRef.getDownloadURL();
-    if (CrudType.edit == crudType) {
-      _addImageUrlToFirestore(url, workoutId, stepId);
-    }
-    return url;
-  }
-
   Future<void> deleteImage({
-    required final File image,
+    required final String url,
     required final int workoutId,
     required final int stepId,
-    required final CrudType crudType,
   }) async {
-    var storageRef = _storage.ref(image.path);
-    await storageRef.delete().then(
-          (value) => CrudType.edit == crudType
-              ? _deleteImageUrlFromFirestore(image.path, workoutId, stepId)
-              : null,
-        );
+    var storageRef = _storage.refFromURL(url);
+    await storageRef
+        .delete()
+        .then((value) => _deleteImageUrlFromFirestore(url, workoutId, stepId));
   }
 
   // FIREBASE FIRESTORE METHODS
@@ -110,22 +103,24 @@ class WorkoutStepMediaService {
     return await _getDatabaseRef(workoutId, stepId).delete();
   }
 
-  _addImageUrlsToFirestore(
-      final List<String> urls, final int workoutId, final int stepId) async {
-    return await _getDatabaseRef(workoutId, stepId).set(
-      {
-        IMAGE_URLS: urls,
-      },
-    );
-  }
-
-  _addImageUrlToFirestore(
-      final String url, final int workoutId, final int stepId) async {
-    return await _getDatabaseRef(workoutId, stepId).update(
-      {
-        IMAGE_URLS: FieldValue.arrayUnion([url]),
-      },
-    );
+  _addImageUrlsToFirestore(final List<String> urls, final int workoutId,
+      final int stepId, final CrudType crudType) async {
+    switch (crudType) {
+      case CrudType.add:
+        await _getDatabaseRef(workoutId, stepId).set(
+          {
+            IMAGE_URLS: urls,
+          },
+        );
+        break;
+      case CrudType.edit:
+        await _getDatabaseRef(workoutId, stepId).update({
+          IMAGE_URLS: FieldValue.arrayUnion(urls),
+        });
+        break;
+      default:
+        break;
+    }
   }
 
   _deleteImageUrlFromFirestore(

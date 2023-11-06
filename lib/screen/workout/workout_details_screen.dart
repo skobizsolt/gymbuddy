@@ -78,7 +78,6 @@ class WorkoutDetailsScreen extends ConsumerWidget {
         builder: (context) => WorkoutStepManager(
           workoutId: workoutId,
           type: type,
-          images: [],
         ),
       ),
     );

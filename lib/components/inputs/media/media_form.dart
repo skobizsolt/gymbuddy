@@ -2,17 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/components/crud/form_category.dart';
+import 'package:gymbuddy/components/inputs/media/media_form_image.dart';
 import 'package:gymbuddy/global/global_variables.dart';
-import 'package:gymbuddy/widgets/carousel/carousel_image.dart';
 import 'package:gymbuddy/widgets/carousel/carousel_with_indicator.dart';
 import 'package:gymbuddy/widgets/carousel/custom_file_image.dart';
 import 'package:image_picker/image_picker.dart';
 
 class WorkoutMediaForm extends StatefulWidget {
-  final List<File> files;
+  final List<File> images;
   const WorkoutMediaForm({
     super.key,
-    required this.files,
+    required this.images,
   });
 
   @override
@@ -20,6 +20,13 @@ class WorkoutMediaForm extends StatefulWidget {
 }
 
 class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
+  late final List<File> localImages;
+
+  initState() {
+    super.initState();
+    localImages = widget.images;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormCategory(
@@ -44,7 +51,7 @@ class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
             ),
           ],
         ),
-        _buildImages(),
+        _buildlImages(),
       ],
     );
   }
@@ -57,13 +64,13 @@ class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
 
     setState(() {
       resultList.forEach((element) {
-        widget.files.add(File(element.path));
+        localImages.add(File(element.path));
       });
     });
   }
 
-  _buildImages() {
-    return widget.files.isEmpty
+  _buildlImages() {
+    return localImages.isEmpty
         ? const SizedBox()
         : Padding(
             padding: const EdgeInsets.only(top: 16.0),
@@ -73,39 +80,20 @@ class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
           );
   }
 
-  _renderImages() {
-    return widget.files
+  List<Widget> _renderImages() {
+    return List<Widget>.from(localImages
         .map(
-          (file) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                CarouselImage(
-                  image: CustomFileImage(file: file),
-                ),
-
-                // Delete icon on top of image
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: IconButton.filled(
-                      color: Theme.of(context).colorScheme.errorContainer,
-                      style: const ButtonStyle().copyWith(
-                          backgroundColor: MaterialStatePropertyAll(
-                              Theme.of(context).colorScheme.onErrorContainer)),
-                      onPressed: () => _removeImage(file),
-                      icon: const Icon(Icons.delete)),
-                ),
-              ],
-            ),
+          (item) => MediaFormImage(
+            image: CustomFileImage(file: item),
+            onDeleteItem: () => _removeImage(item),
           ),
         )
-        .toList();
+        .toList());
   }
 
   _removeImage(File element) {
     setState(() {
-      widget.files.remove(element);
+      localImages.remove(element);
     });
   }
 }
