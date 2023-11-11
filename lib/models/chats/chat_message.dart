@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Message {
+class ChatMessage {
   final String senderId;
   final String senderName;
   final String receiverId;
   final String message;
   final Timestamp timestamp;
-  Message({
+  ChatMessage({
     required this.senderId,
     required this.senderName,
     required this.receiverId,
@@ -14,14 +14,14 @@ class Message {
     required this.timestamp,
   });
 
-  Message copyWith({
+  ChatMessage copyWith({
     String? senderId,
     String? senderName,
     String? receiverId,
     String? message,
     Timestamp? timestamp,
   }) {
-    return Message(
+    return ChatMessage(
       senderId: senderId ?? this.senderId,
       senderName: senderName ?? this.senderName,
       receiverId: receiverId ?? this.receiverId,
@@ -40,8 +40,8 @@ class Message {
     };
   }
 
-  factory Message.fromMap(Map<String, dynamic> map) {
-    return Message(
+  factory ChatMessage.fromMap(Map<String, dynamic> map) {
+    return ChatMessage(
         senderId: map['senderId'] as String,
         senderName: map['senderName'] as String,
         receiverId: map['receiverId'] as String,
@@ -51,6 +51,6 @@ class Message {
 
   @override
   String toString() {
-    return 'Message(senderId: $senderId, senderName: $senderName, receiverId: $receiverId, message: $message, timestamp: $timestamp)';
+    return 'ChatMessage(senderId: $senderId, senderName: $senderName, receiverId: $receiverId, message: $message, timestamp: $timestamp)';
   }
 }

@@ -34,7 +34,8 @@ class AuthScreen extends ConsumerWidget {
 
   void _invalidateProviders(WidgetRef ref) {
     ref.invalidate(userProvider);
-    ref.invalidate(chatsProvider);
+    ref.invalidate(chatPartnersProvider);
+    ref.invalidate(chatHistoryProvider);
     ref.invalidate(workoutStateProvider);
     ref.invalidate(workoutRunnerStateProvider);
   }

@@ -60,7 +60,7 @@ class ChatBuilder extends StatelessWidget {
 
         var messages = snapshotsData.docs
             .map(
-              (e) => Message.fromMap(e.data()),
+              (e) => ChatMessage.fromMap(e.data()),
             )
             .toList();
 

@@ -30,6 +30,7 @@ class App extends StatelessWidget {
       locale: const Locale('hu', 'HU'),
       home: const AuthScreen(),
       navigatorKey: GlobalValues.navigatorKey,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

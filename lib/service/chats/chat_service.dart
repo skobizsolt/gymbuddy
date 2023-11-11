@@ -19,7 +19,7 @@ class ChatService {
   Future<void> sendMessage(
       String senderName, String reveiverId, String message) async {
     // Create new message
-    final Message chatMessage = Message(
+    final ChatMessage chatMessage = ChatMessage(
         senderId: _currentUser.uid,
         senderName: senderName,
         receiverId: reveiverId,
