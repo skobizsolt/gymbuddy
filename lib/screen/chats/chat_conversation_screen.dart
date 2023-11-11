@@ -5,6 +5,7 @@ import 'package:gymbuddy/components/chat_builder.dart';
 import 'package:gymbuddy/components/custom_snackbars.dart';
 import 'package:gymbuddy/layout/input_layout.dart';
 import 'package:gymbuddy/models/user_dto.dart';
+import 'package:gymbuddy/providers/chat_provider.dart';
 import 'package:gymbuddy/providers/user_provider.dart';
 import 'package:gymbuddy/service/chats/chat_service.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
@@ -55,74 +56,86 @@ class ConversationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _userData = ref.watch(userProvider).value;
+    var _shouldUpdateHistory = false;
     return GestureDetector(
       onTap: KeyboardService.closeKeyboard,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-          titleSpacing: 0,
-          title: Row(
-            children: [
-              _renderAvatar(),
-              Flexible(
-                child:
-                    Text("${receiverData.firstName} ${receiverData.lastName}"),
+      child: WillPopScope(
+        onWillPop: () async {
+          if (_shouldUpdateHistory) {
+            ref.invalidate(chatHistoryProvider);
+          }
+          return true;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+            titleSpacing: 0,
+            title: Row(
+              children: [
+                _renderAvatar(),
+                Flexible(
+                  child: Text(
+                      "${receiverData.firstName} ${receiverData.lastName}"),
+                ),
+              ],
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.more_vert_rounded,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
               ),
             ],
           ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.more_vert_rounded,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-            ),
-          ],
-        ),
-        body: Padding(
-          padding:
-              const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 8),
-          child: _buildMessages(),
-        ),
-        bottomSheet: Container(
-          color: Theme.of(context).colorScheme.primary,
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              Expanded(
-                child: InputLayout(
-                  height: 50,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  child: TextFormField(
-                    controller: _chatController,
-                    decoration: const InputDecoration.collapsed(
-                      hintText: 'Say something...',
+          body: Padding(
+            padding:
+                const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 8),
+            child: _buildMessages(),
+          ),
+          bottomSheet: Container(
+            color: Theme.of(context).colorScheme.primary,
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: InputLayout(
+                    height: 50,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    child: TextFormField(
+                      controller: _chatController,
+                      decoration: const InputDecoration.collapsed(
+                        hintText: 'Say something...',
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              IconButton(
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-                onPressed: () {
-                  if (_userData == null) {
-                    showErrorSnackBar(context,
-                        "Something went wrong, please try again later!");
-                  } else {
-                    sendMessage(_userData);
-                  }
-                  _chatController.clear();
-                  KeyboardService.closeKeyboard();
-                },
-                icon: const Icon(
-                  Icons.send,
+                const SizedBox(
+                  width: 8,
                 ),
-              )
-            ],
+                IconButton(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  onPressed: () {
+                    if (_userData == null) {
+                      showErrorSnackBar(context,
+                          "Something went wrong, please try again later!");
+                    } else {
+                      sendMessage(_userData);
+                      if (_shouldUpdateHistory == false) {
+                        _shouldUpdateHistory = true;
+                      }
+                    }
+                    _chatController.clear();
+                    KeyboardService.closeKeyboard();
+                  },
+                  icon: const Icon(
+                    Icons.send,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

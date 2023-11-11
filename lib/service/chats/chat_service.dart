@@ -31,10 +31,18 @@ class ChatService {
     chatroomIds.sort();
     String chatRoomName = chatroomIds.join(FIRESTORE_CHATROOM_ID_DELIMITER);
 
+    final docRef = _getChatRoomRef(chatRoomName);
+
+    // if document not found, create room
+    await docRef.get().then((value) {
+      if (!value.exists) {
+        docRef.set({'users': chatroomIds});
+      }
+      return value;
+    });
+
     // add new message to database
-    await _firestore
-        .collection(FIRESTORE_CHATS_COLLECTION)
-        .doc(chatRoomName)
+    docRef
         .collection(FIRESTORE_CHATS_MESSAGES_SUBCOLLECTION)
         .add(chatMessage.toMap());
   }
@@ -46,11 +54,15 @@ class ChatService {
     chatroomIds.sort();
     String chatRoomName = chatroomIds.join(FIRESTORE_CHATROOM_ID_DELIMITER);
 
-    return _firestore
-        .collection(FIRESTORE_CHATS_COLLECTION)
-        .doc(chatRoomName)
+    return _getChatRoomRef(chatRoomName)
         .collection(FIRESTORE_CHATS_MESSAGES_SUBCOLLECTION)
         .orderBy('timestamp', descending: true)
         .snapshots();
+  }
+
+  DocumentReference<Map<String, dynamic>> _getChatRoomRef(
+    final String chatRoomName,
+  ) {
+    return _firestore.collection(FIRESTORE_CHATS_COLLECTION).doc(chatRoomName);
   }
 }
