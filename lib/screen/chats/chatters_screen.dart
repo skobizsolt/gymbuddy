@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/models/chats/chat_person.dart';
 import 'package:gymbuddy/models/user_dto.dart';
 import 'package:gymbuddy/providers/chat_provider.dart';
+import 'package:gymbuddy/providers/search/search_chatter_provider.dart';
 import 'package:gymbuddy/screen/chats/chat_conversation_tile.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 
@@ -13,6 +14,7 @@ class ChattersScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var data = ref.watch(chatPartnersProvider);
+    final searchController = ref.watch(searchChatterControllerProvider);
 
     if (!data.hasValue || data.value!.length == 0) {
       return const NoContentText(
@@ -35,20 +37,26 @@ class ChattersScreen extends ConsumerWidget {
     return Scaffold(
         appBar: EasySearchBar(
           title: const Text('My buddies'),
-          onSearch: (p0) {},
+          onSearch: (p0) {
+            ref
+                .read(searchChatterControllerProvider.notifier)
+                .onSearch(p0, chatters);
+          },
         ),
         body: SingleChildScrollView(
           child: ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: chatters.length,
+            itemCount: searchController.isNotEmpty
+                ? searchController.length
+                : chatters.length,
             itemBuilder: (context, index) {
-              final String _userId = chatters[index].personId;
-              final UserDto _user = chatters[index].personData!;
-
+              final chatter = searchController.isNotEmpty
+                  ? searchController[index]
+                  : chatters[index];
               return ChatConversationTile(
-                receiverId: _userId,
-                user: _user,
+                receiverId: chatter.personId,
+                user: chatter.personData!,
               );
             },
           ),
