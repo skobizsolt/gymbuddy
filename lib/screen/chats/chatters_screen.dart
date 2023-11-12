@@ -36,7 +36,11 @@ class ChattersScreen extends ConsumerWidget {
 
     return Scaffold(
         appBar: EasySearchBar(
-          title: const Text('My buddies'),
+          title: const Text(
+            'GymBuddies',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
           onSearch: (p0) {
             ref
                 .read(searchChatterControllerProvider.notifier)
