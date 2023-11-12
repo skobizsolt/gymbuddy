@@ -6,6 +6,7 @@ import 'package:gymbuddy/models/user_dto.dart';
 import 'package:gymbuddy/providers/chat_provider.dart';
 import 'package:gymbuddy/providers/search/search_chatter_provider.dart';
 import 'package:gymbuddy/screen/chats/chat_conversation_tile.dart';
+import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 
 class ChattersScreen extends ConsumerWidget {
@@ -34,36 +35,39 @@ class ChattersScreen extends ConsumerWidget {
         )
         .toList();
 
-    return Scaffold(
-        appBar: EasySearchBar(
-          title: const Text(
-            'GymBuddies',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          onSearch: (p0) {
-            ref
-                .read(searchChatterControllerProvider.notifier)
-                .onSearch(p0, chatters);
-          },
-        ),
-        body: SingleChildScrollView(
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: searchController.isNotEmpty
-                ? searchController.length
-                : chatters.length,
-            itemBuilder: (context, index) {
-              final chatter = searchController.isNotEmpty
-                  ? searchController[index]
-                  : chatters[index];
-              return ChatConversationTile(
-                receiverId: chatter.personId,
-                user: chatter.personData!,
-              );
+    return GestureDetector(
+      onTap: KeyboardService.closeKeyboard,
+      child: Scaffold(
+          appBar: EasySearchBar(
+            title: const Text(
+              'GymBuddies',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            onSearch: (value) {
+              ref
+                  .read(searchChatterControllerProvider.notifier)
+                  .onSearch(value, chatters);
             },
           ),
-        ));
+          body: SingleChildScrollView(
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: searchController.isNotEmpty
+                  ? searchController.length
+                  : chatters.length,
+              itemBuilder: (context, index) {
+                final chatter = searchController.isNotEmpty
+                    ? searchController[index]
+                    : chatters[index];
+                return ChatConversationTile(
+                  receiverId: chatter.personId,
+                  user: chatter.personData!,
+                );
+              },
+            ),
+          )),
+    );
   }
 }
