@@ -35,8 +35,17 @@ class ChatService {
 
     // if document not found, create room
     await docRef.get().then((value) {
+      // if not exist, add users and set active time to now
+      // if exists, update lastActive timestamp to now
       if (!value.exists) {
-        docRef.set({'users': chatroomIds});
+        docRef.set({
+          'users': chatroomIds,
+          'lastActive': Timestamp.now(),
+        });
+      } else {
+        docRef.update({
+          'lastActive': Timestamp.now(),
+        });
       }
       return value;
     });

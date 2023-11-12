@@ -1,18 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/chats/chat_message.dart';
 import 'package:gymbuddy/models/user_dto.dart';
 import 'package:gymbuddy/screen/chats/chat_conversation_screen.dart';
+import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 
 class ChatConversationTile extends StatelessWidget {
   final String receiverId;
   final UserDto user;
   final ChatMessage? lastMessage;
+  final Timestamp? lastActive;
   const ChatConversationTile({
     super.key,
     required this.receiverId,
     required this.user,
     this.lastMessage,
+    this.lastActive,
   });
 
   @override
@@ -65,7 +69,8 @@ class ChatConversationTile extends StatelessWidget {
     return lastMessage == null
         ? null
         : Text(
-            '${isMessageFromReceiver ? user.firstName : 'You'}: ${lastMessage!.message}',
+            '${isMessageFromReceiver ? user.firstName : 'You'}: ${lastMessage!.message}' +
+                '${lastActive == null ? '' : ' · ${FormatUtils.toDayAndWeekSpecifiedDateTime(lastActive!.toDate())}'}',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(

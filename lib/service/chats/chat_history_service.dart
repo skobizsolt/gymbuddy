@@ -9,11 +9,12 @@ class ChatHistoryService {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User _currentUser = FirebaseAuth.instance.currentUser!;
 
-  Future<List<Future<ChatPerson>>> getHistory() async {
-    return await _firestore
+  Stream<List<Future<ChatPerson>>> getHistory() {
+    return _firestore
         .collection(FIRESTORE_CHATS_COLLECTION)
-        .get()
-        .then((event) async => await event.docs
+        .orderBy('lastActive', descending: true)
+        .snapshots()
+        .map((event) => event.docs
                 .where(
                   (element) => List<String>.from(element.data()['users'])
                       .contains(_currentUser.uid),
@@ -26,6 +27,7 @@ class ChatHistoryService {
                   ids.firstWhere((id) => id != _currentUser.uid);
               final person = ChatPerson(
                 personId: personId,
+                lastActive: element.data()['lastActive'],
               );
               await _getPersonData(personId)
                   .then((value) => person.personData = value);

@@ -26,7 +26,10 @@ class ChatHistoryScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: _renderContent(context, chatters),
+      body: RefreshIndicator(
+        onRefresh: () async => await ref.refresh(chatHistoryProvider),
+        child: _renderContent(context, chatters),
+      ),
     );
   }
 
@@ -44,6 +47,7 @@ class ChatHistoryScreen extends ConsumerWidget {
       );
     }
     return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -62,6 +66,7 @@ class ChatHistoryScreen extends ConsumerWidget {
                 receiverId: receiver.personId,
                 user: receiver.personData!,
                 lastMessage: receiver.lastMessage,
+                lastActive: receiver.lastActive,
               );
             },
           );

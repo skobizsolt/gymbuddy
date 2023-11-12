@@ -14,7 +14,7 @@ var _chatMessageListenerProvider = StreamProvider((ref) {
   return ChatHistoryService().getMessageSnapshots();
 });
 
-var chatHistoryProvider = FutureProvider<List<Future<ChatPerson>>>((ref) {
+var chatHistoryProvider = StreamProvider<List<Future<ChatPerson>>>((ref) {
   ref.watch(_chatMessageListenerProvider);
   return ChatHistoryService().getHistory();
 });
