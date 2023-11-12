@@ -46,8 +46,10 @@ class UserDto {
     return <String, dynamic>{
       'email': email,
       'username': username,
-      'first_name': firstName,
-      'last_name': lastName,
+      'firstName': firstName,
+      'lastName': lastName,
+      'registeredOn': registeredOn?.millisecondsSinceEpoch,
+      'profileImageUrl': profileImageUrl,
     };
   }
 
@@ -55,5 +57,32 @@ class UserDto {
     return <String, dynamic>{
       'profile_image_url': profileImageUrl,
     };
+  }
+
+  @override
+  String toString() {
+    return 'UserDto(email: $email, username: $username, firstName: $firstName, lastName: $lastName, registeredOn: $registeredOn, profileImageUrl: $profileImageUrl)';
+  }
+
+  @override
+  bool operator ==(covariant UserDto other) {
+    if (identical(this, other)) return true;
+
+    return other.email == email &&
+        other.username == username &&
+        other.firstName == firstName &&
+        other.lastName == lastName &&
+        other.registeredOn == registeredOn &&
+        other.profileImageUrl == profileImageUrl;
+  }
+
+  @override
+  int get hashCode {
+    return email.hashCode ^
+        username.hashCode ^
+        firstName.hashCode ^
+        lastName.hashCode ^
+        registeredOn.hashCode ^
+        profileImageUrl.hashCode;
   }
 }

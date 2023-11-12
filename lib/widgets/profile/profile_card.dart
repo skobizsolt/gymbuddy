@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
+import 'package:gymbuddy/service/util/format_utils.dart';
 
 import 'package:gymbuddy/models/user_dto.dart';
 import 'package:gymbuddy/providers/user_provider.dart';
@@ -25,7 +24,7 @@ class ProfileCard extends ConsumerWidget {
       ],
       [
         // Registered
-        "Joined: ${DateFormat.yMMMd('en_CA').format(userData.registeredOn!)}",
+        "Joined: ${FormatUtils.toHungarianDate(userData.registeredOn!)}",
         Theme.of(context).textTheme.titleSmall,
       ],
     ];
@@ -61,8 +60,6 @@ class ProfileCard extends ConsumerWidget {
       );
     }
 
-    // Allows to set different date locales
-    initializeDateFormatting();
     UserDto _userData = _data.value!;
 
     return Container(

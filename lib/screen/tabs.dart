@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:gymbuddy/models/screens.dart';
-import 'package:gymbuddy/screen/chats_screen.dart';
+import 'package:gymbuddy/screen/chat_history_screen.dart';
 import 'package:gymbuddy/screen/home_screen.dart';
 import 'package:gymbuddy/screen/profile_screen.dart';
 import 'package:gymbuddy/screen/stats_screen.dart';
@@ -27,10 +27,7 @@ class _TabsScreenState extends State<TabsScreen> {
       body: const StatisticsSreen(),
     ),
     Screen(
-      appBar: AppBar(
-        title: const Text('My Buddies'),
-      ),
-      body: ChatsScreen(),
+      body: const ChatHistoryScreen(),
     ),
     Screen(
       appBar: AppBar(
