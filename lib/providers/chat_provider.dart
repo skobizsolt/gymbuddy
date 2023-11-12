@@ -16,5 +16,6 @@ var _chatMessageListenerProvider = StreamProvider((ref) {
 
 var chatHistoryProvider = StreamProvider<List<Future<ChatPerson>>>((ref) {
   ref.watch(_chatMessageListenerProvider);
+  ref.watch(authStateChangeProvider);
   return ChatHistoryService().getHistory();
 });

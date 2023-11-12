@@ -3,11 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/models/api/training_api.models.swagger.dart';
 import 'package:gymbuddy/models/workout.dart';
 import 'package:gymbuddy/models/workout_step.dart';
+import 'package:gymbuddy/providers/auth_provider.dart';
 import 'package:gymbuddy/service/workout/workout_service.dart';
 import 'package:gymbuddy/service/workout/workout_step_service.dart';
 
-var workoutStateProvider = StateNotifierProvider<WorkoutService, List<Workout>>(
-    (ref) => WorkoutService());
+var workoutStateProvider =
+    StateNotifierProvider<WorkoutService, List<Workout>>((ref) {
+  ref.watch(authStateChangeProvider);
+  return WorkoutService();
+});
 
 FutureProvider<List<Workout>> workoutsProvider = FutureProvider((ref) {
   ref.watch(workoutStateProvider);

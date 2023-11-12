@@ -2,10 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/providers/auth_provider.dart';
-import 'package:gymbuddy/providers/chat_provider.dart';
-import 'package:gymbuddy/providers/user_provider.dart';
-import 'package:gymbuddy/providers/workout_provider.dart';
-import 'package:gymbuddy/providers/workout_runner_provider.dart';
 import 'package:gymbuddy/screen/auth/login_or_register_screen.dart';
 import 'package:gymbuddy/screen/tabs.dart';
 
@@ -14,14 +10,17 @@ class AuthScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var stream = ref.read(authStateChangeProvider);
     return Scaffold(
       body: StreamBuilder<User?>(
-        stream: stream,
+        stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           // user is logged in
           if (snapshot.hasData) {
-            _invalidateProviders(ref);
+            Future(
+              () => ref
+                  .read(authStateChangeProvider.notifier)
+                  .update((state) => state = FirebaseAuth.instance.currentUser),
+            );
 
             return const TabsScreen();
           }
@@ -30,13 +29,5 @@ class AuthScreen extends ConsumerWidget {
         },
       ),
     );
-  }
-
-  void _invalidateProviders(WidgetRef ref) {
-    ref.invalidate(userProvider);
-    ref.invalidate(chatPartnersProvider);
-    ref.invalidate(chatHistoryProvider);
-    ref.invalidate(workoutStateProvider);
-    ref.invalidate(workoutRunnerStateProvider);
   }
 }

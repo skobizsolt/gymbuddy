@@ -6,6 +6,6 @@ var authProvider = StateNotifierProvider<AuthService, UserCredential?>((ref) {
   return AuthService(null);
 });
 
-var authStateChangeProvider = Provider((ref) {
-  return FirebaseAuth.instance.authStateChanges();
+var authStateChangeProvider = StateProvider<User?>((ref) {
+  return FirebaseAuth.instance.currentUser;
 });
