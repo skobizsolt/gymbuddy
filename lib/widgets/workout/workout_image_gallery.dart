@@ -79,7 +79,7 @@ class WorkoutImageGallery extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CarouselWithIndicator(
-          images: convertedImageFiles,
+          data: convertedImageFiles,
           autoPlay: autoPlay,
           enlargeCenterPage: enlargeCenterPage,
           height: height,

@@ -91,7 +91,7 @@ class EditWorkoutMediaForm extends ConsumerWidget {
             padding: const EdgeInsets.only(top: 16.0),
             child: CarouselWithIndicator(
                 height: GlobalValues.getScreenSize(context).height * 0.33,
-                images: _renderImages(context, images)),
+                data: _renderImages(context, images)),
           );
   }
 

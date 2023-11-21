@@ -2,13 +2,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class CarouselWithIndicator extends StatefulWidget {
-  final List<Widget> images;
+  final List<Widget> data;
   final double? height;
   final bool autoPlay;
   final bool enlargeCenterPage;
   const CarouselWithIndicator({
     super.key,
-    required this.images,
+    required this.data,
     this.height,
     this.autoPlay = false,
     this.enlargeCenterPage = false,
@@ -27,7 +27,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
       mainAxisSize: MainAxisSize.max,
       children: [
         CarouselSlider(
-          items: widget.images,
+          items: widget.data,
           carouselController: _controller,
           options: CarouselOptions(
               enlargeCenterPage: widget.enlargeCenterPage,
@@ -44,7 +44,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
           padding: const EdgeInsets.only(top: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.images.asMap().entries.map((entry) {
+            children: widget.data.asMap().entries.map((entry) {
               return GestureDetector(
                 onTap: () => _controller.animateToPage(entry.key),
                 child: Container(

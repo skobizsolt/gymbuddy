@@ -7,8 +7,13 @@ import 'package:gymbuddy/screen/workout_runner/summary_screen.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 
 class WorkoutActivityCard extends ConsumerWidget {
-  const WorkoutActivityCard({super.key, required this.sessionId});
+  const WorkoutActivityCard({
+    super.key,
+    required this.sessionId,
+    this.minimal = false,
+  });
   final String sessionId;
+  final bool minimal;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,38 +39,7 @@ class WorkoutActivityCard extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  // Workout name
-                  Text(
-                    session.workoutName,
-                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                        ),
-                  ),
-
-                  Text(
-                    '${workoutCategoryIcon[session.category]} ' +
-                        '${FormatUtils.toCapitalized(session.category.name)}, ' +
-                        '${FormatUtils.toCapitalized(session.difficulty.name)}',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  session.completedAt == null
-                      ? Text(
-                          "Not completed",
-                          style: const TextStyle().copyWith(
-                            color: Theme.of(context).colorScheme.error,
-                          ),
-                        )
-                      : const SizedBox()
-                ],
-              ),
-            ],
-          ),
+          _renderTitle(context, session),
           const SizedBox(
             height: 16,
           ),
@@ -91,13 +65,17 @@ class WorkoutActivityCard extends ConsumerWidget {
           ),
 
           // Completion time
-          session.completedAt == null
-              ? const SizedBox()
-              : _renderDetailEntry(
-                  title: "Completed",
-                  detail: FormatUtils.formatDateTime(session.completedAt),
-                  color: Colors.green,
-                ),
+          _renderCompletedAt(session.completedAt)
+        ],
+      );
+    }
+
+    _buildMinimalSessionDetails() {
+      return Column(
+        children: [
+          _renderTitle(context, session),
+          // Completion time
+          _renderCompletedAt(session.completedAt),
         ],
       );
     }
@@ -107,9 +85,45 @@ class WorkoutActivityCard extends ConsumerWidget {
         onTap: _openSessionSummary,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          child: _buildSessionDetails(),
+          child:
+              minimal ? _buildMinimalSessionDetails() : _buildSessionDetails(),
         ),
       ),
+    );
+  }
+
+  _renderTitle(BuildContext context, SessionActivity session) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(
+          children: [
+            // Workout name
+            Text(
+              session.workoutName,
+              style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                  ),
+            ),
+
+            Text(
+              '${workoutCategoryIcon[session.category]} ' +
+                  '${FormatUtils.toCapitalized(session.category.name)}, ' +
+                  '${FormatUtils.toCapitalized(session.difficulty.name)}',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            session.completedAt == null
+                ? Text(
+                    "Not completed",
+                    style: const TextStyle().copyWith(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  )
+                : const SizedBox()
+          ],
+        ),
+      ],
     );
   }
 
@@ -135,5 +149,15 @@ class WorkoutActivityCard extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  _renderCompletedAt(DateTime? completedAt) {
+    return completedAt == null
+        ? const SizedBox()
+        : _renderDetailEntry(
+            title: "Completed",
+            detail: FormatUtils.formatDateTime(completedAt),
+            color: Colors.green,
+          );
   }
 }
