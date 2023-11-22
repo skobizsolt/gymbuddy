@@ -93,37 +93,42 @@ class WorkoutActivityCard extends ConsumerWidget {
   }
 
   _renderTitle(BuildContext context, SessionActivity session) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Column(
-          children: [
-            // Workout name
-            Text(
-              session.workoutName,
-              style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  ),
-            ),
+    return Container(
+      alignment: Alignment.center,
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Workout name
+          Text(
+            session.workoutName,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                ),
+          ),
 
-            Text(
-              '${workoutCategoryIcon[session.category]} ' +
-                  '${FormatUtils.toCapitalized(session.category.name)}, ' +
-                  '${FormatUtils.toCapitalized(session.difficulty.name)}',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            session.completedAt == null
-                ? Text(
-                    "Not completed",
-                    style: const TextStyle().copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  )
-                : const SizedBox()
-          ],
-        ),
-      ],
+          Text(
+            '${workoutCategoryIcon[session.category]} ' +
+                '${FormatUtils.toCapitalized(session.category.name)}, ' +
+                '${FormatUtils.toCapitalized(session.difficulty.name)}',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          session.completedAt == null
+              ? Text(
+                  "Not completed",
+                  style: const TextStyle().copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                )
+              : const SizedBox()
+        ],
+      ),
     );
   }
 

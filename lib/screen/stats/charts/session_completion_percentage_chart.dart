@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/session_activity.dart';
-import 'package:gymbuddy/widgets/stats/charts/pie_badge.dart';
+import 'package:gymbuddy/widgets/stats/pie_badge.dart';
 
 class SessionPercentagePieChart extends StatefulWidget {
   final List<SessionActivity> data;
@@ -51,10 +51,6 @@ class _SessionPercentagePieChartState extends State<SessionPercentagePieChart> {
               ),
             ),
           ),
-        ),
-        Text(
-          "Completion percentage",
-          style: Theme.of(context).textTheme.titleLarge!,
         ),
       ],
     );

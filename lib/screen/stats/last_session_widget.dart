@@ -14,9 +14,12 @@ class LastSessionWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 8.0),
-            child: Text("Last session"),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              "Last session:",
+              style: Theme.of(context).textTheme.titleMedium!,
+            ),
           ),
           const SizedBox(height: 4),
           WorkoutActivityCard(

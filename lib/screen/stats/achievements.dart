@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/providers/workout_runner_provider.dart';
+import 'package:gymbuddy/screen/stats/chart_widgets.dart';
 import 'package:gymbuddy/screen/stats/last_session_widget.dart';
-import 'package:gymbuddy/widgets/stats/charts/session_completion_percentage_chart.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 
@@ -23,9 +23,10 @@ class AchievementsScreen extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              LastSessionWidget(data: sessions.first),
-              const SizedBox(height: 16),
-              SessionPercentagePieChart(data: sessions),
+              LastSessionWidget(
+                data: sessions.first,
+              ),
+              AchievementCharts(data: sessions),
             ],
           ),
         );
