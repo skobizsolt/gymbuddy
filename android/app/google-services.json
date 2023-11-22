@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "940804112641-gr8lge0o2gm2agkqngt9sbt3n4coqu22.apps.googleusercontent.com",
+          "client_id": "940804112641-nb9goqc4tgrgljj79s3bdffbj5ht9k6f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gymbuddy",
+            "certificate_hash": "700f422706991d1c6a03aa0ed9f75da98323da39"
+          }
+        },
+        {
+          "client_id": "940804112641-6tg1kk2hgkr7qi4r9efgms6fkeljr8gu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "940804112641-gr8lge0o2gm2agkqngt9sbt3n4coqu22.apps.googleusercontent.com",
+              "client_id": "940804112641-6tg1kk2hgkr7qi4r9efgms6fkeljr8gu.apps.googleusercontent.com",
               "client_type": 3
             },
             {
