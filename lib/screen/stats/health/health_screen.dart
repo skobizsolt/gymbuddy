@@ -15,24 +15,24 @@ class HealthScreen extends ConsumerWidget {
     var healthRef = ref.watch(healthProvider);
     return healthRef.when(
       data: (healthData) => RefreshIndicator(
-        onRefresh: () async => ref.invalidate(healthProvider),
+        onRefresh: () async => ref.refresh(healthProvider),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          child: Expanded(
-            child: Column(
-              children: [
-                HeartRateLineChart(
-                  healthDataPoints: healthData,
-                ),
-              ],
-            ),
+          child: Column(
+            children: [
+              HeartRateLineChart(
+                healthDataPoints: healthData,
+              ),
+            ],
           ),
         ),
       ),
       error: (error, stackTrace) =>
           NoContentText(title: "Error occured: ${error.toString()}"),
-      loading: () =>
-          const Center(child: WaitingSpinner(title: "Loading health data...")),
+      loading: () => Container(
+        alignment: Alignment.center,
+        child: const WaitingSpinner(title: "Loading health data..."),
+      ),
     );
   }
 }

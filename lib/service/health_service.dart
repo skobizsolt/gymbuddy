@@ -24,20 +24,15 @@ class HealthService {
       throw Exception("Accessing health data failed");
     }
 
-    var now = DateTime.now();
+    final now = DateTime.now();
+    final midnight = now.subtract(Duration(
+      hours: now.hour,
+      minutes: now.minute,
+      seconds: now.second,
+    ));
 
     List<HealthDataPoint> heartRateDataPoints =
-        await health.getHealthDataFromTypes(
-      now.subtract(
-        Duration(
-          hours: now.hour,
-          minutes: now.minute,
-          seconds: now.second,
-        ),
-      ),
-      now,
-      types,
-    );
+        await health.getHealthDataFromTypes(midnight, now, types);
 
     // fetch health data from the last 24 hours
     return heartRateDataPoints

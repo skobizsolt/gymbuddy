@@ -17,11 +17,11 @@ class HeartRateLineChart extends StatefulWidget {
 
 class _HeartRateLineChartState extends State<HeartRateLineChart> {
   static const _yAxisGap = 40.0;
-  static const _xAxisGap = 6.0;
-  static const _yAxisMaxValue = 4.0;
+  static const _xAxis = 6.0;
+  static const _yAxisMaxValue = 5.5;
 
   double get maxY {
-    final initialMax = _yAxisMaxValue + 0.5;
+    final initialMax = _yAxisMaxValue;
     if (widget.healthDataPoints.isEmpty) {
       return initialMax;
     }
@@ -44,7 +44,7 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
       child: Card(
         color: Theme.of(context).primaryColorDark,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.fromLTRB(24, 8, 2, 0),
           child: Column(
             children: [
               Text('Heart rate',
@@ -76,30 +76,31 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
+    if (value == meta.max) {
+      return Container();
+    }
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      child: Text('${value.toInt() * _xAxisGap.toInt()}h', style: style),
+      child: Text(
+          '${(value.toInt() * _xAxis.toInt()).toString().padLeft(1, '0')}:00',
+          style: Theme.of(context).textTheme.titleSmall),
     );
   }
 
   Widget rightTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 15,
-    );
+    if (value == meta.max) {
+      return Container();
+    }
 
+    final style = Theme.of(context).textTheme.titleSmall;
     var yAxisValue = value.toInt();
 
     if (yAxisValue == 0) {
-      return const Text('', style: style, textAlign: TextAlign.right);
+      return Text('', style: style, textAlign: TextAlign.right);
     }
 
-    return Text((yAxisValue * _yAxisGap).toString(),
+    return Text((yAxisValue * _yAxisGap.toInt()).toString(),
         style: style, textAlign: TextAlign.right);
   }
 
@@ -113,7 +114,7 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
             strokeWidth: 0.5,
           );
         },
@@ -153,17 +154,17 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
         show: false,
       ),
       minX: 0,
-      maxX: 24 / _xAxisGap,
+      maxX: 24 / _xAxis,
       minY: 0,
-      maxY: maxY + 0.5, // max data point
+      maxY: maxY, // max data point
       lineBarsData: [
         LineChartBarData(
-          spots: widget.healthDataPoints
-              .map((point) => FlSpot(
-                  (point.createdAt.hour + point.createdAt.minute / 60) /
-                      _xAxisGap,
-                  point.value / _yAxisGap))
-              .toList(),
+          spots: widget.healthDataPoints.map((point) {
+            final x =
+                (point.createdAt.hour + point.createdAt.minute / 60) / _xAxis;
+            final y = point.value / _yAxisGap;
+            return FlSpot(x, y);
+          }).toList(),
           isCurved: true,
           gradient: LinearGradient(
             colors: gradientColors,
