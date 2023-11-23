@@ -37,6 +37,7 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
               Text('Heart rate',
                   style: Theme.of(context).textTheme.titleMedium),
               Text(FormatUtils.toHungarianDate(DateTime.now())),
+              Text(bpmRange, style: Theme.of(context).textTheme.titleSmall),
               Stack(
                 children: <Widget>[
                   AspectRatio(
@@ -214,5 +215,13 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
       (a, b) => a.x.compareTo(b.x),
     );
     return spots;
+  }
+
+  String get bpmRange {
+    final data = List<HearthRatePoint>.from(widget.healthDataPoints);
+    data.sort(
+      (a, b) => a.value.compareTo(b.value),
+    );
+    return '${data.first.value.toInt()} - ${data.last.value.toInt()} bpm';
   }
 }
