@@ -11,18 +11,21 @@ class StatisticsSreen extends StatelessWidget {
       length: 2,
       child: Column(
         children: [
-          TabBar(tabs: [
-            Tab(
-              icon: Icon(Icons.pie_chart_outline),
-              text: "Achievements",
-            ),
-            Tab(
-              icon: Icon(Icons.monitor_heart_outlined),
-              text: "Health",
-            ),
-          ]),
+          TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.pie_chart_outline),
+                text: "Achievements",
+              ),
+              Tab(
+                icon: Icon(Icons.monitor_heart_outlined),
+                text: "Health",
+              ),
+            ],
+          ),
           Expanded(
             child: TabBarView(
+              physics: NeverScrollableScrollPhysics(),
               children: [
                 AchievementsScreen(),
                 HealthScreen(),

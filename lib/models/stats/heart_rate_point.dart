@@ -1,9 +1,9 @@
 class HearthRatePoint {
-  double? value;
-  DateTime? createdAt;
+  double value;
+  DateTime createdAt;
   HearthRatePoint({
-    this.value,
-    this.createdAt,
+    required this.value,
+    required this.createdAt,
   });
 
   HearthRatePoint copyWith({
