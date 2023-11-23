@@ -20,19 +20,6 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
   static const _xAxis = 6.0;
   static const _yAxisMaxValue = 5.5;
 
-  double get maxY {
-    final initialMax = _yAxisMaxValue;
-    if (widget.healthDataPoints.isEmpty) {
-      return initialMax;
-    }
-    final sortedbyValue = List<HearthRatePoint>.from(widget.healthDataPoints);
-    sortedbyValue.sort(
-      (b, a) => a.value.compareTo(b.value),
-    );
-    double highestValue = sortedbyValue.first.value / _yAxisGap;
-    return highestValue < initialMax ? initialMax : highestValue;
-  }
-
   @override
   Widget build(BuildContext context) {
     List<Color> gradientColors = [
@@ -76,29 +63,22 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    if (value == meta.max) {
-      return Container();
-    }
-
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: Text(
-          '${(value.toInt() * _xAxis.toInt()).toString().padLeft(1, '0')}:00',
-          style: Theme.of(context).textTheme.titleSmall),
+        '${(value.toInt() * _xAxis.toInt()).toString().padLeft(1, '0')}:00',
+        style: Theme.of(context).textTheme.titleSmall,
+      ),
     );
   }
 
   Widget rightTitleWidgets(double value, TitleMeta meta) {
-    if (value == meta.max) {
+    if (value == meta.max || value == meta.min) {
       return Container();
     }
 
     final style = Theme.of(context).textTheme.titleSmall;
     var yAxisValue = value.toInt();
-
-    if (yAxisValue == 0) {
-      return Text('', style: style, textAlign: TextAlign.right);
-    }
 
     return Text((yAxisValue * _yAxisGap.toInt()).toString(),
         style: style, textAlign: TextAlign.right);
@@ -114,15 +94,15 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
-            strokeWidth: 0.5,
-          );
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+              strokeWidth: 1,
+              dashArray: [5, 6]);
         },
         getDrawingVerticalLine: (value) {
-          return const FlLine(
-            color: Colors.transparent,
-            strokeWidth: 1,
-          );
+          return FlLine(
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+              strokeWidth: 1,
+              dashArray: [3, 4]);
         },
       ),
       titlesData: FlTitlesData(
@@ -159,13 +139,8 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
       maxY: maxY, // max data point
       lineBarsData: [
         LineChartBarData(
-          spots: widget.healthDataPoints.map((point) {
-            final x =
-                (point.createdAt.hour + point.createdAt.minute / 60) / _xAxis;
-            final y = point.value / _yAxisGap;
-            return FlSpot(x, y);
-          }).toList(),
-          isCurved: true,
+          spots: spots,
+          isCurved: false,
           gradient: LinearGradient(
             colors: gradientColors,
           ),
@@ -211,5 +186,33 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
         tooltipBgColor: Theme.of(context).colorScheme.background,
       ),
     );
+  }
+
+  double get maxY {
+    final initialMax = _yAxisMaxValue;
+    if (widget.healthDataPoints.isEmpty) {
+      return initialMax;
+    }
+    final sortedbyValue = List<HearthRatePoint>.from(widget.healthDataPoints);
+    sortedbyValue.sort(
+      (b, a) => a.value.compareTo(b.value),
+    );
+    double highestValue = sortedbyValue.first.value / _yAxisGap;
+    return highestValue < initialMax ? initialMax : highestValue;
+  }
+
+  List<FlSpot> get spots {
+    var spots = widget.healthDataPoints.map((point) {
+      final x = (point.createdAt.hour + point.createdAt.minute / 60) / _xAxis;
+      final y = point.value / _yAxisGap;
+      return FlSpot(
+        double.parse(x.toStringAsFixed(2)),
+        double.parse(y.toStringAsFixed(2)),
+      );
+    }).toList();
+    spots.sort(
+      (a, b) => a.x.compareTo(b.x),
+    );
+    return spots;
   }
 }
