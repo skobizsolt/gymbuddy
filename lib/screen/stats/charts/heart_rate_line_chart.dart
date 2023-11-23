@@ -147,8 +147,8 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
           ),
           barWidth: 2,
           isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
+          dotData: FlDotData(
+            show: spots.length == 1,
           ),
           belowBarData: BarAreaData(
             show: true,

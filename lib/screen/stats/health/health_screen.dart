@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/providers/health_provider.dart';
 import 'package:gymbuddy/screen/stats/charts/heart_rate_line_chart.dart';
+import 'package:gymbuddy/screen/stats/charts/weight/weight_line_chart.dart';
 import 'package:gymbuddy/service/health_service.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
@@ -23,6 +24,7 @@ class HealthScreen extends ConsumerWidget {
               HeartRateLineChart(
                 healthDataPoints: healthData,
               ),
+              const WeightLineChart()
             ],
           ),
         ),
