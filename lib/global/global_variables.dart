@@ -16,11 +16,12 @@ class GlobalValues {
   }
 
   // Current route
-  static const SERVER_URL = ANDROID_EMULATOR_URL;
+  static const SERVER_URL =
+      "ec2-18-193-7-208.eu-central-1.compute.amazonaws.com:8080";
 
   //android emulator url
-  static const ANDROID_EMULATOR_URL = "10.0.2.2:8080";
+  //static const ANDROID_EMULATOR_URL = "10.0.2.2:8080";
 
   //ios emulator url
-  static const IOS_EMAULATOR_URL = "localhost:8080";
+  //static const IOS_EMAULATOR_URL = "localhost:8080";
 }
