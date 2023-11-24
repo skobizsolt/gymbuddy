@@ -53,19 +53,6 @@ class WorkoutActivityCard extends ConsumerWidget {
           _renderDetailEntry(
               title: "Estimate was",
               detail: "${FormatUtils.toTimeString(session.timeToComplete)}"),
-
-          Divider(
-            color: Theme.of(context).colorScheme.primary,
-          ),
-
-          // Starting time
-          _renderDetailEntry(
-            title: "Started at",
-            detail: FormatUtils.formatDateTime(session.startedAt),
-          ),
-
-          // Completion time
-          _renderCompletedAt(session.completedAt)
         ],
       );
     }
@@ -74,8 +61,6 @@ class WorkoutActivityCard extends ConsumerWidget {
       return Column(
         children: [
           _renderTitle(context, session),
-          // Completion time
-          _renderCompletedAt(session.completedAt),
         ],
       );
     }
@@ -119,14 +104,7 @@ class WorkoutActivityCard extends ConsumerWidget {
                 '${FormatUtils.toCapitalized(session.difficulty.name)}',
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          session.completedAt == null
-              ? Text(
-                  "Not completed",
-                  style: const TextStyle().copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                )
-              : const SizedBox()
+          _renderSessionTime(context, session),
         ],
       ),
     );
@@ -156,12 +134,18 @@ class WorkoutActivityCard extends ConsumerWidget {
     );
   }
 
-  _renderCompletedAt(DateTime? completedAt) {
-    return completedAt == null
-        ? const SizedBox()
+  _renderSessionTime(BuildContext context, SessionActivity session) {
+    return session.completedAt == null
+        ? _renderDetailEntry(
+            title: "Started at",
+            detail:
+                FormatUtils.toDayAndWeekSpecifiedDateTime(session.startedAt),
+            color: Theme.of(context).colorScheme.error,
+          )
         : _renderDetailEntry(
             title: "Completed",
-            detail: FormatUtils.formatDateTime(completedAt),
+            detail:
+                FormatUtils.toDayAndWeekSpecifiedDateTime(session.completedAt!),
             color: Colors.green,
           );
   }
