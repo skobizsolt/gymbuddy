@@ -1,6 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbuddy/service/health_service.dart';
+import 'package:gymbuddy/models/stats/health_chart_data.dart';
+import 'package:gymbuddy/service/stats/health_service.dart';
 
-var healthProvider = FutureProvider(
-  (ref) => HealthService().getHeartRateDataForToday(),
+var healthProvider = FutureProvider<HealthChartData>(
+  (ref) async {
+    final _healthService = HealthService();
+    return HealthChartData(
+      bloodRateData: await _healthService.getHeartRateDataForToday(),
+      weightData: await _healthService.getWeightDataForTheYear(),
+    );
+  },
 );

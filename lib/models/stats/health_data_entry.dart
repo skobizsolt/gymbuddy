@@ -1,26 +1,26 @@
-class HearthRatePoint {
+class HealthDataEntry {
   double value;
   DateTime createdAt;
-  HearthRatePoint({
+  HealthDataEntry({
     required this.value,
     required this.createdAt,
   });
 
-  HearthRatePoint copyWith({
+  HealthDataEntry copyWith({
     double? value,
     DateTime? createdAt,
   }) {
-    return HearthRatePoint(
+    return HealthDataEntry(
       value: value ?? this.value,
       createdAt: createdAt ?? this.createdAt,
     );
   }
 
   @override
-  String toString() => 'HearthRatePoint(value: $value, createdAt: $createdAt)';
+  String toString() => 'HealthDataEntry(value: $value, createdAt: $createdAt)';
 
   @override
-  bool operator ==(covariant HearthRatePoint other) {
+  bool operator ==(covariant HealthDataEntry other) {
     if (identical(this, other)) return true;
 
     return other.value == value && other.createdAt == createdAt;

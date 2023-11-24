@@ -1,11 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:gymbuddy/models/stats/heart_rate_point.dart';
+import 'package:gymbuddy/models/stats/health_data_entry.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:intl/intl.dart';
 
 class HeartRateLineChart extends StatefulWidget {
-  final List<HearthRatePoint> healthDataPoints;
+  final List<HealthDataEntry> healthDataPoints;
   const HeartRateLineChart({
     super.key,
     required this.healthDataPoints,
@@ -46,7 +46,7 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
                       padding: const EdgeInsets.only(
                         right: 18,
                         left: 12,
-                        top: 24,
+                        top: 16,
                         bottom: 12,
                       ),
                       child: LineChart(
@@ -132,7 +132,9 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
         ),
       ),
       borderData: FlBorderData(
-        show: false,
+        show: true,
+        border: Border.all(
+            color: Theme.of(context).colorScheme.secondary.withOpacity(0.3)),
       ),
       minX: 0,
       maxX: 24 / _xAxis,
@@ -194,7 +196,7 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
     if (widget.healthDataPoints.isEmpty) {
       return initialMax;
     }
-    final sortedbyValue = List<HearthRatePoint>.from(widget.healthDataPoints);
+    final sortedbyValue = List<HealthDataEntry>.from(widget.healthDataPoints);
     sortedbyValue.sort(
       (b, a) => a.value.compareTo(b.value),
     );
@@ -211,17 +213,24 @@ class _HeartRateLineChartState extends State<HeartRateLineChart> {
         double.parse(y.toStringAsFixed(2)),
       );
     }).toList();
-    spots.sort(
-      (a, b) => a.x.compareTo(b.x),
-    );
     return spots;
   }
 
   String get bpmRange {
-    final data = List<HearthRatePoint>.from(widget.healthDataPoints);
+    final data = List<HealthDataEntry>.from(widget.healthDataPoints);
+    if (data.isEmpty) {
+      return '-- bpm';
+    }
     data.sort(
       (a, b) => a.value.compareTo(b.value),
     );
-    return '${data.first.value.toInt()} - ${data.last.value.toInt()} bpm';
+
+    final firstValue = data.first.value.toInt();
+    final lastValue = data.last.value.toInt();
+
+    if (firstValue == lastValue) {
+      return '${lastValue} bpm';
+    }
+    return '${firstValue} - ${lastValue} bpm';
   }
 }

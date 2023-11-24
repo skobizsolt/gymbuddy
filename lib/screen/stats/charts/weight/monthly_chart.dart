@@ -2,25 +2,27 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbuddy/models/stats/health_data_entry.dart';
 import 'package:gymbuddy/service/stats/weight_chart_helper.dart';
-import 'package:intl/intl.dart';
+import 'package:quiver/time.dart';
 
-class WeightYearlyChart extends StatelessWidget {
+class WeightMonthlyChart extends StatelessWidget {
   final List<Color> gradientColors;
   final List<HealthDataEntry> weightsData;
-  const WeightYearlyChart({
+  const WeightMonthlyChart({
     super.key,
     required this.gradientColors,
     required this.weightsData,
   });
-  static const _xAxis = 12.0;
+
+  static final double _xAxis = daysInMonth(now.year, now.month).toDouble();
+  static final now = DateTime.now();
   static final _helper = WeightChartHelper();
 
   @override
   Widget build(BuildContext context) {
-    return LineChart(mainData(gradientColors, context));
+    return LineChart(monthlyData(gradientColors, context));
   }
 
-  LineChartData mainData(List<Color> gradientColors, BuildContext context) {
+  LineChartData monthlyData(List<Color> gradientColors, BuildContext context) {
     double _yMin = weightsData.isEmpty
         ? 40
         : _helper.getWeightsSortedByValue(weightsData).first.value;
@@ -32,13 +34,12 @@ class WeightYearlyChart extends StatelessWidget {
       lineTouchData: getLinetouchData(context),
       gridData: FlGridData(
         show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
+        drawHorizontalLine: true,
         verticalInterval: 1,
+        horizontalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return const FlLine(
             color: Colors.transparent,
-            strokeWidth: 1,
           );
         },
         getDrawingVerticalLine: (value) {
@@ -51,58 +52,76 @@ class WeightYearlyChart extends StatelessWidget {
       ),
       titlesData: FlTitlesData(
         show: true,
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: interval,
-            getTitlesWidget: (value, meta) =>
-                rightTitleWidgets(value, meta, context),
-            reservedSize: 42,
-          ),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
-            interval: 3,
             getTitlesWidget: (value, meta) =>
                 bottomTitleWidgets(value, meta, context),
+            interval: 6,
           ),
         ),
         leftTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, meta) =>
+                rightTitleWidgets(value, meta, context),
+            reservedSize: 42,
+            interval: interval,
+          ),
+        ),
       ),
       borderData: FlBorderData(
         show: true,
         border: Border.all(
-            color: Theme.of(context).colorScheme.secondary.withOpacity(0.3)),
+          color: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+        ),
       ),
-      minX: 0,
+      minX: 1,
       maxX: _xAxis,
-      minY: _yMin.toInt() - 1.0,
-      maxY: _yMax.toInt() + 1.0,
+      minY: _yMin - 0.25,
+      maxY: _yMax + 0.25,
       lineBarsData: [
         LineChartBarData(
-          spots: weightSpots,
+          spots: weightsData
+              .map(
+                (pointInMonth) => FlSpot(
+                  pointInMonth.createdAt.day.toDouble(),
+                  double.parse(pointInMonth.value.toStringAsFixed(1)),
+                ),
+              )
+              .toList(),
           isCurved: false,
           gradient: LinearGradient(
-            colors: gradientColors,
+            colors: [
+              ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                  .lerp(0.2)!,
+              ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                  .lerp(0.2)!,
+            ],
           ),
-          barWidth: 2,
+          barWidth: 5,
           isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
+          dotData: FlDotData(
+            show: weightsData.length == 1,
           ),
           belowBarData: BarAreaData(
             show: true,
             gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
+              colors: [
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!
+                    .withOpacity(0.1),
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!
+                    .withOpacity(0.1),
+              ],
             ),
           ),
         ),
@@ -112,16 +131,10 @@ class WeightYearlyChart extends StatelessWidget {
 
   Widget bottomTitleWidgets(
       double value, TitleMeta meta, BuildContext context) {
-    if (value == meta.max) {
-      return Container();
-    }
-    final now = DateTime.now();
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: Text(
-        '${DateFormat.LLL().format(
-          DateTime(now.year, value.toInt() + 1, now.day),
-        )}',
+        '${value.toInt()}',
         style: Theme.of(context).textTheme.titleSmall,
       ),
     );
@@ -133,7 +146,7 @@ class WeightYearlyChart extends StatelessWidget {
     }
 
     final style = Theme.of(context).textTheme.titleSmall;
-    var yAxisValue = value.toInt();
+    var yAxisValue = value;
 
     return Text((yAxisValue).toStringAsFixed(1),
         style: style, textAlign: TextAlign.right);
@@ -156,14 +169,5 @@ class WeightYearlyChart extends StatelessWidget {
         tooltipBgColor: Theme.of(context).colorScheme.background,
       ),
     );
-  }
-
-  List<FlSpot> get weightSpots {
-    return weightsData
-        .map((point) => FlSpot(
-              point.createdAt.month.toDouble(),
-              double.parse(point.value.toStringAsFixed(2)),
-            ))
-        .toList();
   }
 }
