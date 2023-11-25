@@ -49,7 +49,7 @@ class FormatUtils {
       return '${DateFormat.Hm().format(dateTime)}';
     }
     if (dayDifference < 7) {
-      return '${DateFormat.EEEE().format(dateTime).substring(0, 3)}';
+      return '${DateFormat.E().format(dateTime)}';
     }
     if (DateTime.now().year == dateTime.year) {
       return '${DateFormat.MMMd().format(dateTime)}';

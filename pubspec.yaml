@@ -56,6 +56,10 @@ dependencies:
   carousel_slider: ^4.2.1
   easy_image_viewer: ^1.2.1
   easy_search_bar: ^2.5.0
+  fl_chart: ^0.64.0
+  permission_handler: ^11.0.1
+  health: ^8.0.0
+  quiver: ^3.2.1
 
 dev_dependencies:
   flutter_test:

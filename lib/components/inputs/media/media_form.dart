@@ -76,7 +76,7 @@ class _WorkoutMediaFormState extends State<WorkoutMediaForm> {
             padding: const EdgeInsets.only(top: 16.0),
             child: CarouselWithIndicator(
                 height: GlobalValues.getScreenSize(context).height * 0.33,
-                images: _renderImages()),
+                data: _renderImages()),
           );
   }
 
