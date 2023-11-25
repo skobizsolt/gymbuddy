@@ -4,25 +4,25 @@ import 'package:permission_handler/permission_handler.dart';
 
 class HealthService {
   // create a HealthFactory for use in the app, choose if HealthConnect should be used or not
-  final HealthFactory health = HealthFactory();
+  final HealthFactory _health = HealthFactory();
 
-  static Future<void> requestPermissions() async {
+  Future<bool> requestPermissions() async {
     await Permission.activityRecognition.request();
     await Permission.location.request();
-  }
-
-  Future<List<HealthDataEntry>> getHeartRateDataForToday() async {
     // define the types to get
     var types = [
       HealthDataType.HEART_RATE,
+      HealthDataType.WEIGHT,
     ];
 
-    // requesting access to the data types before reading them
-    try {
-      await health.requestAuthorization(types);
-    } on Exception {
-      throw Exception("Accessing heart rate data failed");
-    }
+    var result = await _health.requestAuthorization(types);
+    return result;
+  }
+
+  Future<List<HealthDataEntry>> getHeartRateDataForToday() async {
+    var types = [
+      HealthDataType.HEART_RATE,
+    ];
 
     final now = DateTime.now();
     final midnight = now.subtract(Duration(
@@ -32,9 +32,9 @@ class HealthService {
     ));
 
     List<HealthDataPoint> heartRateDataPoints =
-        await health.getHealthDataFromTypes(midnight, now, types);
+        await _health.getHealthDataFromTypes(midnight, now, types);
 
-    // fetch health data from the last 24 hours
+    // fetch _health data from the last 24 hours
     return _mapToHealthDataEntry(heartRateDataPoints);
   }
 
@@ -44,21 +44,18 @@ class HealthService {
       HealthDataType.WEIGHT,
     ];
 
-    // requesting access to the data types before reading them
-    try {
-      await health.requestAuthorization(types);
-    } on Exception {
-      throw Exception("Accessing weight data failed");
-    }
-
     final now = DateTime.now();
     final firstDayOfTheYear = DateTime(now.year);
 
     List<HealthDataPoint> heartRateDataPoints =
-        await health.getHealthDataFromTypes(firstDayOfTheYear, now, types);
+        await _health.getHealthDataFromTypes(firstDayOfTheYear, now, types);
 
-    // fetch health data from the last 24 hours
+    // fetch _health data from the last 24 hours
     return _mapToHealthDataEntry(heartRateDataPoints);
+  }
+
+  Future<void> changeAccount() async {
+    await _health.revokePermissions();
   }
 
   _mapToHealthDataEntry(List<HealthDataPoint> datapoints) {
