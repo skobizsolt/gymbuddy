@@ -18,16 +18,19 @@ class AchievementsScreen extends ConsumerWidget {
         if (sessions.isEmpty) {
           return const NoContentText(title: "No telemetry found yet!");
         }
-        return SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              LastSessionWidget(
-                data: sessions.first,
-              ),
-              AchievementCharts(data: sessions),
-            ],
+        return RefreshIndicator(
+          onRefresh: () async => ref.refresh(activityByUserProvider),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                LastSessionWidget(
+                  data: sessions.first,
+                ),
+                AchievementCharts(data: sessions),
+              ],
+            ),
           ),
         );
       },
