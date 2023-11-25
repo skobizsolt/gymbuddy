@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/components/inputs/custom_searchbar.dart';
 import 'package:gymbuddy/global/global_variables.dart';
 import 'package:gymbuddy/models/workout.dart';
-import 'package:gymbuddy/providers/search/search_workout.dart';
+import 'package:gymbuddy/providers/search/search_provider.dart';
 import 'package:gymbuddy/screen/workout/workout_manager.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/widgets/utils/no_content_text.dart';
@@ -42,7 +42,7 @@ class WorkoutsScreen extends ConsumerWidget {
     return WillPopScope(
       onWillPop: () async {
         KeyboardService.closeKeyboard;
-        ref.invalidate(searchWorkoutState);
+        ref.invalidate(searchTermState);
         return true;
       },
       child: GestureDetector(
@@ -128,7 +128,7 @@ class WorkoutsScreen extends ConsumerWidget {
     return CustomSearchBar(
       onChanged: (value) {
         var searchTerm =
-            ref.watch(searchWorkoutState.notifier).update((state) => value);
+            ref.watch(searchTermState.notifier).update((state) => value);
         ref
             .read(searchWorkoutControllerProvider.notifier)
             .onSearch(searchTerm, data);

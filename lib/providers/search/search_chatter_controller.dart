@@ -1,11 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/models/chats/chat_person.dart';
 
-final searchChatterControllerProvider =
-    StateNotifierProvider<SearchUserController, List<ChatPerson>>((ref) {
-  return SearchUserController();
-});
-
 class SearchUserController extends StateNotifier<List<ChatPerson>> {
   SearchUserController() : super([]);
 
