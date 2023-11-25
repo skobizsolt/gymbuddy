@@ -77,3 +77,17 @@ var filterWorkoutsByIdsProvider =
   });
   return likedByUser;
 });
+
+var createdWorkoutsProvider = Provider<int>((ref) {
+  var workouts = ref.watch(workoutsProvider);
+  if (!workouts.hasValue) {
+    workouts = ref.refresh(workoutsProvider);
+  }
+  final now = DateTime.now();
+  return ref
+      .watch(workoutsByUserProvider)
+      .value!
+      .where((element) =>
+          DateTime(now.year, now.month, now.day).isBefore(element.registeredOn))
+      .length;
+});
