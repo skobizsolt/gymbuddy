@@ -5,15 +5,18 @@ class CustomSearchBar extends StatelessWidget {
     super.key,
     this.height,
     this.color,
+    this.onChanged,
   });
   final double? height;
   final Color? color;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
       child: SearchBar(
+        onChanged: onChanged,
         padding: const MaterialStatePropertyAll(
           EdgeInsets.symmetric(
             horizontal: 16,
