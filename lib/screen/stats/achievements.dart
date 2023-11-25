@@ -19,7 +19,7 @@ class AchievementsScreen extends ConsumerWidget {
           return const NoContentText(title: "No telemetry found yet!");
         }
         return SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
