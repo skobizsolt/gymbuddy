@@ -243,13 +243,18 @@ class WorkoutDetailsScreen extends ConsumerWidget {
             children: [
               Expanded(
                 child: InformationTag(
-                  child: Text(
-                    workout.description!,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontStyle: FontStyle.italic,
+                  child: SizedBox(
+                    height: GlobalValues.getScreenSize(context).height * 0.15,
+                    child: SingleChildScrollView(
+                      child: Text(
+                        workout.description!,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        textAlign: TextAlign.justify,
+                      ),
                     ),
-                    textAlign: TextAlign.justify,
                   ),
                 ),
               ),

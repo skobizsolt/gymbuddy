@@ -219,37 +219,9 @@ class _WorkoutReunnerIntroScreenState
                     height: 16,
                   ),
                   InformationTag(
-                      color: const Color.fromARGB(255, 250, 237, 116),
-                      child: SizedBox(
-                          width: double.infinity,
-                          child: _buildHintText(context))),
-                  const SizedBox(
-                    height: 8,
+                    color: const Color.fromARGB(255, 250, 237, 116),
+                    child: _buildHintText(context),
                   ),
-                  (data.description == null || data.description!.isEmpty)
-                      ? const SizedBox()
-                      : Expanded(
-                          child: InformationTag(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimaryContainer,
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: double.infinity,
-                              child: SingleChildScrollView(
-                                child: Text(
-                                  data.description!,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 1.5),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
                 ],
               ),
             ),
@@ -269,16 +241,20 @@ class _WorkoutReunnerIntroScreenState
         const SizedBox(
           width: 8,
         ),
-        Expanded(
-          child: Text(
-            "You are about to start a new training! Before you do, please read out our help page by tapping this dialog to have the best possible experience. Good luck, GymBuddy! 💪",
-            softWrap: true,
-            style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                ),
-            textAlign: TextAlign.justify,
+        Flexible(
+          child: SizedBox(
+            height: GlobalValues.getScreenSize(context).height * 0.2,
+            child: SingleChildScrollView(
+              child: Text(
+                "You are about to start a new training! To have the best experience, please follow the basic workout rules and the steps given by the trainer. If you found something wrong, please contact 'gymbuddy.trainer.app@gmail.com'! Good luck, GymBuddy! 💪",
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                    ),
+                textAlign: TextAlign.justify,
+              ),
+            ),
           ),
         ),
       ],
