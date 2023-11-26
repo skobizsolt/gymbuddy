@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbuddy/layout/dribble_layout.dart';
 import 'package:gymbuddy/providers/user_provider.dart';
 import 'package:gymbuddy/widgets/home/home_option.dart';
-import 'package:gymbuddy/widgets/utils/no_content_text.dart';
 import 'package:gymbuddy/widgets/utils/profile_picture.dart';
 import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 
@@ -58,21 +57,15 @@ class HomeScreen extends ConsumerWidget {
       );
     }
 
-    // If the user data cannot be loaded
-    if (homeData.hasError) {
-      return const Center(
-        child: NoContentText(title: 'An error occured'),
-      );
-    }
-
     // If userdata is loading
-    if (homeData.isLoading) {
-      return const Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            WaitingSpinner(title: 'Fetching data...'),
-          ],
+    if (homeData.isLoading || homeData.hasError) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        body: Center(
+          child: WaitingSpinner(
+            title: 'Fetching app data...',
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
         ),
       );
     }
