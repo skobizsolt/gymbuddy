@@ -80,15 +80,6 @@ class ConversationScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.more_vert_rounded,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-              ),
-            ],
           ),
           body: Padding(
             padding:
