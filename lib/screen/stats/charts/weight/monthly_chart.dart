@@ -44,7 +44,9 @@ class WeightMonthlyChart extends StatelessWidget {
         },
         getDrawingVerticalLine: (value) {
           return FlLine(
-            color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+            color: weightsData.length > 1
+                ? Theme.of(context).colorScheme.secondary.withOpacity(0.2)
+                : Colors.transparent,
             strokeWidth: 1,
             dashArray: [3, 4],
           );

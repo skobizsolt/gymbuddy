@@ -15,7 +15,7 @@ class WeightChartHelper {
   }
 
   double getCoordinatesInterval(final double difference) {
-    return difference / 6;
+    return difference / 2;
   }
 
   getTouchSpotData(LineBarSpot touchedSpot, List<HealthDataEntry> data) {
