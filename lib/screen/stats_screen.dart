@@ -3,6 +3,8 @@ import 'package:gymbuddy/screen/stats/achievements.dart';
 import 'package:gymbuddy/screen/stats/health/health_screen.dart';
 import 'package:gymbuddy/widgets/utils/information_tag.dart';
 
+bool _healthHintVisible = true;
+
 class StatisticsSreen extends StatefulWidget {
   const StatisticsSreen({super.key});
 
@@ -11,8 +13,6 @@ class StatisticsSreen extends StatefulWidget {
 }
 
 class _StatisticsSreenState extends State<StatisticsSreen> {
-  bool _healthHintVisible = true;
-
   @override
   Widget build(BuildContext context) {
     return Column(
