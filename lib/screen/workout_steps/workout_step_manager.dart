@@ -163,7 +163,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
 
                       // Details about the workout
                       MultiLineTextFormField(
-                        hintText: "Step descriptions",
+                        hintText: "Step description",
                         initialValue: CrudType.edit == widget.type
                             ? widget.workoutStep!.details
                             : null,

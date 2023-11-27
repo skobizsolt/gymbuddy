@@ -214,6 +214,7 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
               ]),
               Expanded(
                 child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     _buildStepInformation(currentStep.details),
                     _buildMedia(currentStep.stepId),
@@ -235,12 +236,12 @@ class _WorkoutRunnerScreenState extends ConsumerState<WorkoutRunnerScreen> {
                 textAlign: TextAlign.center,
               ),
             )
-          : Text(
-              details,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    letterSpacing: 1.5,
-                  ),
-              textAlign: TextAlign.justify,
+          : SingleChildScrollView(
+              child: Text(
+                details,
+                style: Theme.of(context).textTheme.bodyMedium!,
+                textAlign: TextAlign.justify,
+              ),
             ),
     );
   }
