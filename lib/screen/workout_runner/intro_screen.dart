@@ -246,7 +246,10 @@ class _WorkoutReunnerIntroScreenState
             height: GlobalValues.getScreenSize(context).height * 0.2,
             child: SingleChildScrollView(
               child: Text(
-                "You are about to start a new training! To have the best experience, please follow the basic workout rules and the steps given by the trainer. If you found something wrong, please contact 'gymbuddy.trainer.app@gmail.com'! Good luck, GymBuddy! 💪",
+                "You are about to start a new training!\n" +
+                    "To have the best experience, please follow the basic workout rules and the steps given by the trainer.\n" +
+                    "If you found something wrong, please contact:\n'gymbuddy.trainer.app@gmail.com'!\n" +
+                    "Good luck, GymBuddy! 💪",
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,

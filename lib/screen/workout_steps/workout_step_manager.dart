@@ -17,6 +17,7 @@ import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
 import 'package:gymbuddy/service/workout/workout_step_media_service.dart';
+import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:gymbuddy/widgets/utils/save_icon.dart';
 
 class WorkoutStepManager extends ConsumerStatefulWidget {
@@ -184,6 +185,11 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
                     children: [
                       _buildTimePicker(),
                       _buildWorkoutStepTypeList(),
+                      InformationTag(
+                        margin: const EdgeInsets.only(top: 8),
+                        color: Colors.yellow[300],
+                        child: _buildHintText(context),
+                      )
                     ],
                   ),
                   const SizedBox(
@@ -294,5 +300,32 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
         _step.estimatedTime = pickedDuration.inSeconds;
       });
     }
+  }
+
+  _buildHintText(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          '❗',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(
+          width: 8,
+        ),
+        Flexible(
+          child: Text(
+            "The category dropdown is just a type indicator for now. " +
+                "If your step is 'rep' based, please include the rep count to the description!",
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
   }
 }
