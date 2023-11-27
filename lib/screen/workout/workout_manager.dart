@@ -126,7 +126,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
                             ? widget.workout!.title
                             : null,
                         hintText: "Title",
-                        onSaved: (value) => _workout.title = value,
+                        onSaved: (value) => _workout.title = value!.trim(),
                       ),
 
                       // Details about the workout
@@ -137,7 +137,8 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
                         hintText: "Describe your workout",
                         maxLines: 30,
                         validator: (p0) => null,
-                        onSaved: (value) => _workout.description = value,
+                        onSaved: (value) => _workout.description =
+                            value == null ? null : value.trim(),
                       ),
                     ],
                   ),

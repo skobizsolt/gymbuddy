@@ -53,7 +53,7 @@ class ChattersScreen extends ConsumerWidget {
               onSearch: (value) {
                 final searchTerm = ref
                     .watch(searchTermState.notifier)
-                    .update((state) => value);
+                    .update((state) => value.trim());
                 ref
                     .read(searchChatterControllerProvider.notifier)
                     .onSearch(searchTerm, chatters);

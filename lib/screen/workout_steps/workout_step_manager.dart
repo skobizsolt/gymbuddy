@@ -158,7 +158,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
                         initialValue: CrudType.edit == widget.type
                             ? widget.workoutStep!.stepName
                             : null,
-                        onSaved: (value) => _step.stepName = value,
+                        onSaved: (value) => _step.stepName = value!.trim(),
                       ),
 
                       // Details about the workout
@@ -171,7 +171,8 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
                           return null;
                         },
                         maxLines: 30,
-                        onSaved: (value) => _step.details = value,
+                        onSaved: (value) =>
+                            _step.details = value == null ? null : value.trim(),
                       ),
                     ],
                   ),
@@ -316,7 +317,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutStepManager> {
         Flexible(
           child: Text(
             "The category dropdown is just a type indicator for now. " +
-                "If your step is 'rep' based, please include the rep count to the description!",
+                "If your step is 'rep' based, please include the rep count in the description!",
             style: Theme.of(context).textTheme.titleSmall!.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold,

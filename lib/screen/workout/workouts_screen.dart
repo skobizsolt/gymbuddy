@@ -128,7 +128,7 @@ class WorkoutsScreen extends ConsumerWidget {
     return CustomSearchBar(
       onChanged: (value) {
         var searchTerm =
-            ref.watch(searchTermState.notifier).update((state) => value);
+            ref.watch(searchTermState.notifier).update((state) => value.trim());
         ref
             .read(searchWorkoutControllerProvider.notifier)
             .onSearch(searchTerm, data);
