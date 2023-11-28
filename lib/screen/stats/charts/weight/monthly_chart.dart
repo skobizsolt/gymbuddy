@@ -25,10 +25,10 @@ class WeightMonthlyChart extends StatelessWidget {
   LineChartData monthlyData(List<Color> gradientColors, BuildContext context) {
     double _yMin = weightsData.isEmpty
         ? 40
-        : _helper.getWeightsSortedByValue(weightsData).first.value;
+        : _helper.getYCoordinate(weightsData, isMinimum: true);
     double _yMax = weightsData.isEmpty
         ? 80
-        : _helper.getWeightsSortedByValue(weightsData).last.value;
+        : _helper.getYCoordinate(weightsData, isMinimum: false);
     double interval = _helper.getCoordinatesInterval(_yMax - _yMin);
     return LineChartData(
       lineTouchData: getLinetouchData(context),
@@ -44,9 +44,7 @@ class WeightMonthlyChart extends StatelessWidget {
         },
         getDrawingVerticalLine: (value) {
           return FlLine(
-            color: weightsData.length > 1
-                ? Theme.of(context).colorScheme.secondary.withOpacity(0.2)
-                : Colors.transparent,
+            color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
             strokeWidth: 1,
             dashArray: [3, 4],
           );
@@ -87,8 +85,8 @@ class WeightMonthlyChart extends StatelessWidget {
       ),
       minX: 1,
       maxX: _xAxis,
-      minY: _yMin - 0.25,
-      maxY: _yMax + 0.25,
+      minY: _yMin,
+      maxY: _yMax,
       lineBarsData: [
         LineChartBarData(
           spots: weightsData
