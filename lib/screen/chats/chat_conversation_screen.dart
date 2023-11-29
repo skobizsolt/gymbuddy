@@ -119,7 +119,6 @@ class ConversationScreen extends ConsumerWidget {
                       }
                     }
                     _chatController.clear();
-                    KeyboardService.closeKeyboard();
                   },
                   icon: const Icon(
                     Icons.send,

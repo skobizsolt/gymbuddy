@@ -47,32 +47,63 @@ class _TabsScreenState extends State<TabsScreen> {
   Widget build(BuildContext context) {
     final Screen activeScreen = screens[_currentIndex];
 
-    return GestureDetector(
-      onTap: KeyboardService.closeKeyboard,
-      child: Scaffold(
-        appBar: activeScreen.appBar,
-        body: activeScreen.body,
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: _selectPage,
-          currentIndex: _currentIndex,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart),
-              label: 'Stats',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_outlined),
-              label: 'Chats',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_2_outlined),
-              label: 'Me',
-            ),
-          ],
+    return WillPopScope(
+      onWillPop: () async {
+        final value = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: const Text(
+                  'Are you sure you want to exit?',
+                  textAlign: TextAlign.center,
+                ),
+                actionsAlignment: MainAxisAlignment.spaceBetween,
+                actions: [
+                  ElevatedButton(
+                    child: const Text('No'),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                  ElevatedButton(
+                    child: const Text('Yes, exit'),
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                  ),
+                ],
+              );
+            });
+
+        return value == true;
+      },
+      child: GestureDetector(
+        onTap: KeyboardService.closeKeyboard,
+        child: Scaffold(
+          appBar: activeScreen.appBar,
+          body: activeScreen.body,
+          bottomNavigationBar: BottomNavigationBar(
+            onTap: _selectPage,
+            currentIndex: _currentIndex,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.bar_chart),
+                label: 'Stats',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat_outlined),
+                label: 'Chats',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_2_outlined),
+                label: 'Me',
+              ),
+            ],
+          ),
         ),
       ),
     );
