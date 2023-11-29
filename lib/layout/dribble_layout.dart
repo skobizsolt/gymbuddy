@@ -5,14 +5,16 @@ class DribbleLayout extends StatelessWidget {
   const DribbleLayout({
     super.key,
     this.addAppBar = true,
-    this.addBackButton = true,
+    this.title,
     this.actions,
+    this.addBackButton = true,
     this.headerContent,
     this.body,
     this.footing,
   });
 
   final bool addAppBar;
+  final Widget? title;
   final List<Widget>? actions;
   final bool addBackButton;
   final Widget? headerContent;
@@ -31,6 +33,7 @@ class DribbleLayout extends StatelessWidget {
           ? AppBar(
               backgroundColor: Colors.transparent,
               automaticallyImplyLeading: addBackButton,
+              title: title,
               actions: actions,
               foregroundColor: headerColor,
             )

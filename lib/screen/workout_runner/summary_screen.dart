@@ -169,27 +169,6 @@ class WorkoutSimulationSummaryScreen extends ConsumerWidget {
                             entry: "Not completed",
                           )
                         : const SizedBox(),
-                    hasData
-                        ? Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Tap for details",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .copyWith(
-                                          fontStyle: FontStyle.italic,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary),
-                                ),
-                              ],
-                            ),
-                          )
-                        : const SizedBox(),
                   ],
                 ),
               ),

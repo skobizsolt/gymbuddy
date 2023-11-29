@@ -12,6 +12,7 @@ import 'package:gymbuddy/providers/workout_provider.dart';
 import 'package:gymbuddy/screen/workout/workout_details_screen.dart';
 import 'package:gymbuddy/service/util/format_utils.dart';
 import 'package:gymbuddy/service/util/keyboard_service.dart';
+import 'package:gymbuddy/widgets/utils/information_tag.dart';
 import 'package:gymbuddy/widgets/utils/save_icon.dart';
 
 class WorkoutManager extends ConsumerStatefulWidget {
@@ -25,11 +26,13 @@ class WorkoutManager extends ConsumerStatefulWidget {
 }
 
 class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
+  static const DAILY_LIMIT = 2;
+
   late ChangeWorkoutDto _workout = ChangeWorkoutDto(
     steps: [],
   );
   final _formkey = GlobalKey<FormState>();
-  bool _isSaving = false;
+  bool _isSaveButtonVisible = false;
 
   _saveForm() async {
     var isValid = _formkey.currentState!.validate();
@@ -38,12 +41,12 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
     }
     _formkey.currentState!.save();
     setState(() {
-      _isSaving = true;
+      _isSaveButtonVisible = true;
     });
     KeyboardService.closeKeyboard();
     await performOperation().whenComplete(
       () => setState(() {
-        _isSaving = false;
+        _isSaveButtonVisible = false;
       }),
     );
   }
@@ -113,6 +116,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
               key: _formkey,
               child: Column(
                 children: [
+                  _checkDailyLimit(context),
                   FormCategory(
                     title: "Basic information",
                     children: [
@@ -122,7 +126,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
                             ? widget.workout!.title
                             : null,
                         hintText: "Title",
-                        onSaved: (value) => _workout.title = value,
+                        onSaved: (value) => _workout.title = value!.trim(),
                       ),
 
                       // Details about the workout
@@ -133,7 +137,8 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
                         hintText: "Describe your workout",
                         maxLines: 30,
                         validator: (p0) => null,
-                        onSaved: (value) => _workout.description = value,
+                        onSaved: (value) => _workout.description =
+                            value == null ? null : value.trim(),
                       ),
                     ],
                   ),
@@ -162,7 +167,7 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
         ),
         floatingActionButton: SaveButton(
           onPressed: _saveForm,
-          isSaving: _isSaving,
+          isSaving: _isSaveButtonVisible,
         ),
       ),
     );
@@ -223,5 +228,31 @@ class _WorkoutManagerState extends ConsumerState<WorkoutManager> {
         borderRadius: BorderRadius.circular(12),
       ),
     );
+  }
+
+  _checkDailyLimit(BuildContext context) {
+    final createdToday = ref.watch(createdWorkoutsProvider);
+    if (widget.type == CrudType.add && createdToday >= DAILY_LIMIT) {
+      setState(() {
+        _isSaveButtonVisible = true;
+      });
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.infinity,
+          child: InformationTag(
+            child: Text(
+              "You have reached the daily limit!\nThe limit was: $DAILY_LIMIT",
+              textAlign: TextAlign.center,
+              style: const TextStyle().copyWith(
+                color: Theme.of(context).colorScheme.onError,
+              ),
+            ),
+            color: Theme.of(context).colorScheme.error,
+          ),
+        ),
+      );
+    }
+    return Container();
   }
 }

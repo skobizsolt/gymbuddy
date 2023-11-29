@@ -118,7 +118,7 @@ class _WeightLineChartState extends State<WeightLineChart> {
           .toList();
       if (weightsInMonth.isNotEmpty) {
         weightsInMonth.sort((a, b) => a.value.compareTo(b.value));
-        entries.add(weightsInMonth[0]);
+        entries.add(weightsInMonth.first);
       }
     }
     return entries;

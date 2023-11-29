@@ -18,6 +18,8 @@ import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../../widgets/utils/author_tag.dart';
+
 class WorkoutDetailsScreen extends ConsumerWidget {
   WorkoutDetailsScreen({super.key, required this.workoutId});
 
@@ -87,7 +89,6 @@ class WorkoutDetailsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final onPrimaryContainer = Theme.of(context).colorScheme.onPrimaryContainer;
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final backgroundColor = Theme.of(context).colorScheme.background;
 
     var workoutRef = ref.watch(workoutByIdProvider(workoutId));
     var stepsRef = ref.watch(workoutStepProvider(workoutId));
@@ -243,13 +244,18 @@ class WorkoutDetailsScreen extends ConsumerWidget {
             children: [
               Expanded(
                 child: InformationTag(
-                  child: Text(
-                    workout.description!,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontStyle: FontStyle.italic,
+                  child: SizedBox(
+                    height: GlobalValues.getScreenSize(context).height * 0.15,
+                    child: SingleChildScrollView(
+                      child: Text(
+                        workout.description!,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        textAlign: TextAlign.justify,
+                      ),
                     ),
-                    textAlign: TextAlign.justify,
                   ),
                 ),
               ),
@@ -263,6 +269,8 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     }
 
     return DribbleLayout(
+      addAppBar: true,
+      title: isSelfRecorce ? Container() : AuthorTag(userId: workout.userId),
       actions: [
         // Delete button
         _renderAppBarButtons(steps.length),
@@ -287,15 +295,32 @@ class WorkoutDetailsScreen extends ConsumerWidget {
           ),
 
           // Edit workout button
-          isSelfRecorce
-              ? ElevatedButton.icon(
-                  onPressed: () => editWorkout(context, workout),
-                  icon: const Icon(Icons.edit),
-                  label: const Text('Edit workout'),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: onPrimaryContainer, elevation: 0),
-                )
-              : const SizedBox(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              isSelfRecorce
+                  ? ElevatedButton.icon(
+                      onPressed: () => editWorkout(context, workout),
+                      icon: const Icon(Icons.edit),
+                      label: const Text('Edit workout'),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: onPrimaryContainer, elevation: 0),
+                    )
+                  : const SizedBox(),
+              const SizedBox(
+                width: 8,
+              ),
+              steps.isEmpty
+                  ? const SizedBox()
+                  : ElevatedButton.icon(
+                      onPressed: () => _launchWorkout(context),
+                      icon: const Icon(Icons.play_arrow),
+                      label: const Text('Launch'),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: onPrimaryContainer, elevation: 0),
+                    ),
+            ],
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -363,28 +388,6 @@ class WorkoutDetailsScreen extends ConsumerWidget {
           ],
         ),
       ),
-      footing: steps.isEmpty
-          ? const SizedBox()
-          : Container(
-              color: backgroundColor,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton.icon(
-                          onPressed: () => _launchWorkout(context),
-                          icon: const Icon(Icons.play_arrow),
-                          label: const Text('Launch'),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
     );
   }
 

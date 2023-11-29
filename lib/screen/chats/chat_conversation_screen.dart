@@ -80,15 +80,6 @@ class ConversationScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.more_vert_rounded,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-              ),
-            ],
           ),
           body: Padding(
             padding:
@@ -128,7 +119,6 @@ class ConversationScreen extends ConsumerWidget {
                       }
                     }
                     _chatController.clear();
-                    KeyboardService.closeKeyboard();
                   },
                   icon: const Icon(
                     Icons.send,

@@ -8,9 +8,11 @@ import 'package:gymbuddy/models/auth/new_user_dto.dart';
 import 'package:gymbuddy/models/user_dto.dart';
 
 class ProfileDataService {
+  final _firestore = FirebaseFirestore.instance;
+
   Stream<UserDto> get profileData {
     var currentUser = FirebaseAuth.instance.currentUser;
-    return FirebaseFirestore.instance
+    return _firestore
         .collection(FIRESTORE_USER_COLLECTION)
         .doc(currentUser!.uid)
         .snapshots()
@@ -35,7 +37,7 @@ class ProfileDataService {
     if (value == null || value.user == null) {
       return;
     }
-    await FirebaseFirestore.instance
+    await _firestore
         .collection(FIRESTORE_USER_COLLECTION)
         .doc(value.user!.uid)
         .set({
@@ -57,7 +59,7 @@ class ProfileDataService {
           .child('${userData.uid}.png');
       await storageRef.putFile(localphoto);
       updatedData.profileImageUrl = await storageRef.getDownloadURL();
-      await FirebaseFirestore.instance
+      await _firestore
           .collection(FIRESTORE_USER_COLLECTION)
           .doc(userData.uid)
           .update(updatedData.toMapProfileImage());
@@ -66,7 +68,7 @@ class ProfileDataService {
     // Now store the newly added data
     if (oldData.firstName != updatedData.firstName ||
         oldData.lastName != updatedData.lastName) {
-      await FirebaseFirestore.instance
+      await _firestore
           .collection(FIRESTORE_USER_COLLECTION)
           .doc(userData!.uid)
           .update(updatedData.toMap());
@@ -74,18 +76,26 @@ class ProfileDataService {
   }
 
   Future<List<String>> get usernames async {
-    var usernamesCollection = await FirebaseFirestore.instance
-        .collection(FIRESTORE_USERNAME_COLLECTION)
-        .get();
+    var usernamesCollection =
+        await _firestore.collection(FIRESTORE_USERNAME_COLLECTION).get();
     List<String> usernames =
         usernamesCollection.docs.map((doc) => doc.id).toList();
     return usernames;
   }
 
   addUsernameToCollection(final String username, final String email) async {
-    return await FirebaseFirestore.instance
+    return await _firestore
         .collection(FIRESTORE_USERNAME_COLLECTION)
         .doc(username)
         .set({'email': email});
+  }
+
+  Future<UserDto?>? getAuthor(String userId) async {
+    return await _firestore
+        .collection(FIRESTORE_USER_COLLECTION)
+        .doc(userId)
+        .get()
+        .then((value) =>
+            value.data() == null ? null : UserDto.fromMap(value.data()!));
   }
 }

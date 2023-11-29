@@ -46,10 +46,10 @@ class UserDto {
     return <String, dynamic>{
       'email': email,
       'username': username,
-      'firstName': firstName,
-      'lastName': lastName,
+      'first_name': firstName,
+      'last_name': lastName,
       'registeredOn': registeredOn?.millisecondsSinceEpoch,
-      'profileImageUrl': profileImageUrl,
+      'profile_image_url': profileImageUrl,
     };
   }
 

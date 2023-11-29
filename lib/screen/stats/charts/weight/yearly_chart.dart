@@ -23,10 +23,10 @@ class WeightYearlyChart extends StatelessWidget {
   LineChartData mainData(List<Color> gradientColors, BuildContext context) {
     double _yMin = weightsData.isEmpty
         ? 40
-        : _helper.getWeightsSortedByValue(weightsData).first.value;
+        : _helper.getYCoordinate(weightsData, isMinimum: true);
     double _yMax = weightsData.isEmpty
         ? 80
-        : _helper.getWeightsSortedByValue(weightsData).last.value;
+        : _helper.getYCoordinate(weightsData, isMinimum: false);
     double interval = _helper.getCoordinatesInterval(_yMax - _yMin);
     return LineChartData(
       lineTouchData: getLinetouchData(context),
@@ -79,12 +79,13 @@ class WeightYearlyChart extends StatelessWidget {
       borderData: FlBorderData(
         show: true,
         border: Border.all(
-            color: Theme.of(context).colorScheme.secondary.withOpacity(0.3)),
+          color: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+        ),
       ),
       minX: 0,
       maxX: _xAxis,
-      minY: _yMin.toInt() - 1.0,
-      maxY: _yMax.toInt() + 1.0,
+      minY: _yMin,
+      maxY: _yMax,
       lineBarsData: [
         LineChartBarData(
           spots: weightSpots,

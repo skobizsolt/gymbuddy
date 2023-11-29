@@ -179,7 +179,7 @@ class _ChangeProfileContentState
                               hintText: 'First name',
                               initialValue: _userData.firstName,
                               onSaved: (value) {
-                                _userData.firstName = value!;
+                                _userData.firstName = value!.trim();
                               },
                             ),
                             const SizedBox(
