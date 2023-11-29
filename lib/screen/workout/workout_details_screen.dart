@@ -18,6 +18,8 @@ import 'package:gymbuddy/widgets/utils/waiting_spinner_widget.dart';
 import 'package:gymbuddy/widgets/workout/steps_panel_list.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../../widgets/utils/author_tag.dart';
+
 class WorkoutDetailsScreen extends ConsumerWidget {
   WorkoutDetailsScreen({super.key, required this.workoutId});
 
@@ -267,6 +269,8 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     }
 
     return DribbleLayout(
+      addAppBar: true,
+      title: isSelfRecorce ? Container() : AuthorTag(userId: workout.userId),
       actions: [
         // Delete button
         _renderAppBarButtons(steps.length),

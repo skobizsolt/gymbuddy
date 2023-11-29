@@ -9,3 +9,6 @@ final userProvider = StreamProvider<UserDto>(
     return ProfileDataService().profileData;
   },
 );
+
+final authorProvider = FutureProvider.family<UserDto?, String>(
+    (ref, userId) => ProfileDataService().getAuthor(userId));
